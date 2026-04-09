@@ -1,0 +1,19 @@
+name: Notify MkDocs of Doc Changes (Temp)
+
+on:
+  push:
+    branches: [master]
+    paths: ["**.md"]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch docs-updated event to polkadot-mkdocs
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.MKDOCS_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/aljosamakevic/polkadot-mkdocs/dispatches \
+            -d '{"event_type": "docs-updated"}'

@@ -1,0 +1,10 @@
+nav:
+  - 'Home': index.md
+  - 'Smart Contracts': smart-contracts
+  - 'Parachains': parachains
+  - 'Chain Interactions': chain-interactions
+  - 'Node Infrastructure': node-infrastructure
+  - 'Technical Reference': reference
+  - 'AI Resources': ai-resources.md
+  - 'Support': get-support.md
+  - 'Policies': policies
