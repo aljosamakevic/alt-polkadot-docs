@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:37:17Z",
+  "generated": "2026-04-21T15:43:06Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2208,6 +2208,34 @@
         ],
         "priority_score": 10
       }
+    },
+    {
+      "skill_id": "get-testnet-tokens-faucet",
+      "title": "Get TestNet Tokens from the Polkadot Faucet",
+      "source_pages": [
+        "smart-contracts/faucet.md"
+      ],
+      "category": "guide",
+      "priority": "low",
+      "status": "pending",
+      "notes": "Three-step UI-only workflow (navigate, paste address, click button). Self-contained (K1=5) and deterministic (S2=3) but S1 does not fire because there are no CLI or SDK steps. Useful as a prerequisite step in deployment tutorials; limited standalone programmatic skill value.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "C2",
+          "C3",
+          "K1",
+          "S2"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 0,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 8
+      }
     }
   ],
   "supplementary_only": [
@@ -3130,6 +3158,92 @@
           "conceptual": 10,
           "not_applicable": 0
         }
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/accounts.md",
+      "category": "reference",
+      "relevant_to": [
+        "set-up-local-dev-node",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Documents the AccountId32Mapper address conversion system (map_account, to_address, to_fallback_account_id, create1/create2), account mapping requirements, and security design for the Polkadot/Ethereum dual-format model. Essential context for any tutorial requiring wallet or address setup on Polkadot Hub. Flagged ambiguous: reference=8, conceptual=7, diff=1.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "R1",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 6,
+          "reference": 8,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/blocks-transactions-fees.md",
+      "category": "reference",
+      "relevant_to": [
+        "set-up-local-dev-node",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Reference documentation for EVM transaction types (Legacy, EIP-1559, EIP-2930, EIP-4844 via pallet_revive) and the multi-dimensional fee model (ref_time, proof_size, storage_deposit). Useful background for understanding gas estimation behavior in deployment tutorials.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/contract-deployment.md",
+      "category": "reference",
+      "relevant_to": [
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix",
+        "set-up-local-dev-node"
+      ],
+      "notes": "Conceptual signals score highest (C1+C2+C3=10) since the page primarily explains REVM vs PVM deployment architecture differences, factory pattern constraints, and gas estimation behavior. Rule 4 assigns reference because reference_score=7 >= 7 and procedural_score=6 < 10. Flagged ambiguous: conceptual=10, reference=7, diff=3.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "R2",
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 6,
+          "reference": 7,
+          "conceptual": 10,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "conceptual",
+          "reference"
+        ]
       }
     }
   ],
