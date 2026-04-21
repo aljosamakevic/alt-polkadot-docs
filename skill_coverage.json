@@ -1,25 +1,29 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T14:42:33Z",
+  "generated": "2026-04-21T17:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 0,
+    "up_to_date": 5,
     "stale": 0,
-    "uncovered": 136,
+    "uncovered": 131,
     "reviewed_no_skill": 0
   },
   "pages": {
     "chain-interactions/accounts/create-account.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T17:00:00Z",
+      "skills": [
+        "create-polkadot-account"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/accounts/query-accounts.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T17:00:00Z",
+      "skills": [
+        "query-account-info-sdks"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/query-data/query-rest.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -29,15 +33,19 @@
     },
     "chain-interactions/query-data/query-sdks.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T17:00:00Z",
+      "skills": [
+        "query-chain-state-sdks"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/query-data/runtime-api-calls.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T17:00:00Z",
+      "skills": [
+        "call-runtime-apis-sdks"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/send-transactions/calculate-transaction-fees.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -77,9 +85,11 @@
     },
     "chain-interactions/send-transactions/with-sdks.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T17:00:00Z",
+      "skills": [
+        "send-transactions-sdks"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/token-operations/convert-assets.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

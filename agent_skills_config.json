@@ -1,0 +1,760 @@
+{
+  "schema_version": "0.1",
+  "generated": "2026-04-21T17:00:00Z",
+  "content_hash": "sha256:533202e0a7eb1e90857d04056edbe37853cd20ae35e85fb2f52cea87134f42bc",
+  "project": {
+    "id": "polkadot-docs",
+    "name": "Polkadot Developer Docs",
+    "docs_base_url": "https://docs.polkadot.com"
+  },
+  "skills": [
+    {
+      "id": "create-polkadot-account",
+      "title": "Create a Polkadot Account Programmatically",
+      "objective": "Generate a new SR25519 Polkadot account including a 12-word mnemonic phrase and SS58 address using TypeScript.",
+      "description": "Generates a new Polkadot SR25519 account (mnemonic, public key, SS58 address) using @polkadot/util-crypto and @polkadot/keyring. Use when you need to create a wallet, automate key generation, or produce a signing account for testing. Supports TypeScript (primary), Python (substrate-interface), and Rust (sp-core). Trigger phrases: 'create a Polkadot account', 'generate wallet keypair', 'new account', 'key generation'. Output: console-printed 12-word BIP39 mnemonic and SS58 address. No network connection required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/accounts/create-account.md"
+      ],
+      "primary_page": "chain-interactions/accounts/create-account.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir account-creator && cd account-creator",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory named 'account-creator' and initialize it as an ESM Node.js project. The 'type=module' flag is required \u2014 the @polkadot packages use ESM imports."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "account-creator",
+          "commands": [
+            "npm install @polkadot/util-crypto @polkadot/keyring",
+            "npm install --save-dev typescript tsx"
+          ],
+          "description": "Install @polkadot/util-crypto (WASM-backed mnemonic generation and cryptoWaitReady), @polkadot/keyring (SR25519 keyring), and tsx (TypeScript executor)."
+        },
+        {
+          "order": 3,
+          "action": "Fetch the account creation script",
+          "working_directory": "account-creator",
+          "reference_file": "create-account.ts",
+          "description": "Fetch the reference file and save it as 'create-account.ts'. No substitutions needed \u2014 the script generates a fresh random account on each execution. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/create-account/create-account.ts -o create-account.ts"
+        },
+        {
+          "order": 4,
+          "action": "Run the account creation script",
+          "working_directory": "account-creator",
+          "commands": [
+            "npx tsx create-account.ts"
+          ],
+          "expected_output": "Address: <SS58-encoded Polkadot address>\nMnemonic: <12-word BIP39 phrase>",
+          "description": "Execute the script. It prints a new SS58 address and 12-word mnemonic to the console. Record both \u2014 the mnemonic is required to sign transactions with this account and cannot be recovered if lost. Never share the mnemonic."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/chain-interactions/create-account",
+        "files": [
+          {
+            "path": "create-account.ts",
+            "description": "Generates a new SR25519 keypair using mnemonicGenerate(); prints SS58 address and mnemonic"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Unable to initialize the WASM interface",
+          "cause": "cryptoWaitReady() was not awaited before keyring operations.",
+          "resolution": "Ensure cryptoWaitReady() is called and awaited at the start of main(). The reference file already does this; verify the file was saved correctly."
+        },
+        {
+          "pattern": "SyntaxError: Cannot use import statement in a module",
+          "cause": "The project is not configured as ESM.",
+          "resolution": "Run 'npm pkg set type=module' in the account-creator directory to enable ES modules."
+        },
+        {
+          "pattern": "Error: Cannot find module '@polkadot/util-crypto'",
+          "cause": "Dependencies not installed.",
+          "resolution": "Run 'npm install @polkadot/util-crypto @polkadot/keyring' in the account-creator directory."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user asks about next steps after account creation or about account concepts.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-with-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-with-sdks.md",
+            "relevance": "How to use the newly created account to sign and submit transactions on Polkadot Hub."
+          },
+          {
+            "slug": "chain-interactions-accounts-query-accounts",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-accounts-query-accounts.md",
+            "relevance": "How to query the balance and account state of the newly created account."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: generate a fresh wallet",
+          "user_says": "Create a new Polkadot account for me",
+          "actions": [
+            "Scaffold 'account-creator/' as an ESM Node.js project",
+            "Install @polkadot/util-crypto and @polkadot/keyring",
+            "Fetch and save create-account.ts",
+            "Run npx tsx create-account.ts"
+          ],
+          "result": "A fresh SR25519 mnemonic phrase and SS58 address printed to console"
+        },
+        {
+          "scenario": "Edge case: user wants Python instead of TypeScript",
+          "user_says": "Generate a Polkadot account using Python",
+          "actions": [
+            "Create a Python virtual environment in 'account-creator-python/'",
+            "Install substrate-interface via pip",
+            "Create create_account.py using generate_mnemonic() and Keypair.create_from_mnemonic()",
+            "Run python create_account.py"
+          ],
+          "result": "SR25519 keypair generated; mnemonic and SS58 address printed to console"
+        }
+      ]
+    },
+    {
+      "id": "query-account-info-sdks",
+      "title": "Query Account Information with SDKs",
+      "objective": "Retrieve account balance, nonce, and account data from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
+      "description": "Queries Polkadot Hub for account balance, nonce, and account state using the Polkadot API (PAPI) TypeScript library. Use when you need to inspect an account's free/reserved/frozen balance or transaction count programmatically. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query account balance', 'check account info', 'get account nonce', 'read wallet balance'. No tokens required \u2014 read-only operation against any funded or unfunded address.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/accounts/query-accounts.md"
+      ],
+      "primary_page": "chain-interactions/accounts/query-accounts.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub or compatible chain (e.g., wss://asset-hub-paseo.dotters.network for TestNet)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir papi-query-account-example && cd papi-query-account-example",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory and initialize an ESM Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "papi-query-account-example",
+          "commands": [
+            "npm install polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install polkadot-api (PAPI) and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Generate PAPI type descriptors",
+          "working_directory": "papi-query-account-example",
+          "commands": [
+            "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
+          ],
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. This connects to the chain and downloads its metadata. Produces @polkadot-api/descriptors with the 'polkadotTestNet' export. If targeting a different network, replace the WebSocket URL and the descriptor name accordingly \u2014 note the name you choose, as it must match the import in query-account.ts."
+        },
+        {
+          "order": 4,
+          "action": "Fetch the query script",
+          "working_directory": "papi-query-account-example",
+          "reference_file": "papi/query-account.ts",
+          "description": "Fetch the reference file and save it as 'query-account.ts'. Then make these two substitutions: (1) Replace 'INSERT_WS_ENDPOINT' with your WebSocket endpoint (e.g., 'wss://asset-hub-paseo.dotters.network'). (2) Replace 'INSERT_ACCOUNT_ADDRESS' with the SS58 address you want to query. Save the changes before running."
+        },
+        {
+          "order": 5,
+          "action": "Run the query script",
+          "working_directory": "papi-query-account-example",
+          "commands": [
+            "npx tsx query-account.ts"
+          ],
+          "expected_output": "Account Information with Nonce, Consumers, Providers, Free Balance, Reserved Balance, Frozen Balance, and Total Balance",
+          "description": "Execute the script. Output will display account nonce, balance breakdown (free/reserved/frozen), and total balance in raw PAS units and human-readable format (divide raw value by 10^10 for PAS)."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/chain-interactions/query-accounts",
+        "files": [
+          {
+            "path": "papi/query-account.ts",
+            "description": "PAPI TypeScript script that queries System.Account storage and prints balance details"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors'",
+          "cause": "PAPI type descriptors were not generated.",
+          "resolution": "Run 'npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network' in the project directory."
+        },
+        {
+          "pattern": "WebSocket connection failed / ECONNREFUSED",
+          "cause": "Incorrect or unreachable WebSocket endpoint URL.",
+          "resolution": "Verify the WebSocket URL in query-account.ts is correct and the endpoint is accessible. For TestNet, use 'wss://asset-hub-paseo.dotters.network'."
+        },
+        {
+          "pattern": "Account not found / undefined accountInfo",
+          "cause": "The queried address has never been funded and has no on-chain entry.",
+          "resolution": "The account exists only once it receives tokens. Query a funded address, or fund the address using the Polkadot faucet at https://faucet.polkadot.io/ first."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs background on account data fields or wants to send transactions from the queried account.",
+        "pages": [
+          {
+            "slug": "reference-tools-papi",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-papi.md",
+            "relevance": "Full PAPI API reference for understanding query methods and typed API usage."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-with-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-with-sdks.md",
+            "relevance": "How to send a transaction from the account after verifying its balance."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: check balance of an address",
+          "user_says": "Query the balance of this Polkadot address: 1abc...",
+          "actions": [
+            "Scaffold 'papi-query-account-example/' ESM project",
+            "Install polkadot-api and tsx",
+            "Generate descriptors with npx papi add polkadotTestNet",
+            "Fetch query-account.ts; substitute WS endpoint and account address",
+            "Run npx tsx query-account.ts"
+          ],
+          "result": "Free/reserved/frozen balance and nonce printed for the specified address"
+        },
+        {
+          "scenario": "Edge case: address not found (zero-balance unfunded account)",
+          "user_says": "Query the account but it shows no data",
+          "actions": [
+            "Explain that Polkadot Hub only stores accounts that have been funded (existential deposit met)",
+            "Direct user to https://faucet.polkadot.io/ to fund the account with testnet PAS tokens",
+            "Re-run query-account.ts after account is funded"
+          ],
+          "result": "After funding, account data is returned correctly"
+        }
+      ]
+    },
+    {
+      "id": "query-chain-state-sdks",
+      "title": "Query On-Chain State with SDKs",
+      "objective": "Read System.Account balance and Assets pallet metadata from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
+      "description": "Queries on-chain storage on Polkadot Hub using PAPI TypeScript library: System.Account for account balance and Assets pallet for USDT (asset ID 1984) metadata and balance. Use when you need to read chain state programmatically beyond account info \u2014 including asset balances and pallet storage. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query chain state', 'read on-chain storage', 'get asset balance', 'check USDT balance on Asset Hub'. No tokens required \u2014 read-only.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/query-data/query-sdks.md"
+      ],
+      "primary_page": "chain-interactions/query-data/query-sdks.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub (e.g., wss://polkadot-asset-hub-rpc.polkadot.io for mainnet or wss://asset-hub-paseo.dotters.network for testnet)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir papi-query-example && cd papi-query-example",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory 'papi-query-example' and initialize an ESM Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "papi-query-example",
+          "commands": [
+            "npm install polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install polkadot-api (PAPI) and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Generate PAPI type descriptors for Polkadot Hub",
+          "working_directory": "papi-query-example",
+          "commands": [
+            "npx papi add pah -n polkadot_asset_hub"
+          ],
+          "description": "Generate compile-time type descriptors using the well-known 'polkadot_asset_hub' chain name. This produces the 'pah' export in @polkadot-api/descriptors. For a different network, use the appropriate -n value from the PAPI well-known chains list, or use -w with a WebSocket URL."
+        },
+        {
+          "order": 4,
+          "action": "Fetch and configure the balance query script",
+          "working_directory": "papi-query-example",
+          "reference_file": "papi/query-balance.ts",
+          "description": "Fetch the reference file and save it as 'query-balance.ts'. Make these two substitutions: (1) Replace 'INSERT_WS_ENDPOINT' with your WebSocket endpoint (e.g., 'wss://polkadot-asset-hub-rpc.polkadot.io' for mainnet). (2) Replace 'INSERT_ADDRESS' with the SS58 address whose balance you want to query. Save the file."
+        },
+        {
+          "order": 5,
+          "action": "Fetch and configure the asset query script",
+          "working_directory": "papi-query-example",
+          "reference_file": "papi/query-asset.ts",
+          "description": "Fetch the reference file and save it as 'query-asset.ts'. Make these two substitutions: (1) Replace 'INSERT_WS_ENDPOINT' with the same WebSocket endpoint used above. (2) Replace 'INSERT_ADDRESS' with the address to check for USDT balance. The script queries asset ID 1984 (USDT) by default; change the asset ID constant if targeting a different asset. Save the file."
+        },
+        {
+          "order": 6,
+          "action": "Run the scripts",
+          "working_directory": "papi-query-example",
+          "commands": [
+            "npx tsx query-balance.ts",
+            "npx tsx query-asset.ts"
+          ],
+          "expected_output": "Account nonce and balance info, then asset metadata and balance for the specified address",
+          "description": "Execute both scripts in sequence. query-balance.ts shows the native PAS balance. query-asset.ts shows the USDT asset metadata and the address's USDT balance (0 if not holding USDT)."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/chain-interactions/query-sdks",
+        "files": [
+          {
+            "path": "papi/query-balance.ts",
+            "description": "Queries System.Account storage for native PAS balance using the 'pah' descriptor"
+          },
+          {
+            "path": "papi/query-asset.ts",
+            "description": "Queries Assets pallet for USDT (asset ID 1984) metadata and address balance"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors'",
+          "cause": "PAPI type descriptors were not generated.",
+          "resolution": "Run 'npx papi add pah -n polkadot_asset_hub' in the project directory."
+        },
+        {
+          "pattern": "WebSocket connection failed / ECONNREFUSED",
+          "cause": "Incorrect or unreachable WebSocket endpoint.",
+          "resolution": "Verify the WebSocket URL. For Polkadot Hub mainnet use 'wss://polkadot-asset-hub-rpc.polkadot.io', for testnet use 'wss://asset-hub-paseo.dotters.network'."
+        },
+        {
+          "pattern": "query-asset returns null or empty for the address",
+          "cause": "The address does not hold the queried asset (USDT asset ID 1984).",
+          "resolution": "This is expected for addresses with no USDT balance. The metadata query will still succeed; only the per-address balance query returns empty."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for deeper understanding of chain storage structure or related SDK tools.",
+        "pages": [
+          {
+            "slug": "reference-tools-papi",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-papi.md",
+            "relevance": "Full PAPI API reference for understanding storage query methods and typed API patterns."
+          },
+          {
+            "slug": "chain-interactions-query-data-runtime-api-calls",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-runtime-api-calls.md",
+            "relevance": "How to call runtime APIs for computed results (e.g., nonce, fee estimation) beyond static storage reads."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: read native balance of an address",
+          "user_says": "Query the DOT/PAS balance for address 15abc... on Polkadot Hub",
+          "actions": [
+            "Scaffold 'papi-query-example/' ESM project",
+            "Install polkadot-api and tsx",
+            "Run npx papi add pah -n polkadot_asset_hub",
+            "Fetch query-balance.ts; substitute endpoint and address",
+            "Run npx tsx query-balance.ts"
+          ],
+          "result": "Account nonce, free/reserved/frozen PAS balance printed to console"
+        },
+        {
+          "scenario": "Edge case: query a non-standard asset ID",
+          "user_says": "Query USDC balance instead of USDT",
+          "actions": [
+            "Fetch query-asset.ts and follow standard setup",
+            "In query-asset.ts, change the asset ID constant from 1984 (USDT) to the USDC asset ID on the target chain",
+            "Run npx tsx query-asset.ts"
+          ],
+          "result": "USDC metadata and address balance returned"
+        }
+      ]
+    },
+    {
+      "id": "call-runtime-apis-sdks",
+      "title": "Call Runtime APIs with SDKs",
+      "objective": "Call AccountNonceApi and Metadata runtime APIs on Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
+      "description": "Executes Polkadot SDK runtime APIs \u2014 AccountNonceApi.account_nonce and Metadata.metadata_versions \u2014 using the PAPI TypeScript library. Use when you need computed results from runtime logic rather than raw storage reads, such as the current transaction nonce or supported metadata versions. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'call runtime API', 'get account nonce via runtime', 'query metadata versions', 'AccountNonceApi'. No tokens required \u2014 read-only operation.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/query-data/runtime-api-calls.md"
+      ],
+      "primary_page": "chain-interactions/query-data/runtime-api-calls.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub TestNet (e.g., wss://asset-hub-paseo.dotters.network)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir papi-runtime-api-example && cd papi-runtime-api-example",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory 'papi-runtime-api-example' and initialize an ESM Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "papi-runtime-api-example",
+          "commands": [
+            "npm install polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install polkadot-api (PAPI) and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Generate PAPI type descriptors for Polkadot Hub TestNet",
+          "working_directory": "papi-runtime-api-example",
+          "commands": [
+            "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
+          ],
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Produces the 'polkadotTestNet' export used in the runtime-apis.ts script. If targeting a different network, replace the WebSocket URL and update the descriptor name accordingly."
+        },
+        {
+          "order": 4,
+          "action": "Fetch the runtime API script",
+          "working_directory": "papi-runtime-api-example",
+          "reference_file": "papi/runtime-apis.ts",
+          "description": "Fetch the reference file and save it as 'runtime-apis.ts'. Make these two substitutions: (1) Replace 'INSERT_WS_ENDPOINT' with your WebSocket endpoint (e.g., 'wss://asset-hub-paseo.dotters.network'). (2) Replace 'INSERT_ADDRESS' with a valid SS58 address to query the nonce for. Save the file."
+        },
+        {
+          "order": 5,
+          "action": "Run the runtime API script",
+          "working_directory": "papi-runtime-api-example",
+          "commands": [
+            "npx tsx runtime-apis.ts"
+          ],
+          "expected_output": "Account Nonce: <number>\nSupported Metadata Versions: [<list of version numbers>]",
+          "description": "Execute the script. It calls AccountNonceApi.account_nonce for the provided address and Metadata.metadata_versions. Nonce for a new address is 0. Metadata versions list shows supported runtime metadata formats (e.g., [14, 15])."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/chain-interactions/runtime-api-calls",
+        "files": [
+          {
+            "path": "papi/runtime-apis.ts",
+            "description": "Calls AccountNonceApi.account_nonce and Metadata.metadata_versions using PAPI typed API"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors'",
+          "cause": "PAPI type descriptors not generated.",
+          "resolution": "Run 'npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network' in the project directory."
+        },
+        {
+          "pattern": "api.apis.AccountNonceApi is undefined",
+          "cause": "The target chain does not expose AccountNonceApi, or the descriptor was generated for a different chain.",
+          "resolution": "Verify the chain exposes AccountNonceApi in its runtime metadata. For Polkadot Hub TestNet, this API is available. If you generated descriptors for a different chain, regenerate with the correct endpoint."
+        },
+        {
+          "pattern": "WebSocket connection failed / timeout on papi add",
+          "cause": "The testnet endpoint is temporarily unavailable.",
+          "resolution": "Polkadot Hub TestNet can be unstable. Wait a few minutes and retry. If the endpoint remains down, check the Polkadot Discord status channel. Alternatively, try a different public endpoint."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for background on available runtime APIs or to compare runtime API calls with storage queries.",
+        "pages": [
+          {
+            "slug": "chain-interactions-query-data-query-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-query-sdks.md",
+            "relevance": "Storage-based queries using the same PAPI setup \u2014 compare with runtime API calls."
+          },
+          {
+            "slug": "reference-tools-papi",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-papi.md",
+            "relevance": "Full PAPI reference listing all available runtime APIs and their method signatures."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: get account nonce before constructing a transaction",
+          "user_says": "Call the AccountNonceApi to get the nonce for my address",
+          "actions": [
+            "Scaffold 'papi-runtime-api-example/' ESM project",
+            "Install polkadot-api and tsx",
+            "Generate descriptors with npx papi add polkadotTestNet",
+            "Fetch runtime-apis.ts; substitute WS endpoint and address",
+            "Run npx tsx runtime-apis.ts"
+          ],
+          "result": "Account nonce and supported metadata versions printed to console"
+        },
+        {
+          "scenario": "Edge case: nonce shows 0 for a new address",
+          "user_says": "The nonce is 0 \u2014 is that correct?",
+          "actions": [
+            "Explain that nonce 0 means the account has not yet sent any transactions",
+            "Note that AccountNonceApi returns 0 for any address that has never submitted a transaction, including unfunded accounts",
+            "No action required \u2014 the nonce increments with each submitted transaction"
+          ],
+          "result": "User understands nonce 0 is correct for a new or never-transacted account"
+        }
+      ]
+    },
+    {
+      "id": "send-transactions-sdks",
+      "title": "Send Transactions with SDKs",
+      "objective": "Construct, sign, and submit a balance transfer transaction on Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
+      "description": "Constructs, signs, and submits a Balances.transfer_keep_alive extrinsic to Polkadot Hub using the PAPI TypeScript library. Use when you need to send tokens programmatically from a funded account. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Requires a funded account mnemonic and testnet PAS tokens. Trigger phrases: 'send a transaction', 'transfer tokens programmatically', 'sign and submit extrinsic', 'send PAS balance'. Uses dotenv to protect the sender mnemonic.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/send-transactions/with-sdks.md"
+      ],
+      "primary_page": "chain-interactions/send-transactions/with-sdks.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub (e.g., wss://asset-hub-paseo.dotters.network for testnet)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens in the sender account \u2014 get from https://faucet.polkadot.io/?parachain=1111 (Polkadot Hub faucet)"
+        ],
+        "wallet": [
+          "An SR25519 account mnemonic phrase for the sender account, funded with testnet PAS"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "SENDER_MNEMONIC",
+          "description": "12-word BIP39 mnemonic phrase for the sender account. Must be the mnemonic for a funded account. Never commit this value to version control.",
+          "required": true
+        },
+        {
+          "name": "WS_ENDPOINT",
+          "description": "WebSocket RPC endpoint for the target chain (e.g., wss://asset-hub-paseo.dotters.network).",
+          "required": true
+        },
+        {
+          "name": "DEST_ADDRESS",
+          "description": "SS58-encoded recipient address for the balance transfer.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir papi-send-tx-example && cd papi-send-tx-example",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory 'papi-send-tx-example' and initialize an ESM Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "papi-send-tx-example",
+          "commands": [
+            "npm install polkadot-api @polkadot/util-crypto @polkadot/keyring dotenv",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install polkadot-api, @polkadot/keyring (for SR25519 signing), dotenv (for secure credential loading), and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Generate PAPI type descriptors",
+          "working_directory": "papi-send-tx-example",
+          "commands": [
+            "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
+          ],
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Produces the 'polkadotTestNet' export used in the send-transfer script. If targeting a different network, replace the endpoint and update the descriptor name in step 5."
+        },
+        {
+          "order": 4,
+          "action": "Create .env and .gitignore for secrets",
+          "working_directory": "papi-send-tx-example",
+          "commands": [
+            "echo 'SENDER_MNEMONIC=\\nWS_ENDPOINT=wss://asset-hub-paseo.dotters.network\\nDEST_ADDRESS=' > .env",
+            "echo '.env' > .gitignore"
+          ],
+          "description": "Create a .env file with three empty placeholders and a .gitignore that excludes it. Stop here and ask the user to edit the .env file directly \u2014 fill in SENDER_MNEMONIC with their 12-word mnemonic, confirm WS_ENDPOINT is correct, and set DEST_ADDRESS to the recipient address. Do NOT ask for the mnemonic in chat. Wait for the user to confirm the .env is filled before proceeding."
+        },
+        {
+          "order": 5,
+          "action": "Fetch and adapt the send-transfer script",
+          "working_directory": "papi-send-tx-example",
+          "reference_file": "with-sdks/papi/send-transfer.ts",
+          "description": "Fetch the reference file and save it as 'send-transfer.ts'. Then apply these modifications: (1) Add 'import \"dotenv/config\";' as the very first line of the file. (2) Replace 'const POLKADOT_TESTNET_RPC = \\'INSERT_WS_ENDPOINT\\';' with 'const POLKADOT_TESTNET_RPC = process.env.WS_ENDPOINT!;'. (3) Replace 'const SENDER_MNEMONIC = \\'INSERT_MNEMONIC\\';' with 'const SENDER_MNEMONIC = process.env.SENDER_MNEMONIC!;'. (4) Replace 'const DEST_ADDRESS = \\'INSERT_DEST_ADDRESS\\';' with 'const DEST_ADDRESS = process.env.DEST_ADDRESS!;'. Save the file. If the AI fetch is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/send-transactions/with-sdks/papi/send-transfer.ts -o send-transfer.ts"
+        },
+        {
+          "order": 6,
+          "action": "Verify the sender account is funded",
+          "working_directory": "papi-send-tx-example",
+          "description": "Before running, confirm the sender account has testnet PAS tokens. If not, direct the user to https://faucet.polkadot.io/?parachain=1111, paste the sender address, and request tokens. Wait for the faucet transaction to confirm (typically 1-2 minutes) before proceeding."
+        },
+        {
+          "order": 7,
+          "action": "Submit the transaction",
+          "working_directory": "papi-send-tx-example",
+          "commands": [
+            "npx tsx send-transfer.ts"
+          ],
+          "expected_output": "Connected to Polkadot Testnet\nSigning and submitting transaction...\nTransaction submitted with hash: 0x<tx-hash>",
+          "description": "Execute the script. It connects to the chain, signs the Balances.transfer_keep_alive extrinsic with the sender mnemonic, submits it, and prints the transaction hash. Save the transaction hash \u2014 needed in step 8 to verify."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/chain-interactions/send-transactions",
+        "files": [
+          {
+            "path": "with-sdks/papi/send-transfer.ts",
+            "description": "PAPI TypeScript script that signs and submits a Balances.transfer_keep_alive extrinsic"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors'",
+          "cause": "PAPI type descriptors not generated.",
+          "resolution": "Run 'npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network' in the project directory."
+        },
+        {
+          "pattern": "Invalid mnemonic phrase / Error creating keypair",
+          "cause": "SENDER_MNEMONIC in .env is incorrect, has extra spaces, or is not a valid BIP39 phrase.",
+          "resolution": "Open .env, verify SENDER_MNEMONIC is a valid 12-word BIP39 phrase with single spaces between words, and no leading/trailing spaces."
+        },
+        {
+          "pattern": "Error: 1010: Invalid Transaction: Inability to pay some fees",
+          "cause": "The sender account has insufficient PAS balance to cover the transfer amount plus gas fees.",
+          "resolution": "Get testnet tokens from https://faucet.polkadot.io/?parachain=1111. Alternatively, reduce the AMOUNT constant in send-transfer.ts to 1_000_000_000n (0.1 PAS)."
+        },
+        {
+          "pattern": "Transaction submitted but not confirmed / stuck pending",
+          "cause": "Polkadot Hub TestNet can be unstable and drop transactions under load.",
+          "resolution": "Wait 1-2 minutes and check the block explorer for the tx hash. If not confirmed, re-run the script. The nonce increments per submitted transaction \u2014 if you see 'nonce too low', the previous transaction was included despite appearing to fail."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs to fund an account, understand fees, or verify the submitted transaction.",
+        "pages": [
+          {
+            "slug": "smart-contracts-faucet",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-faucet.md",
+            "relevance": "How to obtain testnet PAS tokens from the Polkadot faucet."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-calculate-transaction-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-calculate-transaction-fees.md",
+            "relevance": "How to estimate transaction fees before submitting to avoid insufficient balance errors."
+          },
+          {
+            "slug": "chain-interactions-accounts-create-account",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-accounts-create-account.md",
+            "relevance": "How to create a new Polkadot account if the user does not yet have a sender mnemonic."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: send a small amount of PAS to another address",
+          "user_says": "Send 1 PAS from my funded account to address 15xyz...",
+          "actions": [
+            "Scaffold 'papi-send-tx-example/' ESM project",
+            "Install polkadot-api, keyring, dotenv",
+            "Generate descriptors with npx papi add polkadotTestNet",
+            "Create .env and .gitignore; ask user to fill SENDER_MNEMONIC and DEST_ADDRESS",
+            "Fetch and adapt send-transfer.ts with dotenv substitutions",
+            "Verify sender is funded; run npx tsx send-transfer.ts"
+          ],
+          "result": "Transaction hash printed; 1 PAS (10^10 planck) transferred to the destination address"
+        },
+        {
+          "scenario": "Edge case: account has no testnet tokens",
+          "user_says": "The transaction fails with 'inability to pay fees'",
+          "actions": [
+            "Direct user to https://faucet.polkadot.io/?parachain=1111 with their sender address",
+            "Wait for faucet to credit the account (1-2 minutes)",
+            "Re-run send-transfer.ts"
+          ],
+          "result": "Account funded; transaction succeeds on retry"
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "public_root": "/ai/",
+    "skills_dir": "skills"
+  }
+}
