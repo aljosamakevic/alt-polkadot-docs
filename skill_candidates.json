@@ -875,7 +875,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Broad operational guide covering CPU performance tuning (SMT/NUMA deactivation, Spectre mitigations), full Prometheus+Grafana+Alertmanager monitoring stack setup with systemd service files, and security best practices (key management, secure-validator mode, Linux hardening). P1+P2+P3+P4 all present. K1=5 for the monitoring subsections, which can be set up independently on any Linux server running a Polkadot node. K3 absent (no explicit prerequisites section). Code blocks use MkDocs snippet includes for config files (K2=4). Grafana UI steps required for dashboard configuration (C2 fired).",
       "scoring": {
         "signals": [
@@ -899,7 +899,8 @@
           "not_applicable": 0
         },
         "priority_score": 19
-      }
+      },
+      "built_at": "2026-04-21T20:30:00Z"
     },
     {
       "skill_id": "upgrade-validator-node-backup",
@@ -1038,7 +1039,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Tutorial for creating a minimal mock runtime (mock.rs) using construct_runtime! and #[derive_impl] for isolated pallet testing: create mock module, configure frame_system and pallet Config traits, set up genesis storage helpers. K1=0 \u2014 requires completed create-frame-pallet (counter pallet in pallets/pallet-custom). Code uses MkDocs snippet includes but complete reference available in collapsible (K2=4). All CLI steps are programmatic (S1=4). Cookbook CI badge present. Part of pallet development series alongside create-frame-pallet, unit-test-frame-pallet, and benchmark-frame-pallet.",
       "scoring": {
         "signals": [
@@ -1061,7 +1062,8 @@
           "not_applicable": 0
         },
         "priority_score": 20
-      }
+      },
+      "built_at": "2026-04-21T20:30:00Z"
     },
     {
       "skill_id": "unit-test-frame-pallet",
@@ -1071,7 +1073,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Tutorial for writing comprehensive pallet unit tests using FRAME macros (assert_ok!, assert_noop!, System::assert_last_event!): create tests.rs, test basic operations, error conditions, access control, event emission, and genesis configuration. Inline Rust test code is fully shown (no snippet includes; K2=4). K1=0 \u2014 requires create-frame-pallet and set-up-pallet-mock-runtime. All steps are CLI/programmatic (S1=4). Cookbook CI badge present. Final step before benchmarking in the pallet development series.",
       "scoring": {
         "signals": [
@@ -1094,7 +1096,8 @@
           "not_applicable": 0
         },
         "priority_score": 20
-      }
+      },
+      "built_at": "2026-04-21T20:30:00Z"
     },
     {
       "skill_id": "benchmark-frame-pallet",
@@ -1104,7 +1107,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Tutorial covering the full benchmarking workflow: create benchmarking.rs module, define WeightInfo trait, annotate extrinsics, enable runtime-benchmarks Cargo feature, build WASM runtime with benchmarks, install frame-omni-bencher, download weight template, execute benchmarks, and integrate generated weights.rs into production runtime. K1=0 \u2014 requires a working parachain template and pallet (e.g., from create-frame-pallet series), but page explicitly supports substitution with any pallet. R2 fires for CLI flag descriptions (--steps, --repeat, --heap-pages, --wasm-execution). Cookbook CI badge present.",
       "scoring": {
         "signals": [
@@ -1127,7 +1130,8 @@
           "not_applicable": 0
         },
         "priority_score": 20
-      }
+      },
+      "built_at": "2026-04-21T20:30:00Z"
     },
     {
       "skill_id": "open-hrmp-channel-between-parachains",
@@ -2273,7 +2277,7 @@
       ],
       "category": "guide",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Step-by-step guide to cloning, building, and running the Revive Dev node plus ETH-RPC adapter. Not self-contained (K1=0): explicit prerequisite is the Install Polkadot SDK Dependencies guide. All steps are CLI-based with verifiable outcome (node ready at http://localhost:8545). CI badge and test link confirm polkadot-cookbook coverage (K4).",
       "scoring": {
         "signals": [
@@ -2293,7 +2297,8 @@
           "not_applicable": 0
         },
         "priority_score": 20
-      }
+      },
+      "built_at": "2026-04-21T20:30:00Z"
     },
     {
       "skill_id": "connect-wallet-polkadot-hub",

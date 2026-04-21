@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T20:00:00Z",
-  "content_hash": "sha256:0089cd6172934ad82caf1488ac24a0f3c03bffc3960d455f32d8a83ab04e9ac4",
+  "generated": "2026-04-21T20:30:00Z",
+  "content_hash": "sha256:443be83bce7b030a74988cee85173279ca7fbe5f676a4f21c98db3b73bc1852c",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -4731,6 +4731,745 @@
             "Retry with npx tsx deploy.ts"
           ],
           "result": "Deployment succeeds with 5000 gwei gas price, above the 1000 gwei TestNet base fee"
+        }
+      ]
+    },
+    {
+      "id": "set-up-pallet-mock-runtime",
+      "title": "Set Up a Mock Runtime for Pallet Unit Testing",
+      "objective": "Create a mock.rs module in a FRAME pallet that provides a minimal test runtime, enabling isolated unit tests without a full parachain runtime.",
+      "description": "Creates a mock runtime module for FRAME pallet unit testing using construct_runtime! and derive_impl. Use when you need a self-contained test environment for a custom FRAME pallet before writing unit tests. Configures frame_system with test defaults, satisfies pallet Config traits, and provides genesis storage helpers for different initial states. Trigger phrases: 'mock runtime pallet', 'set up pallet testing', 'construct_runtime test', 'pallet test environment', 'derive_impl TestDefaultConfig'. Requires a completed FRAME pallet in pallets/pallet-custom. Do NOT use for full parachain runtime integration testing.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/pallet-development/mock-runtime.md"
+      ],
+      "primary_page": "parachains/customize-runtime/pallet-development/mock-runtime.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain (stable, via rustup)",
+          "Cargo",
+          "Completed the Make a Custom Pallet guide \u2014 the counter pallet must exist in pallets/pallet-custom"
+        ],
+        "network": [],
+        "tokens": [],
+        "wallet": []
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create mock.rs and add module declaration to lib.rs",
+          "working_directory": "pallets/pallet-custom/src",
+          "commands": [
+            "touch mock.rs"
+          ],
+          "description": "Create the empty mock.rs file. Then open src/lib.rs and insert the following two lines immediately after the 'pub use pallet::*;' line:\n\n#[cfg(test)]\nmod mock;\n\nThe #[cfg(test)] attribute ensures this module is only compiled when running tests, keeping it out of production builds."
+        },
+        {
+          "order": 2,
+          "action": "Fetch and save the complete mock.rs",
+          "working_directory": "pallets/pallet-custom/src",
+          "reference_file": "mock.rs",
+          "description": "Fetch the reference file and save it as 'mock.rs', replacing the empty placeholder. The file must contain: (1) imports including construct_runtime!, frame_system, and IdentityLookup; (2) Test runtime type and Block type alias via construct_runtime!; (3) #[derive_impl(frame_system::config_preludes::TestDefaultConfig)] for System with AccountId = u64, Lookup = IdentityLookup, Block = Block; (4) impl pallet_custom::Config for Test with type RuntimeEvent = RuntimeEvent and type CounterMaxValue = ConstU32<1000>; (5) new_test_ext() genesis helper; (6) new_test_ext_with_counter(val: u32) helper; (7) new_test_ext_with_interactions() helper accepting counter value and Vec of (AccountId, u32) interactions. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/parachains/customize-runtime/pallet-development/mock-runtime/mock.rs -o mock.rs"
+        },
+        {
+          "order": 3,
+          "action": "Verify mock runtime compiles",
+          "working_directory": "pallets/pallet-custom",
+          "commands": [
+            "cargo test --package pallet-custom --lib"
+          ],
+          "expected_output": "test mock::__construct_runtime_integrity_test::runtime_integrity_tests ... ok\ntest mock::test_genesis_config_builds ... ok",
+          "description": "Compile the test code including the new mock module. Two auto-generated tests will run: the construct_runtime integrity test and the genesis config build test. Both must pass. If compilation fails with 'missing field' errors, add the missing associated type to the impl pallet_custom::Config for Test block in mock.rs using a sensible default (e.g., type WeightInfo = ();)."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/parachains/customize-runtime/pallet-development/mock-runtime",
+        "files": [
+          {
+            "path": "mock.rs",
+            "description": "Complete mock runtime: construct_runtime! with System + CustomPallet, frame_system TestDefaultConfig, pallet Config impl, and three genesis storage helpers (default, counter init, interactions init)"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0277]: the trait bound is not satisfied / missing associated type in Config impl",
+          "cause": "The mock.rs Config implementation is missing an associated type that the pallet's Config trait declares (e.g., WeightInfo).",
+          "resolution": "Add the missing type to the impl pallet_custom::Config for Test block in mock.rs. Use a placeholder \u2014 for WeightInfo: type WeightInfo = ();"
+        },
+        {
+          "pattern": "error[E0412]: cannot find type in scope / unresolved import",
+          "cause": "An import path in mock.rs does not match the current crate layout.",
+          "resolution": "Verify that import paths in mock.rs match your actual pallet crate name and module structure. Check Cargo.toml for the crate name."
+        },
+        {
+          "pattern": "error: proc macro `construct_runtime` panicked",
+          "cause": "A pallet in construct_runtime! has a misconfigured index or incompatible Config.",
+          "resolution": "Verify the pallet name and module path match the actual module. Ensure all required Config associated types are implemented in the mock."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when continuing pallet development after mock runtime setup.",
+        "pages": [
+          {
+            "slug": "parachains-customize-runtime-pallet-development-pallet-testing",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-pallet-testing.md",
+            "relevance": "Next step: write comprehensive unit tests using the mock runtime."
+          },
+          {
+            "slug": "parachains-customize-runtime-pallet-development-create-a-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-create-a-pallet.md",
+            "relevance": "Prerequisite: the custom counter pallet that this mock runtime is written for."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: create a test environment for the custom counter pallet",
+          "user_says": "Set up a mock runtime so I can write unit tests for my counter pallet",
+          "actions": [
+            "Create pallets/pallet-custom/src/mock.rs",
+            "Add #[cfg(test)] mod mock; to lib.rs after pub use pallet::*;",
+            "Fetch the complete mock.rs from the polkadot-cookbook reference and save it",
+            "Run cargo test --package pallet-custom --lib to confirm auto-generated tests pass"
+          ],
+          "result": "Two auto-generated tests pass: construct_runtime integrity test and genesis config build test. The mock runtime is ready for unit test authoring."
+        },
+        {
+          "scenario": "Edge case: pallet Config has additional associated types not in the reference mock.rs",
+          "user_says": "Compilation fails with 'missing associated type WeightInfo in impl pallet_custom::Config for Test'",
+          "actions": [
+            "Open src/mock.rs",
+            "Add type WeightInfo = (); inside the impl pallet_custom::Config for Test block",
+            "Re-run cargo test --package pallet-custom --lib"
+          ],
+          "result": "Compilation succeeds with the () placeholder WeightInfo, appropriate for test environments."
+        }
+      ]
+    },
+    {
+      "id": "unit-test-frame-pallet",
+      "title": "Write Unit Tests for a FRAME Pallet",
+      "objective": "Create a tests.rs module and write comprehensive unit tests covering basic operations, error conditions, access control, event emission, and genesis configuration.",
+      "description": "Writes a complete tests.rs module for a FRAME pallet using assert_ok!, assert_noop!, and System::assert_last_event macros. Use after completing the mock runtime guide to verify pallet logic in complete isolation. Covers all critical test categories: dispatchable success paths, arithmetic guard errors, root-only origin checks, event data correctness, user-interaction tracking, and genesis state loading. Trigger phrases: 'unit test FRAME pallet', 'test pallet logic', 'assert_noop assert_ok', 'pallet test suite', 'test dispatchable'. Requires completed create-a-pallet and set-up-pallet-mock-runtime guides. Do NOT use for integration or end-to-end testing of a full parachain.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/pallet-development/pallet-testing.md"
+      ],
+      "primary_page": "parachains/customize-runtime/pallet-development/pallet-testing.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain (stable, via rustup)",
+          "Cargo",
+          "Completed the Make a Custom Pallet guide \u2014 counter pallet in pallets/pallet-custom",
+          "Completed the Mock Your Runtime guide \u2014 mock.rs must exist in pallets/pallet-custom/src"
+        ],
+        "network": [],
+        "tokens": [],
+        "wallet": []
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create tests.rs and add module declaration to lib.rs",
+          "working_directory": "pallets/pallet-custom/src",
+          "commands": [
+            "touch tests.rs"
+          ],
+          "description": "Create the empty tests.rs file. Then open src/lib.rs and add the following two lines immediately after the mock module declaration:\n\n#[cfg(test)]\nmod tests;\n\nThe module declarations in lib.rs should now read:\n#[cfg(test)] mod mock;\n#[cfg(test)] mod tests;"
+        },
+        {
+          "order": 2,
+          "action": "Write test module imports",
+          "working_directory": "pallets/pallet-custom/src",
+          "description": "Open src/tests.rs and write these imports at the top:\n\nuse crate::{mock::*, Error, Event};\nuse frame::deps::frame_support::{assert_noop, assert_ok};\nuse frame::deps::sp_runtime::DispatchError;\n\nThese bring in: all mock runtime items (Test, new_test_ext*, RuntimeOrigin, System, CustomPallet, CounterValue, UserInteractions), the pallet Error and Event enums, FRAME assertion macros, and DispatchError for origin checks."
+        },
+        {
+          "order": 3,
+          "action": "Write basic operation and event emission tests",
+          "working_directory": "pallets/pallet-custom/src",
+          "description": "Append these tests to src/tests.rs. Call System::set_block_number(1) inside execute_with before any event assertion \u2014 events are suppressed on block 0:\n\n#[test]\nfn increment_works() \u2014 uses new_test_ext(), signs with account 1, increments by 50, asserts CounterValue is 50 and CounterIncremented event with new_value:50/who:1/amount:50, asserts UserInteractions for account 1 is 1.\n\n#[test]\nfn set_counter_value_works() \u2014 uses new_test_ext(), sets block 1, calls set_counter_value(RuntimeOrigin::root(), 100), asserts CounterValue is 100 and CounterValueSet { new_value: 100 } event.\n\n#[test]\nfn decrement_works() \u2014 uses new_test_ext_with_counter(100), signs with account 2, decrements by 30, asserts CounterValue is 70 and CounterDecremented event."
+        },
+        {
+          "order": 4,
+          "action": "Write error condition and access control tests",
+          "working_directory": "pallets/pallet-custom/src",
+          "description": "Append these tests to src/tests.rs:\n\n#[test]\nfn increment_fails_on_overflow() \u2014 uses new_test_ext_with_counter(u32::MAX), asserts assert_noop!(increment(signed(1), 1), Error::<Test>::Overflow). assert_noop! verifies both the error AND that no storage was modified.\n\n#[test]\nfn decrement_fails_on_underflow() \u2014 uses new_test_ext_with_counter(10), asserts noop on decrement(signed(1), 11) with Error::Underflow.\n\n#[test]\nfn set_counter_value_requires_root() \u2014 uses new_test_ext(), asserts noop on set_counter_value(signed(alice), 100) with DispatchError::BadOrigin, then asserts ok with RuntimeOrigin::root().\n\n#[test]\nfn increment_respects_max_value() \u2014 uses new_test_ext_with_counter(950), asserts noop on increment(signed(1), 51) with Error::CounterMaxValueExceeded, then asserts ok on increment of 50."
+        },
+        {
+          "order": 5,
+          "action": "Write genesis configuration and interaction tracking tests",
+          "working_directory": "pallets/pallet-custom/src",
+          "description": "Append these final tests to src/tests.rs:\n\n#[test]\nfn genesis_config_works() \u2014 uses new_test_ext_with_interactions(42, vec![(1, 5), (2, 10)]), asserts CounterValue is 42, UserInteractions for account 1 is 5, for account 2 is 10.\n\n#[test]\nfn increment_tracks_multiple_interactions() \u2014 calls increment three times on same account, asserts UserInteractions count is 3.\n\n#[test]\nfn different_users_tracked_separately() \u2014 account 1 increments twice (total interactions: 2), account 2 decrements once (interactions: 1); asserts each account tracked independently."
+        },
+        {
+          "order": 6,
+          "action": "Run the complete test suite",
+          "working_directory": "pallets/pallet-custom",
+          "commands": [
+            "cargo test --package pallet-custom"
+          ],
+          "expected_output": "test result: ok. 15 passed; 0 failed; 0 ignored",
+          "description": "Run all tests. Expected output shows 15 passing tests: 13 pallet tests plus 2 auto-generated mock tests. If fewer appear, verify every function has #[test]. If an event test fails with 'left: []', confirm System::set_block_number(1) is the first call inside the execute_with closure."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/parachains/customize-runtime/pallet-development/pallet-testing",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "left: [], right: [EventRecord { ... }] / assertion failed on event",
+          "cause": "System::set_block_number(1) was not called before the dispatchable. Events are suppressed on block 0.",
+          "resolution": "Add System::set_block_number(1); as the first line inside the execute_with closure for any test that checks events."
+        },
+        {
+          "pattern": "error: assert_noop! failed \u2014 storage was modified",
+          "cause": "The dispatchable modified storage before returning an error, violating the no-op contract.",
+          "resolution": "This is a pallet bug: all preconditions must be checked before any storage mutations. Fix the pallet extrinsic, not the test."
+        },
+        {
+          "pattern": "thread 'tests::...' panicked at 'called Result::unwrap() on Err'",
+          "cause": "A dispatchable wrapped in assert_ok! returned an error. Usually wrong origin or incorrect genesis state.",
+          "resolution": "Check that the genesis helper (new_test_ext vs new_test_ext_with_counter) matches expected initial state, and the origin type matches what the extrinsic requires."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when extending pallet testing or proceeding to benchmarking.",
+        "pages": [
+          {
+            "slug": "parachains-customize-runtime-pallet-development-benchmark-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-benchmark-pallet.md",
+            "relevance": "Next step: benchmark extrinsics and generate production weight files."
+          },
+          {
+            "slug": "parachains-customize-runtime-pallet-development-mock-runtime",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-mock-runtime.md",
+            "relevance": "Prerequisite: the mock runtime providing new_test_ext helpers and the Test runtime type."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: write a complete test suite for the counter pallet",
+          "user_says": "Write unit tests for my custom counter pallet covering increment, decrement, errors, and genesis config",
+          "actions": [
+            "Create pallets/pallet-custom/src/tests.rs",
+            "Add #[cfg(test)] mod tests; to lib.rs",
+            "Write imports: use crate::{mock::*, Error, Event}; plus FRAME macros",
+            "Write increment_works, set_counter_value_works, decrement_works with System::set_block_number(1) for event checks",
+            "Write error tests: overflow, underflow, root-only access control",
+            "Write genesis_config_works and interaction tracking tests",
+            "Run cargo test --package pallet-custom \u2014 expect 15 passing tests"
+          ],
+          "result": "All 15 tests pass including 2 auto-generated mock tests."
+        },
+        {
+          "scenario": "Edge case: event assertion fails with empty event list",
+          "user_says": "My event test fails: 'left: [], right: [EventRecord {...}]'",
+          "actions": [
+            "Open the failing test in tests.rs",
+            "Add System::set_block_number(1); as the first line inside the execute_with closure",
+            "Re-run cargo test --package pallet-custom"
+          ],
+          "result": "The event test passes because events are recorded starting from block 1."
+        }
+      ]
+    },
+    {
+      "id": "benchmark-frame-pallet",
+      "title": "Benchmark a FRAME Pallet and Generate Weight Files",
+      "objective": "Create a benchmarking.rs module, build the WASM runtime with benchmarking enabled, run frame-omni-bencher, and replace placeholder weights with measured production values.",
+      "description": "Implements full FRAME pallet benchmarking: adds benchmarking.rs with #[benchmark] functions, defines WeightInfo trait, wires it into pallet Config, configures Cargo.toml features, builds release WASM, installs frame-omni-bencher, downloads the weight template, and generates weights.rs. Use when a custom pallet needs accurate extrinsic weights before production deployment. Trigger phrases: 'benchmark pallet', 'frame-omni-bencher', 'generate weight file', 'WeightInfo', 'pallet weights production'. Requires a working parachain template with the custom pallet integrated. Do NOT use for estimating gas on EVM contracts.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/pallet-development/benchmark-pallet.md"
+      ],
+      "primary_page": "parachains/customize-runtime/pallet-development/benchmark-pallet.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target",
+          "Cargo",
+          "A working parachain template with the custom pallet integrated (from create-a-pallet series)",
+          "The custom counter pallet in pallets/pallet-custom with mock runtime set up (from mock-runtime guide)"
+        ],
+        "network": [],
+        "tokens": [],
+        "wallet": []
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create benchmarking.rs with benchmark functions",
+          "working_directory": "pallets/pallet-custom/src",
+          "commands": [
+            "touch benchmarking.rs"
+          ],
+          "description": "Create pallets/pallet-custom/src/benchmarking.rs with:\n\n#![cfg(feature = \"runtime-benchmarks\")]\nuse super::*;\nuse frame::deps::frame_benchmarking::v2::*;\nuse frame::benchmarking::prelude::RawOrigin;\n\n#[benchmarks]\nmod benchmarks {\n    use super::*;\n\n    #[benchmark]\n    fn set_counter_value() {\n        let new_value: u32 = 100;\n        #[extrinsic_call]\n        _(RawOrigin::Root, new_value);\n        assert_eq!(CounterValue::<T>::get(), new_value);\n    }\n\n    #[benchmark]\n    fn increment() {\n        let caller: T::AccountId = whitelisted_caller();\n        let amount: u32 = 50;\n        #[extrinsic_call]\n        _(RawOrigin::Signed(caller.clone()), amount);\n        assert_eq!(CounterValue::<T>::get(), amount);\n        assert_eq!(UserInteractions::<T>::get(caller), 1);\n    }\n\n    #[benchmark]\n    fn decrement() {\n        CounterValue::<T>::put(100);\n        let caller: T::AccountId = whitelisted_caller();\n        let amount: u32 = 30;\n        #[extrinsic_call]\n        _(RawOrigin::Signed(caller.clone()), amount);\n        assert_eq!(CounterValue::<T>::get(), 70);\n    }\n\n    impl_benchmark_test_suite!(Pallet, crate::mock::new_test_ext(), crate::mock::Test);\n}\n\nFor a different pallet, update function names and assertions accordingly."
+        },
+        {
+          "order": 2,
+          "action": "Define WeightInfo trait in weights.rs",
+          "working_directory": "pallets/pallet-custom/src",
+          "commands": [
+            "touch weights.rs"
+          ],
+          "description": "Create pallets/pallet-custom/src/weights.rs with a WeightInfo trait and () placeholder implementation:\n\npub trait WeightInfo {\n    fn set_counter_value() -> frame::prelude::Weight;\n    fn increment() -> frame::prelude::Weight;\n    fn decrement() -> frame::prelude::Weight;\n}\n\nimpl WeightInfo for () {\n    fn set_counter_value() -> frame::prelude::Weight { frame::prelude::Weight::from_parts(10_000, 0) }\n    fn increment() -> frame::prelude::Weight { frame::prelude::Weight::from_parts(15_000, 0) }\n    fn decrement() -> frame::prelude::Weight { frame::prelude::Weight::from_parts(15_000, 0) }\n}\n\nThe () impl is used in tests; benchmark-generated values will replace this file in the final step."
+        },
+        {
+          "order": 3,
+          "action": "Wire WeightInfo into pallet Config and extrinsic annotations",
+          "working_directory": "pallets/pallet-custom/src",
+          "description": "Edit src/lib.rs with four changes:\n1. At the top add: pub mod weights;  (expose weights module)\n2. After 'pub use pallet::*;' add: #[cfg(feature = \"runtime-benchmarks\")] mod benchmarking;\n3. In #[pallet::config] trait add: type WeightInfo: weights::WeightInfo;\n4. Replace hardcoded weight attributes on each extrinsic:\n   - #[pallet::weight(T::WeightInfo::set_counter_value())]\n   - #[pallet::weight(T::WeightInfo::increment())]\n   - #[pallet::weight(T::WeightInfo::decrement())]"
+        },
+        {
+          "order": 4,
+          "action": "Update pallet Cargo.toml with runtime-benchmarks feature",
+          "working_directory": "pallets/pallet-custom",
+          "description": "Open pallets/pallet-custom/Cargo.toml and add the runtime-benchmarks feature under [features]:\n\n[features]\ndefault = [\"std\"]\nruntime-benchmarks = [\n    \"frame/runtime-benchmarks\",\n]\nstd = [\n    \"codec/std\",\n    \"scale-info/std\",\n    \"frame/std\",\n]"
+        },
+        {
+          "order": 5,
+          "action": "Update mock.rs, runtime Cargo.toml, runtime config, and benchmarks.rs",
+          "working_directory": ".",
+          "description": "Four integration edits required:\n1. src/mock.rs: add type WeightInfo = (); to impl pallet_custom::Config for Test.\n2. runtime/Cargo.toml: add 'pallet-custom/runtime-benchmarks' to the runtime-benchmarks feature list.\n3. runtime/src/configs/mod.rs: add type WeightInfo = (); to impl pallet_custom::Config for Runtime (placeholder).\n4. runtime/src/benchmarks.rs: add [pallet_custom, CustomPallet] inside the define_benchmarks! macro."
+        },
+        {
+          "order": 6,
+          "action": "Test benchmark compilation",
+          "working_directory": "pallets/pallet-custom",
+          "commands": [
+            "cargo test -p pallet-custom --features runtime-benchmarks"
+          ],
+          "expected_output": "test benchmarking::benchmarks::bench_set_counter_value ... ok",
+          "description": "Run benchmark unit tests generated by impl_benchmark_test_suite!. All three benchmark functions must pass before building the full runtime. These tests verify the benchmark code compiles and the assertions hold."
+        },
+        {
+          "order": 7,
+          "action": "Build the release runtime with benchmarks enabled",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release --features runtime-benchmarks"
+          ],
+          "expected_output": "Finished release [optimized] target(s)",
+          "description": "Compile the full runtime in release mode. Produces the WASM at target/release/wbuild/parachain-template-runtime/parachain_template_runtime.wasm. Build may take 15-30 minutes. This WASM is only for benchmarking \u2014 do not use for production deployment."
+        },
+        {
+          "order": 8,
+          "action": "Install frame-omni-bencher",
+          "working_directory": ".",
+          "commands": [
+            "cargo install frame-omni-bencher --locked"
+          ],
+          "expected_output": "Installed package `frame-omni-bencher`",
+          "description": "Install via cargo, or download a pre-built binary from the Polkadot SDK releases page. Replace VERSION with the SDK version tag used by the parachain template (e.g., polkadot-stable2412):\nmacOS: curl -L -o frame-omni-bencher https://github.com/paritytech/polkadot-sdk/releases/download/VERSION/frame-omni-bencher-aarch64-apple-darwin && chmod +x frame-omni-bencher && sudo mv frame-omni-bencher /usr/local/bin/\nUbuntu: curl -L -o frame-omni-bencher https://github.com/paritytech/polkadot-sdk/releases/download/VERSION/frame-omni-bencher && chmod +x frame-omni-bencher && sudo mv frame-omni-bencher /usr/local/bin/"
+        },
+        {
+          "order": 9,
+          "action": "Download the weight Handlebars template",
+          "working_directory": ".",
+          "description": "Download the official weight template for your SDK version. Replace SDK_VERSION with the polkadot-sdk release tag from the parachain template's Cargo.toml (e.g., polkadot-stable2412):\n\ncurl -L https://raw.githubusercontent.com/paritytech/polkadot-sdk/refs/tags/SDK_VERSION/substrate/.maintain/frame-weight-template.hbs --output ./pallets/pallet-custom/frame-weight-template.hbs\n\nSave this path \u2014 needed in step 10."
+        },
+        {
+          "order": 10,
+          "action": "Execute benchmarks and generate weights.rs",
+          "working_directory": ".",
+          "commands": [
+            "frame-omni-bencher v1 benchmark pallet --runtime ./target/release/wbuild/parachain-template-runtime/parachain_template_runtime.wasm --pallet pallet_custom --extrinsic \"\" --template ./pallets/pallet-custom/frame-weight-template.hbs --output ./pallets/pallet-custom/src/weights.rs"
+          ],
+          "expected_output": "Wrote weight file to ./pallets/pallet-custom/src/weights.rs",
+          "description": "Run benchmarks against the WASM runtime and generate production weights.rs. This overwrites the placeholder weights.rs from step 2. The output contains a SubstrateWeight<T> struct implementing WeightInfo with actual measured values. For more precise measurements, add: --steps 50 --repeat 20"
+        },
+        {
+          "order": 11,
+          "action": "Update runtime config to use generated weights",
+          "working_directory": ".",
+          "description": "Open runtime/src/configs/mod.rs and update the pallet Config to use measured weights instead of ():\n\nimpl pallet_custom::Config for Runtime {\n    type RuntimeEvent = RuntimeEvent;\n    type CounterMaxValue = ConstU32<1000>;\n    type WeightInfo = pallet_custom::weights::SubstrateWeight<Runtime>;\n}\n\nThen rebuild for production without the benchmarks flag:\ncargo build --release"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/parachains/customize-runtime/pallet-development/benchmark-pallet",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0412]: cannot find type Weight / use of undeclared crate",
+          "cause": "The weights.rs uses frame_support types with the wrong import path for the SDK version.",
+          "resolution": "Use frame::prelude::Weight rather than frame_support::weights::Weight for SDK versions that use the unified frame crate."
+        },
+        {
+          "pattern": "Error: No benchmarks found for pallet_custom",
+          "cause": "The pallet was not registered in define_benchmarks! in runtime/src/benchmarks.rs, or the pallet name is misspelled.",
+          "resolution": "Add [pallet_custom, CustomPallet] to define_benchmarks! \u2014 use underscore form for the crate name (pallet_custom not pallet-custom) and the correct runtime type alias."
+        },
+        {
+          "pattern": "could not compile parachain-template-runtime / runtime-benchmarks feature error",
+          "cause": "The pallet's runtime-benchmarks feature was not added to the runtime's feature cascade in runtime/Cargo.toml.",
+          "resolution": "Add 'pallet-custom/runtime-benchmarks' to the runtime-benchmarks list in runtime/Cargo.toml."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load for context on pallet development prerequisites or parachain template.",
+        "pages": [
+          {
+            "slug": "parachains-customize-runtime-pallet-development-create-a-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-create-a-pallet.md",
+            "relevance": "The custom counter pallet being benchmarked."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "The parachain template runtime structure required for benchmark integration."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: benchmark the counter pallet and generate a production weight file",
+          "user_says": "Benchmark my counter pallet and generate weights.rs for production use",
+          "actions": [
+            "Create benchmarking.rs with #[benchmark] functions for all three extrinsics",
+            "Create placeholder weights.rs with WeightInfo trait and () impl",
+            "Add WeightInfo to pallet Config and update #[pallet::weight] attributes in lib.rs",
+            "Update pallet Cargo.toml with runtime-benchmarks feature",
+            "Wire into runtime: mock.rs WeightInfo=(), runtime Cargo.toml, runtime Config, define_benchmarks!",
+            "Run cargo test -p pallet-custom --features runtime-benchmarks to verify benchmark compilation",
+            "cargo build --release --features runtime-benchmarks to build benchmark WASM",
+            "Install frame-omni-bencher, download frame-weight-template.hbs",
+            "Run frame-omni-bencher to generate weights.rs",
+            "Update runtime Config to use pallet_custom::weights::SubstrateWeight<Runtime>"
+          ],
+          "result": "A measured weights.rs replaces the placeholder; runtime uses accurate production weights."
+        },
+        {
+          "scenario": "Edge case: frame-omni-bencher reports 'No benchmarks found'",
+          "user_says": "frame-omni-bencher says No benchmarks found for pallet_custom",
+          "actions": [
+            "Open runtime/src/benchmarks.rs",
+            "Verify define_benchmarks! includes [pallet_custom, CustomPallet]",
+            "If missing, add the entry with underscore crate name and correct runtime type alias",
+            "Rebuild with --features runtime-benchmarks and re-run frame-omni-bencher"
+          ],
+          "result": "Benchmarks are discovered and weights.rs is generated successfully."
+        }
+      ]
+    },
+    {
+      "id": "set-up-local-dev-node",
+      "title": "Set Up a Local Development Node",
+      "objective": "Clone the polkadot-sdk repository, build the revive-dev-node and eth-rpc adapter binaries, and run a local Ethereum-compatible blockchain at http://localhost:8545.",
+      "description": "Builds and runs a local Polkadot SDK development node with smart contract support and an ETH-RPC adapter at http://localhost:8545. Use when you need a fee-free isolated environment for deploying and testing EVM smart contracts before using Polkadot Hub TestNet. Supports Ethereum tools (Hardhat, Remix, MetaMask, Ethers.js) via the ETH-RPC adapter. Trigger phrases: 'local dev node', 'run node locally', 'revive-dev-node', 'localhost:8545', 'local Polkadot blockchain'. Requires Rust and Polkadot SDK build dependencies installed. Do NOT use as a substitute for TestNet validation \u2014 the local node exposes a subset of the Ethereum JSON-RPC API.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/dev-environments/local-dev-node.md"
+      ],
+      "primary_page": "smart-contracts/dev-environments/local-dev-node.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain (stable + nightly via rustup) with wasm32-unknown-unknown target",
+          "Polkadot SDK build dependencies \u2014 complete the Install Polkadot SDK Dependencies guide first (Rust, clang, cmake, protobuf-compiler)",
+          "Git",
+          "At least 20 GB free disk space for the release build"
+        ],
+        "network": [],
+        "tokens": [],
+        "wallet": []
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone the polkadot-sdk repository",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/paritytech/polkadot-sdk.git",
+            "cd polkadot-sdk"
+          ],
+          "description": "Clone the official polkadot-sdk repository. The clone downloads several GB of source code. The repository contains both the revive-dev-node implementation and the ETH-RPC adapter."
+        },
+        {
+          "order": 2,
+          "action": "Build the revive-dev-node binary",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "cargo build -p revive-dev-node --bin revive-dev-node --release"
+          ],
+          "expected_output": "Finished release [optimized] target(s)",
+          "description": "Compile the Revive Dev node in release mode. Release builds are optimized but take significantly longer (up to 30 minutes). The binary will be at polkadot-sdk/target/release/revive-dev-node. If out of memory, limit parallelism by appending: -- -j2"
+        },
+        {
+          "order": 3,
+          "action": "Build the ETH-RPC adapter binary",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "cargo build -p pallet-revive-eth-rpc --bin eth-rpc --release"
+          ],
+          "expected_output": "Finished release [optimized] target(s)",
+          "description": "Compile the ETH-RPC adapter. This translates Ethereum JSON-RPC calls into Substrate requests. Binary at polkadot-sdk/target/release/eth-rpc."
+        },
+        {
+          "order": 4,
+          "action": "Start the Revive Dev node",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "./target/release/revive-dev-node --dev"
+          ],
+          "interactive": true,
+          "description": "Start the local development node with --dev. This initializes a blockchain with pallet-revive for smart contracts and pre-funded development accounts. The node immediately produces blocks. Leave this terminal running \u2014 open a new terminal for step 5. For debug logging, prepend: RUST_LOG=\"error,evm=debug,sc_rpc_server=info,runtime::revive=debug\""
+        },
+        {
+          "order": 5,
+          "action": "Start the ETH-RPC adapter in a new terminal",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "./target/release/eth-rpc --dev"
+          ],
+          "interactive": true,
+          "description": "Open a new terminal, navigate to the polkadot-sdk directory, and start the adapter with --dev. It connects to the local node and exposes Ethereum JSON-RPC at http://localhost:8545. Success is indicated by log lines showing the adapter is ready. For debug logging, prepend: RUST_LOG=\"info,eth-rpc=debug\"\n\nVerify the environment is ready by connecting Hardhat, Remix, or MetaMask to http://localhost:8545."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/local-dev-node",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error: linker not found / error while loading shared libraries / could not compile",
+          "cause": "Missing system build dependencies such as clang, cmake, or protobuf-compiler.",
+          "resolution": "Complete the Install Polkadot SDK Dependencies guide. On Ubuntu: sudo apt install -y cmake clang libclang-dev protobuf-compiler. On macOS: brew install cmake protobuf."
+        },
+        {
+          "pattern": "Connection refused at localhost:8545 / eth-rpc exits immediately",
+          "cause": "The revive-dev-node is not running when eth-rpc starts, or it crashed before the adapter connected.",
+          "resolution": "Ensure revive-dev-node --dev is running in a separate terminal and producing blocks before starting eth-rpc. The adapter connects via WebSocket to the node."
+        },
+        {
+          "pattern": "Method not found / eth_method not supported",
+          "cause": "An Ethereum tool is calling a JSON-RPC method not implemented by the ETH-RPC adapter (e.g., anvil_* or debug_*).",
+          "resolution": "The local node supports a subset of the Ethereum JSON-RPC API. Use Polkadot Hub TestNet for full API compatibility. Check the Polkadot EVM differences documentation for supported methods."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load for guidance on connecting Ethereum tools or deploying contracts.",
+        "pages": [
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Prerequisite: installing Rust and Polkadot SDK build dependencies."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Configure Hardhat to connect to http://localhost:8545 for local testing."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: start a local dev environment for smart contract development",
+          "user_says": "Set up a local Polkadot node for testing my smart contracts",
+          "actions": [
+            "Clone polkadot-sdk from GitHub",
+            "Build revive-dev-node with cargo build --release in polkadot-sdk/",
+            "Build eth-rpc adapter with cargo build --release",
+            "Start revive-dev-node --dev in terminal 1",
+            "Start eth-rpc --dev in terminal 2",
+            "Confirm ETH-RPC is listening at http://localhost:8545"
+          ],
+          "result": "Local node produces blocks; ETH-RPC adapter accepts standard Ethereum JSON-RPC at localhost:8545."
+        },
+        {
+          "scenario": "Edge case: cargo build takes excessively long or runs out of memory",
+          "user_says": "The build has been running for over an hour and my machine is unresponsive",
+          "actions": [
+            "Cancel the build with Ctrl+C",
+            "Check free disk space (df -h) \u2014 at least 20 GB required",
+            "Check free RAM \u2014 at least 8 GB recommended",
+            "Restart build with limited parallelism: cargo build -p revive-dev-node --bin revive-dev-node --release -- -j2"
+          ],
+          "result": "Build completes more slowly with reduced CPU and memory usage."
+        }
+      ]
+    },
+    {
+      "id": "set-up-validator-monitoring-stack",
+      "title": "Set Up Prometheus, Grafana, and Alertmanager for a Validator Node",
+      "objective": "Install and configure a Prometheus, Grafana, and Alertmanager monitoring stack on a Linux validator server, with real-time metrics dashboards and email alerts for node downtime.",
+      "description": "Installs and configures Prometheus, Grafana, and Alertmanager as systemd services on a Linux validator host. Scrapes node metrics from port 9615, visualizes them in Grafana, and routes email alerts via Alertmanager. Use when operating a Polkadot validator node and needing visibility into performance and automated downtime alerting. Trigger phrases: 'monitor validator', 'Prometheus Grafana validator', 'validator alerts', 'node metrics', 'alertmanager email'. Requires a running Polkadot validator node on Ubuntu/Debian with systemd and sudo access. Do NOT use for EVM smart contract monitoring.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-validator/operational-tasks/general-management.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-validator/operational-tasks/general-management.md",
+      "prerequisites": {
+        "runtime": [
+          "Ubuntu/Debian Linux server with systemd",
+          "sudo access on the server",
+          "wget, curl, tar, nano installed",
+          "A running Polkadot validator node exposing Prometheus metrics on port 9615 (start with --prometheus-external flag)"
+        ],
+        "network": [
+          "Outbound HTTPS to download Prometheus and Alertmanager release binaries from GitHub",
+          "Server accessible on port 9090 (Prometheus UI) and port 3000 (Grafana UI) from the admin browser"
+        ],
+        "tokens": [],
+        "wallet": []
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create prometheus system user and directories",
+          "working_directory": ".",
+          "commands": [
+            "sudo useradd --no-create-home --shell /usr/sbin/nologin prometheus",
+            "sudo mkdir /etc/prometheus /var/lib/prometheus",
+            "sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus"
+          ],
+          "description": "Create a dedicated 'prometheus' system user with no home directory and no shell (minimal privilege). Create the config directory /etc/prometheus and data directory /var/lib/prometheus, then set ownership."
+        },
+        {
+          "order": 2,
+          "action": "Download and install Prometheus",
+          "working_directory": "/tmp",
+          "description": "Go to https://github.com/prometheus/prometheus/releases and copy the tarball URL for your architecture (amd64 or arm64). Replace INSERT_RELEASE_URL with the full URL (e.g., https://github.com/prometheus/prometheus/releases/download/v3.0.0/prometheus-3.0.0.linux-amd64.tar.gz):\n\nsudo apt-get update && sudo apt-get upgrade -y\nwget INSERT_RELEASE_URL\ntar xfz prometheus-*.tar.gz\ncd prometheus-*\nsudo cp ./prometheus /usr/local/bin/\nsudo cp ./promtool /usr/local/bin/\nsudo cp -r ./consoles /etc/prometheus\nsudo cp -r ./console_libraries /etc/prometheus\nsudo chown -R prometheus:prometheus /etc/prometheus/consoles /etc/prometheus/console_libraries\ncd /tmp && rm -r prometheus*"
+        },
+        {
+          "order": 3,
+          "action": "Create prometheus.yml and start Prometheus as a systemd service",
+          "working_directory": ".",
+          "description": "Create /etc/prometheus/prometheus.yml with this content:\n\nglobal:\n  scrape_interval: 15s\n  evaluation_interval: 15s\nrule_files:\n  - rules.yml\nalerting:\n  alertmanagers:\n    - static_configs:\n        - targets:\n          - localhost:9093\nscrape_configs:\n  - job_name: 'prometheus'\n    scrape_interval: 5s\n    static_configs:\n      - targets: ['localhost:9090']\n  - job_name: 'node_metrics'\n    scrape_interval: 5s\n    static_configs:\n      - targets: ['localhost:9615']\n\nThen: sudo chown prometheus:prometheus /etc/prometheus/prometheus.yml\nValidate: promtool check config /etc/prometheus/prometheus.yml\n\nCreate /etc/systemd/system/prometheus.service:\n[Unit]\nDescription=Prometheus\nWants=network-online.target\nAfter=network-online.target\n[Service]\nUser=prometheus\nGroup=prometheus\nType=simple\nExecStart=/usr/local/bin/prometheus --config.file /etc/prometheus/prometheus.yml --storage.tsdb.path /var/lib/prometheus/ --web.console.templates=/etc/prometheus/consoles --web.console.libraries=/etc/prometheus/console_libraries\n[Install]\nWantedBy=multi-user.target\n\nThen:\nsudo systemctl daemon-reload && sudo systemctl enable prometheus && sudo systemctl start prometheus\n\nVerify at http://SERVER_IP:9090/"
+        },
+        {
+          "order": 4,
+          "action": "Install Grafana and connect to Prometheus",
+          "working_directory": ".",
+          "commands": [
+            "sudo apt-get install -y apt-transport-https software-properties-common wget",
+            "sudo mkdir -p /etc/apt/keyrings/",
+            "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null",
+            "echo \"deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main\" | sudo tee -a /etc/apt/sources.list.d/grafana.list",
+            "sudo apt-get update && sudo apt-get install -y grafana",
+            "sudo systemctl daemon-reload && sudo systemctl enable grafana-server && sudo systemctl start grafana-server"
+          ],
+          "interactive": true,
+          "description": "Install Grafana from the official apt repository and start it as a systemd service. Navigate to http://SERVER_IP:3000/ and log in with admin/admin (change password on first login). To connect Grafana to Prometheus:\n1. Settings (gear icon) > Data Sources > Add data source > Prometheus.\n2. Set URL to http://localhost:9090 > Save & Test (confirm 'Data source is working').\n3. Dashboards > Import > enter ID 21715 (Substrate Node Metrics) > select Prometheus > Import."
+        },
+        {
+          "order": 5,
+          "action": "Install Alertmanager",
+          "working_directory": "/tmp",
+          "description": "Go to https://github.com/prometheus/alertmanager/releases and copy the tarball URL for your architecture. Replace INSERT_RELEASE_URL:\n\nwget INSERT_RELEASE_URL\ntar -xvzf alertmanager*\ncd alertmanager-*\nsudo cp ./alertmanager /usr/local/bin/\nsudo cp ./amtool /usr/local/bin/\nsudo chown prometheus:prometheus /usr/local/bin/alertmanager /usr/local/bin/amtool\nsudo mkdir /etc/alertmanager\nsudo chown -R prometheus:prometheus /etc/alertmanager"
+        },
+        {
+          "order": 6,
+          "action": "Configure Alertmanager email notifications",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "Stop and ask the user to provide their Gmail address. Instruct them to generate a Gmail app password at https://support.google.com/accounts/answer/185833 (requires 2-Step Verification). Do NOT ask for the password in chat \u2014 the user should edit the file directly.\n\nCreate /etc/alertmanager/alertmanager.yml:\n\nglobal:\n  smtp_smarthost: 'smtp.gmail.com:587'\n  smtp_from: 'YOUR_EMAIL@gmail.com'\n  smtp_auth_username: 'YOUR_EMAIL@gmail.com'\n  smtp_auth_password: 'YOUR_APP_PASSWORD'\nroute:\n  receiver: 'email-notifications'\nreceivers:\n  - name: 'email-notifications'\n    email_configs:\n      - to: 'YOUR_EMAIL@gmail.com'\n        send_resolved: True\n\nReplace YOUR_EMAIL and YOUR_APP_PASSWORD with the user's values. Then:\nsudo chown -R prometheus:prometheus /etc/alertmanager\n\nWait for user confirmation that the file is filled before proceeding."
+        },
+        {
+          "order": 7,
+          "action": "Create Alertmanager systemd service, alert rules, and start everything",
+          "working_directory": ".",
+          "description": "Create /etc/systemd/system/alertmanager.service:\n[Unit]\nDescription=AlertManager\nWants=network-online.target\nAfter=network-online.target\n[Service]\nUser=prometheus\nGroup=prometheus\nType=simple\nWorkingDirectory=/etc/alertmanager/\nExecStart=/usr/local/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml\n[Install]\nWantedBy=multi-user.target\n\nEnable and start:\nsudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo systemctl start alertmanager\nsudo systemctl status alertmanager  # Active field should show 'active (running)'\n\nCreate /etc/prometheus/rules.yml:\ngroups:\n  - name: alert_rules\n    rules:\n      - alert: InstanceDown\n        expr: up == 0\n        for: 5m\n        labels:\n          severity: critical\n        annotations:\n          summary: 'Instance {{ $labels.instance }} down'\n          description: '{{ $labels.instance }} has been down for more than 5 minutes.'\n\nFinalize:\nsudo chown prometheus:prometheus /etc/prometheus/rules.yml\nsudo -u prometheus promtool check rules /etc/prometheus/rules.yml\nsudo systemctl restart prometheus && sudo systemctl restart alertmanager\n\nEmail alerts will fire if the validator node goes offline for more than 5 minutes."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/node-infrastructure/run-a-validator/operational-tasks/general-management",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "promtool check config fails / YAML parse error in prometheus.yml",
+          "cause": "Indentation error or incorrect syntax in prometheus.yml.",
+          "resolution": "YAML is whitespace-sensitive. Verify that scrape_configs uses 2-space indentation consistently. No tabs allowed. Re-run: promtool check config /etc/prometheus/prometheus.yml"
+        },
+        {
+          "pattern": "Grafana shows 'Data source is not working' / ECONNREFUSED on port 9090",
+          "cause": "Prometheus is not running or the data source URL is incorrect.",
+          "resolution": "Check: sudo systemctl status prometheus. If stopped, check prometheus.yml for YAML errors. Verify port 9090 is reachable from the Grafana host. Use http://localhost:9090 if both services are on the same server."
+        },
+        {
+          "pattern": "node_metrics target shows as DOWN in Prometheus Status > Targets",
+          "cause": "The Polkadot node is not exposing metrics on port 9615, or the validator is not running.",
+          "resolution": "Ensure the Polkadot node is started with the --prometheus-external flag. Test the endpoint directly: curl http://localhost:9615/metrics. If the node is on a different IP, update the targets value in prometheus.yml."
+        },
+        {
+          "pattern": "Alertmanager: error sending email / authentication failed",
+          "cause": "Invalid Gmail app password, or 2-Step Verification not enabled on the Gmail account.",
+          "resolution": "Generate a new app password at https://support.google.com/accounts/answer/185833. Ensure 2-Step Verification is enabled on the Gmail account. Update /etc/alertmanager/alertmanager.yml and restart alertmanager."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load for context on validator node setup or key management.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator.md",
+            "relevance": "Validator node setup \u2014 prerequisite for having a running node to monitor."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-staking-mechanics-offenses-and-slashes",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-staking-mechanics-offenses-and-slashes.md",
+            "relevance": "Slashing conditions \u2014 understanding which downtime events trigger slash penalties."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: set up complete monitoring for a new validator",
+          "user_says": "Set up Prometheus and Grafana to monitor my Polkadot validator",
+          "actions": [
+            "Create prometheus user and /etc/prometheus, /var/lib/prometheus directories",
+            "Download and install Prometheus binaries; create prometheus.yml scraping port 9615",
+            "Create prometheus.service and start with systemctl",
+            "Install Grafana from apt; start service; log in at port 3000",
+            "Add Prometheus as Grafana data source (http://localhost:9090); import dashboard ID 21715",
+            "Download and install Alertmanager; ask user to fill in email credentials in alertmanager.yml",
+            "Create alertmanager.service and start",
+            "Create rules.yml with InstanceDown alert; restart Prometheus and Alertmanager"
+          ],
+          "result": "Prometheus scrapes validator metrics every 5s; Grafana shows real-time dashboard; email alert fires if node is offline for 5+ minutes."
+        },
+        {
+          "scenario": "Edge case: no node metrics visible in Grafana despite Prometheus running",
+          "user_says": "Grafana shows no data and Prometheus shows node_metrics target as DOWN",
+          "actions": [
+            "Check if the Polkadot node process is running: systemctl status polkadot",
+            "Verify the node was started with --prometheus-external flag",
+            "Test metrics endpoint: curl http://localhost:9615/metrics",
+            "If the node is on a different IP, update the targets value in /etc/prometheus/prometheus.yml and restart Prometheus"
+          ],
+          "result": "Node metrics appear in Grafana once the Prometheus scrape target is reachable."
         }
       ]
     }

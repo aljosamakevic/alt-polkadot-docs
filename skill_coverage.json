@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T20:00:00Z",
+  "generated": "2026-04-21T20:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 30,
+    "up_to_date": 35,
     "stale": 0,
-    "uncovered": 106,
+    "uncovered": 101,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -199,9 +199,11 @@
     },
     "node-infrastructure/run-a-validator/operational-tasks/general-management.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:30:00Z",
+      "skills": [
+        "set-up-validator-monitoring-stack"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/operational-tasks/pause-validating.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -259,9 +261,11 @@
     },
     "parachains/customize-runtime/pallet-development/benchmark-pallet.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:30:00Z",
+      "skills": [
+        "benchmark-frame-pallet"
+      ],
+      "status": "up_to_date"
     },
     "parachains/customize-runtime/pallet-development/create-a-pallet.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -271,15 +275,19 @@
     },
     "parachains/customize-runtime/pallet-development/mock-runtime.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:30:00Z",
+      "skills": [
+        "set-up-pallet-mock-runtime"
+      ],
+      "status": "up_to_date"
     },
     "parachains/customize-runtime/pallet-development/pallet-testing.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:30:00Z",
+      "skills": [
+        "unit-test-frame-pallet"
+      ],
+      "status": "up_to_date"
     },
     "parachains/get-started.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -739,9 +747,11 @@
     },
     "smart-contracts/dev-environments/local-dev-node.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:30:00Z",
+      "skills": [
+        "set-up-local-dev-node"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/dev-environments/remix.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
