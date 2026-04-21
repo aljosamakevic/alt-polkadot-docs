@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:14:00Z",
+  "generated": "2026-04-21T15:20:06Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1695,6 +1695,104 @@
         },
         "priority_score": 15
       }
+    },
+    {
+      "skill_id": "interact-polkadot-node-py-substrate",
+      "title": "Interact with a Polkadot Node Using Python Substrate Interface",
+      "source_pages": [
+        "reference/tools/py-substrate-interface.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Walks through installing the library, connecting to a node, reading chain state (account balance), and submitting a balance transfer — all CLI/SDK steps with no GUI dependencies. No explicit 'you should see' outcome language prevents P4 from firing. K2 not awarded because actual code lives in --8<-- snippet includes whose content is not visible in the page source.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "R3",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 3,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "interact-polkadot-node-subxt",
+      "title": "Interact with a Polkadot Node Using Subxt (Rust)",
+      "source_pages": [
+        "reference/tools/subxt.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Numbered installation steps (install CLI, add core deps), Rust/TOML files to create, and verifiable outcome language ('your Cargo.toml should look like this'). Covers the full workflow from prerequisites through reading chain constants/state and submitting a signed transaction. K2 not awarded due to INSERT_* placeholders (INSERT_NODE_URL, INSERT_ADDRESS, INSERT_SECRET_PHRASE) and unresolved {{dependencies.crates.*}} template variables.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "R1",
+          "C1",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 5,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "spawn-test-network-zombienet",
+      "title": "Spawn and Test a Parachain Network with Zombienet",
+      "source_pages": [
+        "reference/tools/zombienet.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Covers the full Zombienet lifecycle: install (executable/Nix/Docker), write TOML or JSON network config files, spawn a relay chain with validators and parachain collators, author .zndsl test files with DSL assertions, and run the test suite. Explicit numbered outcome steps ('Zombienet will: 1. Download binaries ... 5. Display endpoints') and 'test runner will report pass/fail' confirm P4. Extensive Settings/RelayChain/Parachain/Collator config reference tables are present alongside the procedural flow. K2 not awarded due to INSERT_* placeholders and --8<-- snippet includes.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 12,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
     }
   ],
   "supplementary_only": [
@@ -2565,6 +2663,35 @@
           "not_applicable": 0
         }
       }
+    },
+    {
+      "page": "reference/tools/sidecar.md",
+      "category": "reference",
+      "relevant_to": [
+        "interact-polkadot-node-py-substrate",
+        "interact-polkadot-node-subxt"
+      ],
+      "notes": "Installation and basic usage of Substrate API Sidecar, a REST caching layer for Polkadot SDK nodes. Tied procedural (9) and reference (9) scores make this ambiguous: Rule 4 fires first (reference >= 7 AND procedural < 10) assigning 'reference', but the guide-like installation workflow is equally significant. Useful supplementary context for any skill that queries Polkadot chain state, offering a REST alternative to direct RPC or Rust/Python SDK approaches.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P4",
+          "R1",
+          "R2",
+          "C1"
+        ],
+        "category_scores": {
+          "procedural": 9,
+          "reference": 9,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ]
+      }
     }
   ],
   "not_applicable": [
@@ -2736,6 +2863,25 @@
           "procedural": 0,
           "reference": 0,
           "conceptual": 0,
+          "not_applicable": 4
+        }
+      }
+    },
+    {
+      "page": "reference/tools/xcm-tools.md",
+      "category": "not_applicable",
+      "reason": "Survey/index page presenting five XCM tools (Moonsong Labs XCM Tools, ParaSpell, Astar XCM Tools, Chopsticks, Moonbeam XCM SDK). Each section provides a short description and minimal bootstrap commands, then defers substantive usage to external documentation. No complete self-contained XCM workflow; primary function is discovery and navigation to the right tool. N1 fires (score 4), triggering Rule 1.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P4",
+          "C1",
+          "N1"
+        ],
+        "category_scores": {
+          "procedural": 9,
+          "reference": 0,
+          "conceptual": 5,
           "not_applicable": 4
         }
       }
