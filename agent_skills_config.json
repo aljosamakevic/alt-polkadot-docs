@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "generated": "2026-04-21T23:59:00Z",
-  "content_hash": "sha256:55430364911cc4d469536eebbe1b06ab71a594e8f3c84c570185cb6f847edc9e",
+  "content_hash": "sha256:b9fcc356e7673fb77911efa114edd9d68661b5a6d30ba7c7ee3753c0070e1920",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -7804,17 +7804,18 @@
       "title": "Onboard as a Polkadot Validator (Full Flow)",
       "objective": "Install, configure, and activate a Polkadot validator node from binary installation through session key registration, DOT bonding, and systemd service setup.",
       "description": "Walks through the complete Polkadot validator onboarding workflow across three phases: (1) installing the polkadot binary and worker executables; (2) generating and registering session keys and the node identity key; (3) syncing the chain, bonding DOT via Polkadot.js Apps, submitting session keys on-chain, and configuring a systemd service for persistence. Use when setting up a new Polkadot validator node from scratch. Trigger phrases: 'become a Polkadot validator', 'onboard validator', 'set up validator node', 'bond DOT validator', 'register session keys', 'start validating Polkadot'. Prerequisite: a Linux server meeting hardware requirements (see set-up-polkadot-validator-node). Note: bonding and key submission steps involve Polkadot.js Apps GUI and must be delegated to the user.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "chain_role": "isolated",
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
       "source_pages": [
+        "node-infrastructure/run-a-validator/requirements.md",
         "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md",
         "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md",
         "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md"
       ],
-      "primary_page": "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md",
+      "primary_page": "node-infrastructure/run-a-validator/requirements.md",
       "prerequisites": {
         "runtime": [
           "64-bit Linux server (Ubuntu 22.04+ recommended), minimum 8 CPU cores, 32 GB RAM, 1+ TB NVMe SSD",
@@ -11859,6 +11860,181 @@
             "Warn: MainNet uses real DOT — use TestNet (chain ID 420420417) for development and testing"
           ],
           "result": "User receives Polkadot Hub MainNet network parameters with a caution about real token usage"
+        }
+      ]
+    },
+    {
+      "id": "start-validating-on-polkadot",
+      "title": "Start Validating on Polkadot",
+      "objective": "Sync a Polkadot validator node with the relay chain, bond DOT tokens, activate the validator via Polkadot.js Apps, and configure the node as a persistent systemd service.",
+      "description": "Syncs a Polkadot validator node with the relay chain, bonds DOT tokens via Polkadot.js Apps, activates the validator, and configures it as a persistent systemd service. Use after completing node setup and session key registration (see set-up-polkadot-validator-node and manage-validator-session-keys). Key capabilities: full and warp sync options with progress monitoring; GUI bonding and activation steps delegated to the user; systemd unit file creation for auto-restarting operation; recovery guidance for zero-peer and stuck-waiting scenarios. Trigger phrases: 'start validating', 'bond DOT validator', 'activate my validator', 'run validator systemd', 'sync validator node', 'validator waiting set'.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md",
+      "prerequisites": {
+        "runtime": [
+          "64-bit Linux server (Ubuntu 22.04+ recommended) with polkadot binary, polkadot-execute-worker, and polkadot-prepare-worker installed in /usr/local/bin/ (see set-up-polkadot-validator-node)",
+          "systemd for service management"
+        ],
+        "network": [
+          "TCP port 30333 open for P2P peer discovery",
+          "Stable internet connection for chain sync (Polkadot full sync requires 1+ TB NVMe SSD)"
+        ],
+        "tokens": [
+          "DOT tokens for bonding: minimum self-stake of 10,000 DOT required as of March 2026 runtime upgrade; additional DOT to meet the current minimum active nomination threshold (check https://wiki.polkadot.com/general/chain-state-values/)",
+          "Small DOT balance in stash account for extrinsic fees"
+        ],
+        "wallet": [
+          "Polkadot.js browser extension (https://polkadot.js.org/extension/) with stash account imported",
+          "Stash account funded with bonding amount plus fees"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Start node synchronization",
+          "working_directory": ".",
+          "commands": [
+            "polkadot --base-path /var/lib/polkadot --chain polkadot --validator --name 'MY_VALIDATOR_NAME' --rpc-port 9944 --rpc-addr 127.0.0.1 --sync warp &"
+          ],
+          "description": "Replace MY_VALIDATOR_NAME with your chosen validator display name (visible on-chain and in Telemetry — choose a unique name). Network options: use --chain polkadot for Polkadot mainnet, --chain kusama for Kusama, or --chain westend for Westend testnet. Sync options: --sync warp downloads only finality proofs and latest state first (fastest, hours), then fetches historical blocks in background; omit --sync to use full sync (downloads entire chain history from genesis — requires more time and disk). The node must be fully synced before bonding and activation. This is the manual run before systemd is configured; stop it (pkill polkadot) once systemd is set up in step 5."
+        },
+        {
+          "order": 2,
+          "action": "Monitor sync progress",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"startingBlock\":0,\"currentBlock\":...,\"highestBlock\":...},\"id\":1}",
+          "description": "Poll until currentBlock equals highestBlock. Run this command repeatedly — full sync can take hours or days depending on sync mode and hardware. You can also check Telemetry at https://telemetry.polkadot.io/ and search for your validator name (MY_VALIDATOR_NAME). Fully synced nodes appear white; gray nodes are still syncing. Do NOT proceed to bonding until sync is complete."
+        },
+        {
+          "order": 3,
+          "action": "Bond DOT via Polkadot.js Apps (delegate to user)",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "This step requires the Polkadot.js Apps GUI — delegate to the user:\n\n1. Navigate to https://polkadot.js.org/apps/#/staking/actions\n2. Click the Accounts tab, then '+ Stash'\n3. Select your stash account (the account holding your DOT)\n4. Set value bonded: at least 10,000 DOT self-stake (minimum as of March 2026) plus enough to exceed the current minimum active nomination threshold\n5. Set payment destination (reward recipient address — do NOT use an exchange address)\n6. Click Bond and sign with your Polkadot.js extension\n7. Wait for ExtrinsicSuccess confirmation\n\nNote: unbonding period is 28 days on Polkadot, 7 days on Kusama. Stop and confirm with the user before proceeding to step 4."
+        },
+        {
+          "order": 4,
+          "action": "Activate validator via Polkadot.js Apps (delegate to user)",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "This step requires the Polkadot.js Apps GUI — delegate to the user:\n\n1. In Polkadot.js Apps, go to Network > Staking > Accounts tab\n2. Click '+ Validator'\n3. Set bond amount and click Next\n4. Paste the session key hex blob from author_rotateKeys (obtained during key-management — see manage-validator-session-keys)\n5. Set commission to at least 10% (minimum enforced on-chain as of March 2026; below 10% is permissionlessly chill-able via staking.chillOther)\n6. Set blocked nominations preference\n7. Click Bond & Validate and sign with your Polkadot.js extension\n\nAfter confirmation, your validator appears in the 'waiting' set. It will be selected for the active set when a slot is available in a future era (eras are 24 hours on Polkadot, 6 hours on Kusama). Stop and confirm with the user before proceeding to step 5."
+        },
+        {
+          "order": 5,
+          "action": "Create systemd service file",
+          "working_directory": ".",
+          "commands": [
+            "sudo curl -sL https://raw.githubusercontent.com/paritytech/polkadot-sdk/refs/heads/master/polkadot/scripts/packaging/polkadot.service -o /etc/systemd/system/polkadot-validator.service"
+          ],
+          "description": "Fetch the official Polkadot systemd unit file from polkadot-sdk. If the fetch is blocked, create the file manually at /etc/systemd/system/polkadot-validator.service with the following content:\n\n[Unit]\nDescription=Polkadot Validator Node\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot \\\n  --base-path=/var/lib/polkadot \\\n  --chain=polkadot \\\n  --validator \\\n  --name=MY_VALIDATOR_NAME \\\n  --node-key-file=/var/lib/polkadot/node-key \\\n  --rpc-port=9944 \\\n  --rpc-addr=127.0.0.1\nRestart=always\nRestartSec=10\nLimitNOFILE=65536\n\n[Install]\nWantedBy=multi-user.target\n\nSubstitutions: replace MY_VALIDATOR_NAME with your validator display name; replace --chain=polkadot with --chain=kusama or --chain=westend for other networks. The RestartSec=10 delay is critical — do not reduce it. If the node crashes and GRANDPA votes were not persisted to disk, restarting immediately risks equivocation (a slashable offense)."
+        },
+        {
+          "order": 6,
+          "action": "Stop manual node and start systemd service",
+          "working_directory": ".",
+          "commands": [
+            "pkill polkadot || true",
+            "sudo systemctl daemon-reload",
+            "sudo systemctl enable polkadot-validator.service",
+            "sudo systemctl start polkadot-validator.service"
+          ],
+          "description": "Stop the manually-started node from step 1 (pkill polkadot — '|| true' prevents failure if the node is already stopped), reload systemd to pick up the new unit file, enable the service to start on boot, then start it now."
+        },
+        {
+          "order": 7,
+          "action": "Verify service health",
+          "working_directory": ".",
+          "commands": [
+            "sudo systemctl status polkadot-validator.service",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":{\"peers\":5,\"isSyncing\":false,\"shouldHavePeers\":true,...}}",
+          "description": "Verify the systemd service is active (running) and the node has peers and is not syncing. If peers is 0, check that TCP port 30333 is open (sudo ufw allow 30333/tcp; for cloud VMs also update the security group). For ongoing log monitoring: sudo journalctl -fu polkadot-validator. Your validator is now in the waiting set and will be selected for the active set in a future era when a slot is available and your stake meets the minimum threshold."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Node reports 0 peers after 15 minutes",
+          "cause": "TCP port 30333 is blocked by a firewall or cloud security group.",
+          "resolution": "Open port 30333: sudo ufw allow 30333/tcp. For cloud VMs, add an inbound TCP rule for port 30333 in your security group or firewall settings. Mainnet bootnodes are embedded in the chain spec — no manual bootnode configuration is needed."
+        },
+        {
+          "pattern": "Validator appears in waiting set but never activates after multiple eras",
+          "cause": "Bonded amount is below the minimum active nomination threshold for the current era, or session keys were not submitted correctly on-chain.",
+          "resolution": "Verify session keys are registered: Polkadot.js Apps > Developer > Chain State > session.nextKeys(YOUR_STASH_ADDRESS) — should return the key blob from author_rotateKeys. Check the current minimum active nomination threshold at https://wiki.polkadot.com/general/chain-state-values/ or Subscan. Bond more DOT if your stake is below the threshold."
+        },
+        {
+          "pattern": "systemd service fails to start (ExecStart path not found)",
+          "cause": "Polkadot binary not installed at /usr/local/bin/polkadot, or worker executables missing.",
+          "resolution": "Verify: which polkadot && which polkadot-execute-worker && which polkadot-prepare-worker. If missing, reinstall all three binaries from the same polkadot-sdk release tag and place them in the same directory."
+        },
+        {
+          "pattern": "ExtrinsicFailed or InsufficientBalance during bonding",
+          "cause": "Stash account does not hold enough DOT to cover the bonding amount plus transaction fees.",
+          "resolution": "Check stash account balance in Polkadot.js Apps. Ensure the account has more DOT than the intended bond amount (reserve at least 0.1 DOT for fees). Fund the stash account before retrying."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for validator prerequisites, key management, or post-activation operations.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-validator-requirements",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-requirements.md",
+            "relevance": "Hardware requirements, minimum bond thresholds, and VPS recommendations — review before setting up a validator."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management.md",
+            "relevance": "Session key generation and registration — must be completed before bonding and activation."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-staking-mechanics-rewards",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-staking-mechanics-rewards.md",
+            "relevance": "How validator rewards are calculated and distributed after becoming active."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: complete the final phase of validator setup",
+          "user_says": "I've installed the polkadot binary and generated session keys. How do I start validating?",
+          "actions": [
+            "Start the node with --sync warp to catch up to the chain head quickly",
+            "Poll system_syncState until currentBlock equals highestBlock",
+            "Delegate bonding to user: Polkadot.js Apps > Network > Staking > Accounts > + Stash",
+            "Delegate activation to user: Bond & Validate with session key hex and commission at least 10%",
+            "Fetch and save polkadot-validator.service systemd unit file",
+            "Stop manual node, daemon-reload, enable and start systemd service",
+            "Verify health via system_health RPC — confirm peers > 0 and isSyncing false"
+          ],
+          "result": "Validator running as a systemd service and appearing in the waiting set, ready to be selected for active validation in a future era"
+        },
+        {
+          "scenario": "Edge case: validator stuck at 0 peers after service start",
+          "user_says": "My validator started but shows 0 peers and isSyncing is stuck",
+          "actions": [
+            "Check firewall: sudo ufw status — verify port 30333 is allowed",
+            "For cloud VMs, check security group inbound rules for TCP 30333",
+            "Run: sudo journalctl -fu polkadot-validator | grep -i peer",
+            "If port is blocked: sudo ufw allow 30333/tcp && sudo systemctl restart polkadot-validator"
+          ],
+          "result": "Node connects to peers and resumes syncing; peer count increases over the following minutes"
         }
       ]
     }

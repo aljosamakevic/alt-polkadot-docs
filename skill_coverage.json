@@ -3,9 +3,9 @@
   "generated": "2026-04-21T23:59:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 79,
+    "up_to_date": 80,
     "stale": 0,
-    "uncovered": 57,
+    "uncovered": 56,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -203,9 +203,10 @@
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": "2026-04-21T22:30:00Z",
+      "last_scanned": "2026-04-21T23:59:00Z",
       "skills": [
-        "onboard-polkadot-validator"
+        "onboard-polkadot-validator",
+        "start-validating-on-polkadot"
       ],
       "status": "up_to_date"
     },
@@ -245,9 +246,11 @@
     },
     "node-infrastructure/run-a-validator/requirements.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:59:00Z",
+      "skills": [
+        "onboard-polkadot-validator"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/staking-mechanics/offenses-and-slashes.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

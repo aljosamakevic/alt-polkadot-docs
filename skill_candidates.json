@@ -820,8 +820,9 @@
       ],
       "category": "tutorial",
       "priority": "low",
-      "status": "pending",
+      "status": "built",
       "notes": "Covers syncing a validator node (full or warp sync), bonding DOT via Polkadot.js Apps staking UI, activating the validator, and running as a systemd service. P1+P2+P3+P4 all present; systemd unit file is a source file to create. K1=0 — intro states key-management must be completed first. GUI-heavy bonding and activation steps (S1=0). Bonding requires real DOT on mainnet (S2=0). C2 fired (multiple screenshots). Part of composite skill onboard-polkadot-validator.",
+      "built_at": "2026-04-21T23:59:00Z",
       "scoring": {
         "signals": [
           "P1",
