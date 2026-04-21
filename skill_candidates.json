@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T17:00:00Z",
+    "generated": "2026-04-21T18:00:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -242,6 +242,22 @@
                 "signals": ["P1", "P2", "P4", "C2", "K1", "K3", "S2"],
                 "category_scores": { "procedural": 15, "reference": 0, "conceptual": 3, "not_applicable": 0 },
                 "priority_score": 11
+            }
+        },
+        {
+            "skill_id": "install-polkadot-sdk",
+            "title": "Install the Polkadot SDK",
+            "source_pages": [
+                "parachains/install-polkadot-sdk.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Multi-OS installation guide (macOS, Linux, Windows WSL) for the Polkadot SDK. Numbered steps throughout, multiple CLI commands (brew, apt, rustup, cargo build), and verification steps with expected output. Cookbook CI badge present (K4). Self-contained from scratch — covers all dependency installation and SDK build. Optional kitchensink explore step uses Polkadot.js Apps GUI but does not affect the primary installation workflow (S1 still fires). Serves as prerequisite for most parachain development skills (create-frame-pallet, set-up-the-parachain-template, etc.).",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
             }
         },
         {
@@ -622,6 +638,50 @@
             "scoring": {
                 "signals": ["N1", "N2"],
                 "category_scores": { "procedural": 0, "reference": 0, "conceptual": 0, "not_applicable": 8 }
+            }
+        },
+        {
+            "page": "parachains/get-started.md",
+            "category": "not_applicable",
+            "reason": "Navigation landing page composed entirely of tables linking to other doc pages, grouped by topic (Quick Start, Launch, Customize, Testing, Runtime Upgrades, Interoperability, Integrations). No procedural steps, code, or substantive content of its own.",
+            "scoring": {
+                "signals": ["C3", "N1"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 2, "not_applicable": 4 },
+                "category_ambiguous": true,
+                "contending_categories": ["not_applicable", "conceptual"]
+            }
+        },
+        {
+            "page": "parachains/integrations/indexers.md",
+            "category": "not_applicable",
+            "reason": "Tools directory listing Subsquid and SubQuery with external reference links. The brief conceptual intro ('What is a Blockchain Indexer?') scores conceptual higher (7) than not_applicable (4), but N1 fires because the page's primary purpose is a grid-card link directory to external tools. Rule 1 takes precedence over Rule 5.",
+            "scoring": {
+                "signals": ["C1", "C3", "N1"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 7, "not_applicable": 4 },
+                "category_ambiguous": true,
+                "contending_categories": ["not_applicable", "conceptual"]
+            }
+        },
+        {
+            "page": "parachains/integrations/oracles.md",
+            "category": "not_applicable",
+            "reason": "Tools directory listing Acurast and DIA oracle providers with external reference links. Same pattern as indexers.md: conceptual intro scores higher (7) than not_applicable (4), but N1 fires (grid-card link directory) and Rule 1 takes precedence.",
+            "scoring": {
+                "signals": ["C1", "C3", "N1"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 7, "not_applicable": 4 },
+                "category_ambiguous": true,
+                "contending_categories": ["not_applicable", "conceptual"]
+            }
+        },
+        {
+            "page": "parachains/integrations/wallets.md",
+            "category": "not_applicable",
+            "reason": "Tools directory listing hot wallets (Nova, Talisman, SubWallet), cold wallets (Ledger, Polkadot Vault), and wallet tools (LunoKit) with external reference links only. Same pattern as indexers/oracles: conceptual intro scores higher (7) than not_applicable (4), but N1 fires (grid-card link directory) and Rule 1 takes precedence.",
+            "scoring": {
+                "signals": ["C1", "C3", "N1"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 7, "not_applicable": 4 },
+                "category_ambiguous": true,
+                "contending_categories": ["not_applicable", "conceptual"]
             }
         }
     ]
