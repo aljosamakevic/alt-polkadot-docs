@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T23:30:00Z",
+  "generated": "2026-04-21T23:59:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 75,
+    "up_to_date": 79,
     "stale": 0,
-    "uncovered": 61,
+    "uncovered": 57,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -395,9 +395,11 @@
     },
     "parachains/runtime-maintenance/coretime-renewal.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:59:00Z",
+      "skills": [
+        "renew-parachain-coretime"
+      ],
+      "status": "up_to_date"
     },
     "parachains/runtime-maintenance/runtime-upgrades.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -415,9 +417,11 @@
     },
     "parachains/runtime-maintenance/unlock-parachains.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:59:00Z",
+      "skills": [
+        "unlock-parachain-via-xcm"
+      ],
+      "status": "up_to_date"
     },
     "parachains/testing/fork-a-parachain.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -717,9 +721,11 @@
     },
     "smart-contracts/connect.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:59:00Z",
+      "skills": [
+        "connect-polkadot-hub-testnet"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/dapps/zero-to-hero.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -833,9 +839,11 @@
     },
     "smart-contracts/faucet.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:59:00Z",
+      "skills": [
+        "get-testnet-tokens-faucet"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/for-eth-devs/accounts.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

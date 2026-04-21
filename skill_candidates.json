@@ -1297,7 +1297,7 @@
       ],
       "category": "guide",
       "priority": "low",
-      "status": "pending",
+      "status": "built",
       "notes": "Guide covering manual coretime renewal (broker.renew extrinsic) and auto-renewal configuration (enable_auto_renew via XCM from the parachain). Entirely GUI-driven via Polkadot.js Apps (S1 absent). No CLI commands or code blocks (K2 absent). K1=0 — requires an existing parachain with active coretime and an HRMP channel to the Coretime chain (for auto-renewal). No explicit prerequisites section; no cookbook badge. Ambiguous between guide and reference: procedural=10 vs reference=8 (extrinsic parameter tables for enable_auto_renew/disable_auto_renew); Rule 3 fires first. C1+C3 fire for bulk sale phase explanations and query result descriptions.",
       "scoring": {
         "signals": [
@@ -1322,7 +1322,8 @@
           "reference"
         ],
         "priority_score": 6
-      }
+      },
+      "built_at": "2026-04-21T23:59:00Z"
     },
     {
       "skill_id": "perform-runtime-upgrade",
@@ -1365,7 +1366,7 @@
       ],
       "category": "guide",
       "priority": "low",
-      "status": "pending",
+      "status": "built",
       "notes": "Guide for unlocking a locked parachain by sending a registrar.removeLock XCM from the parachain to the relay chain using sudo. Covers checking lock status (Chain State query), encoding the removeLock extrinsic, funding the sovereign account, and crafting the XCM via Polkadot.js Apps UI. P1+P4=10 → Rule 3 guide. Entirely GUI-driven (S1=0). No code blocks (K2 absent). K1=0 — requires an existing running parachain. No prerequisites section; no cookbook badge. Ambiguous between guide and reference: procedural=10 vs reference=8 (extrinsic descriptions for registrar.removeLock and registrar.paras, sovereign account derivation table); Rule 3 fires first.",
       "scoring": {
         "signals": [
@@ -1390,7 +1391,8 @@
           "reference"
         ],
         "priority_score": 6
-      }
+      },
+      "built_at": "2026-04-21T23:59:00Z"
     },
     {
       "skill_id": "fork-parachain-chopsticks",
@@ -1854,7 +1856,7 @@
       ],
       "category": "guide",
       "priority": "low",
-      "status": "pending",
+      "status": "built",
       "notes": "Procedural score (10) triggers rule 3 guide classification, but reference score (12) is numerically higher — flagged ambiguous. The bulk of the page is network configuration reference data (chain IDs, RPC URLs, WSS endpoints for TestNet/MainNet/Kusama). The only procedural workflow is a 3-step GUI-only faucet interaction (navigate → paste address → click button); no CLI commands or file creation. S1 = 0 (GUI-only), K1 = 0 (requires pre-existing wallet), K3 = 0 (no prerequisites section), resulting in priority_score of 3. Page's primary agent-facing value is as supplementary reference context for network connection details used by other skills.",
       "scoring": {
         "signals": [
@@ -1877,7 +1879,8 @@
           "guide",
           "reference"
         ]
-      }
+      },
+      "built_at": "2026-04-21T23:59:00Z"
     },
     {
       "skill_id": "build-dapp-viem-nextjs",
@@ -2281,7 +2284,7 @@
       ],
       "category": "guide",
       "priority": "low",
-      "status": "pending",
+      "status": "built",
       "notes": "Three-step UI-only workflow (navigate, paste address, click button). Self-contained (K1=5) and deterministic (S2=3) but S1 does not fire because there are no CLI or SDK steps. Useful as a prerequisite step in deployment tutorials; limited standalone programmatic skill value.",
       "scoring": {
         "signals": [
@@ -2299,7 +2302,8 @@
           "not_applicable": 0
         },
         "priority_score": 8
-      }
+      },
+      "built_at": "2026-04-21T23:59:00Z"
     },
     {
       "skill_id": "set-up-local-dev-node",

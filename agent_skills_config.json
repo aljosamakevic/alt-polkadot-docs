@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T23:30:00Z",
-  "content_hash": "sha256:bd7339dc0e3cf93cc88320b65d623854bc13fb5d3723809c16db7f94d159b950",
+  "generated": "2026-04-21T23:59:00Z",
+  "content_hash": "sha256:55430364911cc4d469536eebbe1b06ab71a594e8f3c84c570185cb6f847edc9e",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -11413,6 +11413,452 @@
             "Verify continuous block production in Parachains > Overview"
           ],
           "result": "Parachain switches to dedicated bulk coretime allocation with continuous block production"
+        }
+      ]
+    },
+    {
+      "id": "get-testnet-tokens-faucet",
+      "title": "Get TestNet Tokens from the Polkadot Faucet",
+      "objective": "Fund an EVM wallet address with PAS test tokens on Polkadot Hub TestNet (chain ID 420420417) using the Polkadot faucet UI.",
+      "description": "Guides the user through the three-step Polkadot Hub TestNet faucet workflow: navigate to the faucet site, enter an EVM address, and submit the token request. Use when a deployment or contract tutorial requires a funded account and the user does not yet have testnet tokens. Trigger phrases: 'get test tokens', 'fund my wallet', 'need PAS tokens', 'Polkadot faucet', 'testnet tokens'. Output: the specified EVM address is credited with PAS tokens on Polkadot Hub TestNet (chain ID 420420417). Note: this is a browser UI workflow that must be delegated to the user.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/faucet.md"
+      ],
+      "primary_page": "smart-contracts/faucet.md",
+      "prerequisites": {
+        "wallet": [
+          "MetaMask or any EVM-compatible wallet with an address (only the 0x-prefixed address is needed)",
+          "Copy your EVM address (0x-prefixed, 42 characters)"
+        ],
+        "network": [
+          "Internet access to https://faucet.polkadot.io/"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Navigate to the Polkadot faucet",
+          "working_directory": ".",
+          "description": "Open https://faucet.polkadot.io/ in a browser. The faucet dispenses PAS tokens on Polkadot Hub TestNet (chain ID 420420417) and other test networks. Confirm the page loads — if unavailable, check the Polkadot Discord #faucet channel. This step must be delegated to the user."
+        },
+        {
+          "order": 2,
+          "action": "Enter EVM address and select Polkadot Hub TestNet",
+          "working_directory": ".",
+          "description": "In the faucet UI, paste the 0x-prefixed EVM address into the address field. From the network selector, choose 'Polkadot Hub TestNet' (chain ID 420420417). The faucet has a rate limit of approximately 500 PAS per 24 hours per address. This step must be delegated to the user."
+        },
+        {
+          "order": 3,
+          "action": "Submit the faucet request and confirm receipt",
+          "working_directory": ".",
+          "description": "Click the 'Get Tokens' (or similar) button. The faucet processes the request and returns a transaction hash. Verify receipt: curl -s -X POST https://services.polkadothub-rpc.com/testnet -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_getBalance\",\"params\":[\"YOUR_ADDRESS\",\"latest\"],\"id\":1}' — a non-zero hex value confirms the account is funded. Replace YOUR_ADDRESS with the 0x-prefixed address. This step must be delegated to the user."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Faucet shows 'rate limit exceeded' or 'already requested'",
+          "cause": "The address has already received tokens within the 24-hour rate limit window.",
+          "resolution": "Wait 24 hours before requesting again, or use a different development wallet address. For local testing without rate limits, consider forking TestNet using Chopsticks."
+        },
+        {
+          "pattern": "Balance remains zero after successful faucet transaction",
+          "cause": "The faucet transaction may still be pending due to TestNet latency, or Polkadot Hub TestNet is not added to MetaMask.",
+          "resolution": "Wait 1-2 minutes and recheck the balance. Add Polkadot Hub TestNet to MetaMask: chain ID 420420417, RPC https://services.polkadothub-rpc.com/testnet, symbol PAS."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for network connection details or to understand how PAS tokens are used in smart contract workflows.",
+        "pages": [
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Full network parameters (RPC endpoints, chain IDs, WSS URLs) for Polkadot Hub TestNet and MainNet."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Hardhat setup for Polkadot Hub deployment — requires a funded account from this faucet step."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: fund a wallet before contract deployment",
+          "user_says": "I need testnet PAS tokens to deploy a smart contract on Polkadot Hub",
+          "actions": [
+            "Navigate to https://faucet.polkadot.io/",
+            "Paste EVM address and select Polkadot Hub TestNet",
+            "Submit token request and wait for confirmation",
+            "Verify balance via eth_getBalance JSON-RPC call"
+          ],
+          "result": "EVM address funded with PAS tokens on Polkadot Hub TestNet (chain ID 420420417), ready for contract deployment"
+        },
+        {
+          "scenario": "Edge case: rate limit hit, testing still needed",
+          "user_says": "The faucet says I already requested tokens today",
+          "actions": [
+            "Explain the 24-hour rate limit",
+            "Suggest using a second development wallet address",
+            "Offer to set up a local Chopsticks fork of TestNet as an alternative"
+          ],
+          "result": "User continues testing with an alternative address or local fork that bypasses faucet dependency"
+        }
+      ]
+    },
+    {
+      "id": "renew-parachain-coretime",
+      "title": "Renew Coretime for a Parachain",
+      "objective": "Renew or configure auto-renewal of a parachain's bulk coretime lease before expiry using Polkadot.js Apps.",
+      "description": "Guides operators through renewing an existing bulk coretime lease: manually via the broker.renew extrinsic, or automatically via the enable_auto_renew XCM call from the parachain to the Coretime chain. Use when a parachain's coretime region is approaching its end block and the operator wants to maintain continuous block production. Trigger phrases: 'renew coretime', 'coretime expiry', 'auto-renew parachain', 'broker.renew', 'enable_auto_renew'. Prerequisites: existing parachain with active bulk coretime; DOT/PAS for fees; Polkadot.js Apps with connected operator account. Note: entirely GUI-driven via Polkadot.js Apps — all steps must be delegated to the user.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/runtime-maintenance/coretime-renewal.md"
+      ],
+      "primary_page": "parachains/runtime-maintenance/coretime-renewal.md",
+      "prerequisites": {
+        "runtime": [
+          "Polkadot.js Apps (https://polkadot.js.org/apps/) connected to the Coretime parachain (or relay chain)"
+        ],
+        "network": [
+          "RPC access to Polkadot or Paseo relay chain and Coretime parachain"
+        ],
+        "tokens": [
+          "DOT (mainnet) or PAS (Paseo testnet) in the operator account for the renewal fee",
+          "For auto-renewal: tokens in the parachain sovereign account on the Coretime chain to cover ongoing XCM execution fees"
+        ],
+        "wallet": [
+          "Polkadot.js extension (https://polkadot.js.org/extension/) with the operator account that holds the coretime region"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Check current coretime lease status",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to the Coretime chain, navigate to Developer > Chain State. Select broker > regions() to see the current coretime region for your para ID — note the region core and end block. Compare the end block to the current block to determine time remaining. This step must be delegated to the user."
+        },
+        {
+          "order": 2,
+          "action": "Manually renew via broker.renew extrinsic",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to the Coretime chain, navigate to Developer > Extrinsics. Select the operator account, choose broker > renew, and enter the core index for the para ID. Submit and sign the transaction. The new region starts from the end of the current region. Important: broker.renew must be submitted during the Renewals phase of the bulk sale cycle — submitting outside this window fails. Check the current phase via broker > saleInfo() in Chain State. This step must be delegated to the user."
+        },
+        {
+          "order": 3,
+          "action": "(Optional) Enable auto-renewal via XCM from the parachain",
+          "working_directory": ".",
+          "description": "To automate future renewals, the parachain sends an XCM message to the Coretime chain calling broker > enable_auto_renew(core, task, maybe_task_address). In Polkadot.js Apps connected to the parachain, navigate to Developer > Extrinsics, select sudo > sudo(call), and craft a polkadotXcm > send call targeting the Coretime chain with the encoded enable_auto_renew extrinsic. Prerequisite: an HRMP channel must be open between the parachain and the Coretime chain, and the parachain sovereign account on the Coretime chain must have sufficient tokens for ongoing renewals. This step must be delegated to the user."
+        },
+        {
+          "order": 4,
+          "action": "Verify renewal",
+          "working_directory": ".",
+          "description": "After transaction confirmation, query broker > regions() on the Coretime chain to verify the region shows an updated end block. For auto-renewal, query broker > autoRenewals() to confirm the entry is present. This step must be delegated to the user."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Transaction rejected: 'Cannot renew outside Renewals phase'",
+          "cause": "The broker.renew extrinsic was submitted outside the Renewals phase of the bulk coretime sale cycle.",
+          "resolution": "Check the current sale phase via broker > saleInfo() in Chain State. Wait for the next Renewals phase — visible as saleInfo.renewalsEnd block."
+        },
+        {
+          "pattern": "XCM for enable_auto_renew fails with 'Barrier' or 'TooExpensive'",
+          "cause": "The parachain sovereign account on the Coretime chain has insufficient tokens, or the HRMP channel is not open.",
+          "resolution": "Fund the sovereign account on the Coretime chain via a standard XCM transfer. Verify the HRMP channel between the parachain and Coretime chain is open and bidirectional."
+        },
+        {
+          "pattern": "Region not visible after renewal",
+          "cause": "Transaction may still be pending, or the core was assigned to a different para ID.",
+          "resolution": "Wait for finalization and re-query broker > regions(). Filter results by your para ID."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for background on coretime mechanics or the initial coretime purchase workflow.",
+        "pages": [
+          {
+            "slug": "parachains-launch-a-parachain-obtain-coretime",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-obtain-coretime.md",
+            "relevance": "How to initially obtain coretime — the prerequisite workflow before renewal applies."
+          },
+          {
+            "slug": "reference-polkadot-hub-consensus-and-security-agile-coretime",
+            "url": "https://docs.polkadot.com/ai/pages/reference-polkadot-hub-consensus-and-security-agile-coretime.md",
+            "relevance": "Conceptual overview of agile coretime, bulk sale phases, and the Renewals window mechanics."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: manual renewal before expiry",
+          "user_says": "My parachain's coretime is expiring soon — how do I renew it?",
+          "actions": [
+            "Query broker > regions() on the Coretime chain to find the current region end block",
+            "Wait for the Renewals phase of the bulk sale cycle",
+            "Submit broker.renew with the core index in Polkadot.js Apps",
+            "Verify the updated end block in broker > regions()"
+          ],
+          "result": "Parachain coretime renewed for another bulk period; continuous block production maintained"
+        },
+        {
+          "scenario": "Edge case: configure auto-renewal via XCM",
+          "user_says": "I want my parachain to renew its coretime automatically every period",
+          "actions": [
+            "Verify HRMP channel is open to the Coretime chain",
+            "Fund parachain sovereign account on the Coretime chain",
+            "Submit enable_auto_renew XCM via sudo on the parachain",
+            "Confirm the entry in broker > autoRenewals()"
+          ],
+          "result": "Auto-renewal configured; coretime renews each cycle without manual intervention"
+        }
+      ]
+    },
+    {
+      "id": "unlock-parachain-via-xcm",
+      "title": "Unlock a Parachain via XCM",
+      "objective": "Remove a manager lock on a parachain by sending a registrar.removeLock XCM call from the parachain to the relay chain using sudo via Polkadot.js Apps.",
+      "description": "Walks operators through unlocking a locked parachain: verify lock status via Chain State, encode the registrar.removeLock extrinsic, fund the sovereign account, and submit the XCM message via sudo. Use when a parachain is stuck in a locked state after initial onboarding and needs to transition to self-managing. Trigger phrases: 'unlock parachain', 'remove parachain lock', 'registrar.removeLock', 'parachain locked', 'parachain stuck'. Prerequisites: running parachain with sudo access; sovereign account funded on relay chain; Polkadot.js Apps. Note: entirely GUI-driven via Polkadot.js Apps — all steps must be delegated to the user.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/runtime-maintenance/unlock-parachains.md"
+      ],
+      "primary_page": "parachains/runtime-maintenance/unlock-parachains.md",
+      "prerequisites": {
+        "runtime": [
+          "Polkadot.js Apps (https://polkadot.js.org/apps/) connected to both the parachain and the relay chain",
+          "sudo pallet active on the parachain"
+        ],
+        "network": [
+          "RPC access to the parachain and the relay chain (Polkadot, Paseo, or Westend)"
+        ],
+        "tokens": [
+          "DOT/PAS in the parachain sovereign account on the relay chain to cover XCM execution fees (minimum ~1 DOT recommended)",
+          "Small DOT/PAS balance in the sudo account for extrinsic submission fees"
+        ],
+        "wallet": [
+          "Polkadot.js extension with the sudo account for the parachain"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Verify parachain lock status",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to the relay chain, navigate to Developer > Chain State. Select registrar > paras(paraId) and enter the para ID. If the result shows 'manager: Some(account)', the parachain is locked. Note the manager account address — the XCM must originate from this account's parachain. This step must be delegated to the user."
+        },
+        {
+          "order": 2,
+          "action": "Encode the registrar.removeLock extrinsic",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to the relay chain, navigate to Developer > Extrinsics. Select registrar > removeLock, enter the para ID, and use the 'Encode call data' option (do NOT submit). Copy the resulting hex-encoded call data — this will be used as the XCM payload in the next step. This step must be delegated to the user."
+        },
+        {
+          "order": 3,
+          "action": "Fund the parachain sovereign account on the relay chain",
+          "working_directory": ".",
+          "description": "Compute the sovereign account address for the parachain on the relay chain (deterministic from the para ID — use the subkey utility or Polkadot.js Apps > Developer > Utilities > Derive account). In Polkadot.js Apps on the relay chain, go to Accounts and verify the sovereign account has at least 1 DOT/PAS. If not, transfer tokens from a funded relay chain account. The sovereign account pays for XCM execution on the relay chain. This step must be delegated to the user."
+        },
+        {
+          "order": 4,
+          "action": "Submit the XCM unlock message via sudo",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to the parachain, navigate to Developer > Extrinsics. Select sudo > sudo(call), then choose polkadotXcm > send. Set the destination to the relay chain (V3 MultiLocation: parent = 1, interior = Here). Construct the XCM message with: WithdrawAsset (from sovereign account), BuyExecution (weight: Unlimited), Transact (call = encoded registrar.removeLock from Step 2). Sign and submit with the sudo account. This step must be delegated to the user."
+        },
+        {
+          "order": 5,
+          "action": "Verify parachain is unlocked",
+          "working_directory": ".",
+          "description": "After relay chain finalization (30-60 seconds), re-query registrar > paras(paraId) in Chain State on the relay chain. The 'manager' field should now be 'None', confirming the lock is removed. This step must be delegated to the user."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "XCM fails with 'Barrier' error on relay chain",
+          "cause": "The XCM message lacks a valid BuyExecution instruction, or the sovereign account has insufficient tokens to pay for execution.",
+          "resolution": "Ensure the sovereign account has sufficient DOT/PAS (minimum ~1 DOT). Verify the XCM includes WithdrawAsset followed by BuyExecution with WeightLimit::Unlimited."
+        },
+        {
+          "pattern": "registrar.removeLock fails: 'NotOwner' or 'NotRegistered'",
+          "cause": "The account sending the XCM is not the manager recorded in registrar > paras(), or the para ID is not registered.",
+          "resolution": "Confirm the manager account matches registrar > paras(paraId). The Transact call must originate from the correct parachain's sovereign account on the relay chain."
+        },
+        {
+          "pattern": "Para still shows lock after XCM sent",
+          "cause": "The XCM message may still be queued or the relay chain has not finalized the XCM execution block.",
+          "resolution": "Wait for relay chain finalization. Check XCMP or DMP message queues in Chain State. If the message failed, inspect the relay chain event log for XCM execution errors."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for context on parachain deployment and XCM channel requirements.",
+        "pages": [
+          {
+            "slug": "parachains-launch-a-parachain-deploy-to-polkadot",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-deploy-to-polkadot.md",
+            "relevance": "Parachain onboarding workflow — the context in which parachains typically end up locked after deployment."
+          },
+          {
+            "slug": "parachains-interoperability-channels-with-system-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-interoperability-channels-with-system-parachains.md",
+            "relevance": "XCM channel setup context for inter-chain communication from parachain to relay chain."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: unlock parachain after initial deployment",
+          "user_says": "My parachain is locked after deployment — how do I remove the lock?",
+          "actions": [
+            "Verify lock status via registrar > paras() in Polkadot.js Apps on the relay chain",
+            "Encode registrar.removeLock call data without submitting",
+            "Fund sovereign account on relay chain with at least 1 DOT/PAS",
+            "Submit XCM via sudo > polkadotXcm > send from the parachain",
+            "Confirm lock removed by re-querying registrar > paras()"
+          ],
+          "result": "Parachain lock removed; parachain is now self-managing and can operate independently"
+        },
+        {
+          "scenario": "Edge case: sovereign account insufficient funds",
+          "user_says": "The XCM failed with a Barrier error — sovereign account doesn't have enough tokens",
+          "actions": [
+            "Derive the sovereign account address from the para ID",
+            "Transfer at least 1 DOT/PAS from a funded relay chain account to the sovereign account",
+            "Retry the XCM send with BuyExecution WeightLimit::Unlimited"
+          ],
+          "result": "Sovereign account funded; XCM retry succeeds and parachain lock is removed"
+        }
+      ]
+    },
+    {
+      "id": "connect-polkadot-hub-testnet",
+      "title": "Connect to Polkadot Hub and Get Test Tokens",
+      "objective": "Add Polkadot Hub TestNet to MetaMask and fund an EVM address with PAS test tokens to prepare a smart contract development environment.",
+      "description": "Provides Polkadot Hub TestNet and MainNet network parameters and walks through adding the network to MetaMask and requesting PAS test tokens from the faucet. Use when setting up a new smart contract development environment or when a skill needs TestNet connection reference data (RPC URLs, WSS endpoints, chain IDs). Trigger phrases: 'connect to Polkadot Hub', 'add TestNet to MetaMask', 'Polkadot Hub network config', 'chain ID 420420417', 'configure RPC endpoint'. Output: MetaMask configured with Polkadot Hub TestNet (chain ID 420420417) and account funded with PAS. This skill is primarily a network reference — consult it for endpoint URLs and chain IDs needed by other skills.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/connect.md"
+      ],
+      "primary_page": "smart-contracts/connect.md",
+      "prerequisites": {
+        "wallet": [
+          "MetaMask browser extension installed (https://metamask.io/download/)"
+        ],
+        "network": [
+          "Internet access to Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet",
+          "Internet access to the faucet: https://faucet.polkadot.io/"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Add Polkadot Hub TestNet to MetaMask",
+          "working_directory": ".",
+          "description": "In MetaMask, open Settings > Networks > Add a network > Add a network manually. Enter these parameters: Network name: 'Polkadot Hub TestNet'; New RPC URL: 'https://services.polkadothub-rpc.com/testnet'; Chain ID: '420420417'; Currency symbol: 'PAS'. For the Block Explorer URL, check https://docs.polkadot.com/smart-contracts/connect/ for the current explorer URL, as it may change. Click Save and switch MetaMask to this network. This step must be delegated to the user."
+        },
+        {
+          "order": 2,
+          "action": "Request PAS test tokens from the faucet",
+          "working_directory": ".",
+          "description": "Navigate to https://faucet.polkadot.io/. Select 'Polkadot Hub TestNet', paste your 0x-prefixed EVM address, and click the request button. The faucet credits PAS tokens within seconds. Rate limit: approximately 500 PAS per 24 hours per address. This step must be delegated to the user."
+        },
+        {
+          "order": 3,
+          "action": "Verify MetaMask balance",
+          "working_directory": ".",
+          "description": "In MetaMask, confirm the PAS balance is non-zero on the Polkadot Hub TestNet network. To verify programmatically: curl -s -X POST https://services.polkadothub-rpc.com/testnet -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_getBalance\",\"params\":[\"YOUR_ADDRESS\",\"latest\"],\"id\":1}'. Replace YOUR_ADDRESS with the 0x-prefixed address. A non-zero hex result confirms the account is funded."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "MetaMask: 'Invalid chain ID' or cannot connect to network",
+          "cause": "Incorrect chain ID or RPC URL entered in MetaMask network settings.",
+          "resolution": "Verify the chain ID is exactly 420420417 (decimal) and the RPC URL is https://services.polkadothub-rpc.com/testnet. Remove and re-add the network if the error persists."
+        },
+        {
+          "pattern": "Faucet rate limit: 'Already requested recently'",
+          "cause": "The address already received tokens within the 24-hour rate limit window.",
+          "resolution": "Wait 24 hours, or use a different development wallet address."
+        },
+        {
+          "pattern": "RPC endpoint returns errors or is unreachable",
+          "cause": "TestNet may be under maintenance, or the public RPC endpoint URL has changed.",
+          "resolution": "Check https://docs.polkadot.com/smart-contracts/connect/ for the latest endpoint URLs. The WSS alternative is wss://services.polkadothub-rpc.com/testnet."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for development framework configuration that uses the TestNet endpoints established here.",
+        "pages": [
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Hardhat network configuration using the TestNet RPC URL and chain ID provided by this skill."
+          },
+          {
+            "slug": "smart-contracts-faucet",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-faucet.md",
+            "relevance": "Detailed faucet workflow for obtaining PAS test tokens."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: set up development environment from scratch",
+          "user_says": "I want to deploy a smart contract on Polkadot Hub — how do I connect to TestNet?",
+          "actions": [
+            "Add Polkadot Hub TestNet to MetaMask with chain ID 420420417 and RPC https://services.polkadothub-rpc.com/testnet",
+            "Request PAS tokens from https://faucet.polkadot.io/",
+            "Verify funded balance in MetaMask"
+          ],
+          "result": "MetaMask connected to Polkadot Hub TestNet with funded PAS balance, ready for smart contract deployment"
+        },
+        {
+          "scenario": "Edge case: looking up MainNet connection parameters",
+          "user_says": "What RPC endpoint and chain ID do I use for Polkadot Hub MainNet?",
+          "actions": [
+            "Reference the MainNet network parameters from the source page",
+            "Warn: MainNet uses real DOT — use TestNet (chain ID 420420417) for development and testing"
+          ],
+          "result": "User receives Polkadot Hub MainNet network parameters with a caution about real token usage"
         }
       ]
     }
