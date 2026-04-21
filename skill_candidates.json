@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:47:47Z",
+  "generated": "2026-04-21T15:53:59Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2236,6 +2236,128 @@
         },
         "priority_score": 8
       }
+    },
+    {
+      "skill_id": "set-up-local-dev-node",
+      "title": "Set Up a Local Development Node",
+      "source_pages": [
+        "smart-contracts/dev-environments/local-dev-node.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Step-by-step guide to cloning, building, and running the Revive Dev node plus ETH-RPC adapter. Not self-contained (K1=0): explicit prerequisite is the Install Polkadot SDK Dependencies guide. All steps are CLI-based with verifiable outcome (node ready at http://localhost:8545). CI badge and test link confirm polkadot-cookbook coverage (K4).",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P4",
+          "K2",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 9,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 20
+      }
+    },
+    {
+      "skill_id": "connect-wallet-polkadot-hub",
+      "title": "Connect a Wallet to Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/integrations/wallets.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Numbered GUI steps for connecting MetaMask and Talisman to Polkadot Hub TestNet. K1=0: step 4 for MetaMask defers to smart-contracts/connect/ for RPC parameters. S1=0: all steps are browser-extension UI clicks with no CLI equivalent. Medium priority reflects GUI-only workflow limiting automation fitness.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "C2",
+          "C3",
+          "K2",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 0,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 10
+      }
+    },
+    {
+      "skill_id": "deploy-contracts-ethers-js",
+      "title": "Deploy Contracts to Polkadot Hub with Ethers.js",
+      "source_pages": [
+        "smart-contracts/libraries/ethers-js.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete tutorial: project setup, Solidity compilation, deployment, and contract interaction via Ethers.js. Explicit numbered steps in the deploy section (P1). Self-contained with prerequisites listed. Code via --8<-- includes from polkadot-cookbook (K4). INSERT_* placeholders for RPC URL, chain ID, and mnemonic require substitution (K2=0).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 21
+      }
+    },
+    {
+      "skill_id": "deploy-contracts-viem",
+      "title": "Deploy Contracts to Polkadot Hub with viem",
+      "source_pages": [
+        "smart-contracts/libraries/viem.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "End-to-end TypeScript guide using viem: project init, chain config, wallet client, compilation, deployment, and contract interaction. No explicit numbered steps (P1=0) so scores as guide rather than tutorial despite full workflow coverage. Self-contained with prerequisites listed. INSERT_* placeholders for RPC URL, chain ID, and private key require substitution (K2=0). Companion to deploy-contracts-ethers-js.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 14,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 21
+      }
     }
   ],
   "supplementary_only": [
@@ -3537,6 +3659,24 @@
           "procedural": 9,
           "reference": 0,
           "conceptual": 5,
+          "not_applicable": 4
+        }
+      }
+    },
+    {
+      "page": "smart-contracts/get-started.md",
+      "category": "not_applicable",
+      "reason": "Navigation hub / landing page. Content is primarily link tables across Quick Starts, Build and Test, Cookbooks, Libraries, Integrations, and Precompiles sections. The Ethereum Tool Differences block is brief conceptual prose but secondary to the navigation function. No procedures, CLI commands, or files to create.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3",
+          "N1"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
           "not_applicable": 4
         }
       }
