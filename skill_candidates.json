@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T20:00:00Z",
+    "generated": "2026-04-21T20:30:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -258,6 +258,22 @@
                 "signals": ["P1", "P2", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
                 "category_scores": { "procedural": 15, "reference": 0, "conceptual": 0, "not_applicable": 0 },
                 "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "set-up-parachain-template",
+            "title": "Set Up the Polkadot SDK Parachain Template",
+            "source_pages": [
+                "parachains/launch-a-parachain/set-up-the-parachain-template.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Full workflow for cloning, building, running, and verifying the Polkadot SDK Parachain Template locally. P1+P2+P4 present (15 = tutorial threshold). P3 absent — directory structure is shown illustratively, not as files to create. GUI verification step (Polkadot.js Apps) does not block S1 since the primary workflow is CLI-only. K1=0 — requires install-polkadot-sdk as prerequisite. Cookbook CI badge present (K4). First step in the three-page parachain launch series (set-up-the-parachain-template → deploy-to-polkadot → obtain-coretime).",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "C2", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 20
             }
         },
         {
@@ -622,6 +638,58 @@
                 "contending_categories": ["guide", "reference"],
                 "priority_score": 9
             }
+        },
+        {
+            "skill_id": "renew-parachain-coretime",
+            "title": "Renew Coretime for a Parachain",
+            "source_pages": [
+                "parachains/runtime-maintenance/coretime-renewal.md"
+            ],
+            "category": "guide",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Guide covering manual coretime renewal (broker.renew extrinsic) and auto-renewal configuration (enable_auto_renew via XCM from the parachain). Entirely GUI-driven via Polkadot.js Apps (S1 absent). No CLI commands or code blocks (K2 absent). K1=0 — requires an existing parachain with active coretime and an HRMP channel to the Coretime chain (for auto-renewal). No explicit prerequisites section; no cookbook badge. Ambiguous between guide and reference: procedural=10 vs reference=8 (extrinsic parameter tables for enable_auto_renew/disable_auto_renew); Rule 3 fires first. C1+C3 fire for bulk sale phase explanations and query result descriptions.",
+            "scoring": {
+                "signals": ["P1", "P4", "R1", "R3", "C1", "C3", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 8, "conceptual": 7, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "reference"],
+                "priority_score": 6
+            }
+        },
+        {
+            "skill_id": "perform-runtime-upgrade",
+            "title": "Perform a Forkless Runtime Upgrade",
+            "source_pages": [
+                "parachains/runtime-maintenance/runtime-upgrades.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Tutorial guiding through a full runtime upgrade cycle: add a new dispatchable function to a custom pallet, bump spec_version, rebuild the Wasm binary, and submit system.setCode via sudo through Polkadot.js Apps. P1+P2+P3+P4 all present (score 20). K1=0 — requires install-polkadot-sdk, set-up-the-parachain-template, and create-a-pallet as prerequisites. K2=4 — code uses --8<-- snippet includes rather than inline blocks, but complete code is referenced. Submission step is GUI-dependent (S1=0). Cookbook CI badge present. See storage-migrations.md as supplementary context for upgrade-related data transformations.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "C2", "K2", "K3", "K4", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 16
+            }
+        },
+        {
+            "skill_id": "unlock-parachain-via-xcm",
+            "title": "Unlock a Parachain via XCM",
+            "source_pages": [
+                "parachains/runtime-maintenance/unlock-parachains.md"
+            ],
+            "category": "guide",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Guide for unlocking a locked parachain by sending a registrar.removeLock XCM from the parachain to the relay chain using sudo. Covers checking lock status (Chain State query), encoding the removeLock extrinsic, funding the sovereign account, and crafting the XCM via Polkadot.js Apps UI. P1+P4=10 → Rule 3 guide. Entirely GUI-driven (S1=0). No code blocks (K2 absent). K1=0 — requires an existing running parachain. No prerequisites section; no cookbook badge. Ambiguous between guide and reference: procedural=10 vs reference=8 (extrinsic descriptions for registrar.removeLock and registrar.paras, sovereign account derivation table); Rule 3 fires first.",
+            "scoring": {
+                "signals": ["P1", "P4", "R1", "R3", "C1", "C3", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 8, "conceptual": 7, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "reference"],
+                "priority_score": 6
+            }
         }
     ],
     "supplementary_only": [
@@ -714,6 +782,18 @@
             "scoring": {
                 "signals": ["R3", "C1", "C2", "C3"],
                 "category_scores": { "procedural": 0, "reference": 3, "conceptual": 10, "not_applicable": 0 }
+            }
+        },
+        {
+            "page": "parachains/runtime-maintenance/storage-migrations.md",
+            "category": "reference",
+            "relevant_to": ["perform-runtime-upgrade", "create-frame-pallet", "add-existing-pallet-to-runtime"],
+            "notes": "Reference guide for storage migrations in Polkadot SDK runtimes: explains when migrations are required (type changes, key changes, enum reordering), the OnRuntimeUpgrade trait (on_runtime_upgrade, pre_upgrade, post_upgrade), VersionedMigration pattern, single-block vs multi-block migration tradeoffs, and migration file organization. No numbered action steps or CLI commands. Code blocks are illustrative patterns pulled from the SDK (--8<-- includes), not files to create. R1 fires for OnRuntimeUpgrade trait method table; R3 for VersionedMigration type parameter descriptions. C1 fires for single-block vs multi-block rationale. Ambiguous between reference (8) and conceptual (7); Rule 4 fires first. Essential supplementary reading for any runtime upgrade or pallet modification skill.",
+            "scoring": {
+                "signals": ["R1", "R3", "C1", "C3"],
+                "category_scores": { "procedural": 0, "reference": 8, "conceptual": 7, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["reference", "conceptual"]
             }
         }
     ],
