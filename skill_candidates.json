@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T18:00:00Z",
+    "generated": "2026-04-21T20:00:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -552,6 +552,76 @@
                 "category_scores": { "procedural": 20, "reference": 4, "conceptual": 0, "not_applicable": 0 },
                 "priority_score": 20
             }
+        },
+        {
+            "skill_id": "open-hrmp-channel-between-parachains",
+            "title": "Open an HRMP Channel Between Parachains",
+            "source_pages": [
+                "parachains/interoperability/channels-between-parachains.md"
+            ],
+            "category": "guide",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Two-step guide for establishing unidirectional (and then bidirectional) HRMP channels between two user parachains: fund sovereign accounts, encode hrmpInitOpenChannel and hrmpAcceptOpenChannel extrinsics, craft XCM messages, and submit via Polkadot.js Apps. No CLI commands; entirely GUI-driven. Cookbook CI badge present (K4). Ambiguous between guide and reference: numbered steps with P4 give procedural=10 (Rule 3 fires), reference=8 (extrinsic parameter tables R1 and R3). Tiebreaker: Rule 3 fires before Rule 4 because procedural=10 meets the guide threshold. GUI-only workflow (S1=0) and placeholder call data that must be recomputed per para ID (K2=0) limit priority to medium.",
+            "scoring": {
+                "signals": ["P1", "P4", "R1", "R3", "C2", "K1", "K3", "K4", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 8, "conceptual": 3, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "reference"],
+                "priority_score": 17
+            }
+        },
+        {
+            "skill_id": "open-hrmp-channel-with-system-parachain",
+            "title": "Open an HRMP Channel with a System Parachain",
+            "source_pages": [
+                "parachains/interoperability/channels-with-system-parachains.md"
+            ],
+            "category": "guide",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Simplified single-message procedure for bidirectional HRMP channel setup between a user parachain and a system parachain (e.g., Asset Hub): fund sovereign account, encode establish_channel_with_system extrinsic, submit XCM to relay chain via Polkadot.js Apps, verify at next session. More efficient than the two-step regular parachain flow. Entirely GUI-driven; no CLI commands. Cookbook CI badge present (K4). Same scoring pattern as channels-between-parachains: procedural=10 vs reference=8; Rule 3 fires first (guide). GUI-only (S1=0) and placeholder call data (K2=0) limit priority to medium.",
+            "scoring": {
+                "signals": ["P1", "P4", "R1", "R3", "C2", "K1", "K3", "K4", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 8, "conceptual": 3, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "reference"],
+                "priority_score": 17
+            }
+        },
+        {
+            "skill_id": "deploy-parachain-to-polkadot-testnet",
+            "title": "Deploy a Parachain to the Polkadot TestNet",
+            "source_pages": [
+                "parachains/launch-a-parachain/deploy-to-polkadot.md"
+            ],
+            "category": "tutorial",
+            "priority": "low",
+            "status": "pending",
+            "notes": "End-to-end tutorial for deploying a Polkadot SDK parachain to Paseo TestNet: obtain PAS tokens (faucet via UI), reserve a para ID (Polkadot.js Apps), generate collator keys (subkey Docker), produce and edit plain/raw chain specs (chain-spec-builder), export genesis wasm and state (polkadot-omni-node), register a parathread (UI), generate a node key, start the collator, and insert session keys (curl RPC). K1=0 — intro explicitly references set-up-the-parachain-template as required prior step. K2=0 — INSERT_SECRET_PHRASE, INSERT_PUBLIC_KEY_HEX_FORMAT, and INSERT_PARA_ID placeholders present. GUI steps for para ID reservation and parathread registration (S1=0). No cookbook badge. Part of a three-page launch series: set-up-the-parachain-template → deploy-to-polkadot → obtain-coretime. Consider proposing a composite once set-up-the-parachain-template is classified.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "R2", "C2", "K3", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 4, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 9
+            }
+        },
+        {
+            "skill_id": "obtain-coretime-parachain",
+            "title": "Obtain Coretime for a Parachain",
+            "source_pages": [
+                "parachains/launch-a-parachain/obtain-coretime.md"
+            ],
+            "category": "guide",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Guide for obtaining validation time after deploying a parachain: place on-demand coretime orders (Polkadot.js Apps onDemand extrinsic) or purchase and assign bulk coretime (RegionX marketplace web UI). No CLI commands; entirely GUI-driven across two different web interfaces. K1=0 — explicitly requires deploy-to-polkadot tutorial as prerequisite. No cookbook badge. Part of the three-page launch series: set-up-the-parachain-template → deploy-to-polkadot → obtain-coretime. Ambiguous between guide and reference: procedural=10 (R1 extrinsic descriptions, R3 parameter descriptions), reference=8; Rule 3 fires first (guide).",
+            "scoring": {
+                "signals": ["P1", "P4", "R1", "R3", "C2", "K3", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 8, "conceptual": 3, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "reference"],
+                "priority_score": 9
+            }
         }
     ],
     "supplementary_only": [
@@ -624,6 +694,23 @@
             "category": "conceptual",
             "relevant_to": ["onboard-polkadot-validator", "start-validating-on-polkadot", "set-up-polkadot-validator-node"],
             "notes": "Explains era points, reward variance between para-validators and non-para-validators, payout scheme (equal base reward regardless of stake), running multiple validators, and commission-based nominator payment distribution. Multiple mermaid flowcharts illustrate reward split scenarios. No CLI commands, no runnable code. C1+C2+C3 all fire; R3 for commission rate and era point parameter descriptions. Useful background for any validator economics question.",
+            "scoring": {
+                "signals": ["R3", "C1", "C2", "C3"],
+                "category_scores": { "procedural": 0, "reference": 3, "conceptual": 10, "not_applicable": 0 }
+            }
+        },
+        {
+            "page": "parachains/interoperability/get-started.md",
+            "category": "conceptual",
+            "relevant_to": [
+                "open-hrmp-channel-between-parachains",
+                "open-hrmp-channel-with-system-parachain",
+                "estimate-xcm-fees-teleport",
+                "replay-dry-run-xcm-chopsticks",
+                "transfer-assets-parachains-paraspell",
+                "bridge-eth-to-polkadot-snowbridge"
+            ],
+            "notes": "Conceptual introduction to XCM: the four principles (asynchronous, absolute, asymmetric, agnostic), the XCM tech stack diagram, core functionalities (programmability, multichain decomposition, bridging), and an annotated first-look example showing WithdrawAsset/BuyExecution/DepositAsset instructions. No procedural steps, no CLI commands, no source files to create. Code blocks are illustrative only (C3). Useful background for any XCM-related skill.",
             "scoring": {
                 "signals": ["R3", "C1", "C2", "C3"],
                 "category_scores": { "procedural": 0, "reference": 3, "conceptual": 10, "not_applicable": 0 }
