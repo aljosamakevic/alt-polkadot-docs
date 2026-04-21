@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:31:09Z",
+  "generated": "2026-04-21T15:37:17Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2109,6 +2109,105 @@
         },
         "priority_score": 18
       }
+    },
+    {
+      "skill_id": "set-up-hardhat-pvm",
+      "title": "Set Up Hardhat with the Polkadot Plugin (PVM)",
+      "source_pages": [
+        "smart-contracts/dev-environments/hardhat-polkadot.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete workflow: initialize project, compile Solidity to PVM bytecode via resolc, test locally with a Substrate node, and deploy to TestNet. Has an explicit prerequisites section, numbered steps throughout, and clear outcome language ('You should see JSON files containing the contract ABIs and bytecodes'). Backed by polkadot-cookbook CI. PVM variant using @parity/hardhat-polkadot — mirrors the EVM skill but targets PolkaVM runtime. P3 not fired: the init wizard creates project files; no explicit file-creation code block on the page.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 25
+      }
+    },
+    {
+      "skill_id": "set-up-hardhat-evm",
+      "title": "Set Up Hardhat for Polkadot Hub (EVM)",
+      "source_pages": [
+        "smart-contracts/dev-environments/hardhat.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Covers Hardhat project initialization, network configuration for Polkadot Hub TestNet (full hardhat.config.ts file shown — P3 fires), and contract verification with Blockscout or Routescan. Self-contained setup workflow with explicit prerequisites and outcome language. Backed by polkadot-cookbook CI. Standard EVM variant with no PVM/resolc dependency.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 25
+      }
+    },
+    {
+      "skill_id": "connect-remix-polkadot",
+      "title": "Connect Remix IDE to Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/dev-environments/remix.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Ambiguous: procedural=10 vs conceptual=7 (difference=3, within ambiguity threshold). Resolved as guide because numbered connection steps (1-4) and a verifiable outcome ('Remix will display your MetaMask account address') are present. However, all steps are GUI-only clicks/dropdowns (S1=0), reducing agent executability. K1=0: requires MetaMask already configured for Polkadot (references Wallet Integrations guide). No reference repo. Useful as a prerequisite context page before Remix-based deploy tutorials.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "C1",
+          "C3",
+          "K2",
+          "K3",
+          "S2"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "conceptual"
+        ],
+        "priority_score": 10
+      }
     }
   ],
   "supplementary_only": [
@@ -3007,6 +3106,30 @@
           "guide",
           "reference"
         ]
+      }
+    },
+    {
+      "page": "smart-contracts/explorers.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-hardhat-pvm",
+        "set-up-hardhat-evm",
+        "set-up-local-dev-node",
+        "connect-remix-polkadot"
+      ],
+      "notes": "Reference directory of available block explorers (BlockScout, Routescan, Subscan) for Polkadot Hub with descriptions, URLs, and screenshots. No procedural content. Useful supplementary context for any skill involving contract deployment or verification, as agents need explorer URLs for post-deployment steps. BlockScout and Routescan URLs are also referenced inline in the Hardhat config verification sections.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
       }
     }
   ],
