@@ -3,9 +3,9 @@
   "generated": "2026-04-21T22:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 50,
+    "up_to_date": 56,
     "stale": 0,
-    "uncovered": 86,
+    "uncovered": 80,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -177,29 +177,36 @@
     },
     "node-infrastructure/run-a-node/relay-chain/secure-wss.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "set-up-secure-wss-relay-node"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "onboard-polkadot-validator"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": "2026-04-21T19:30:00Z",
+      "last_scanned": "2026-04-21T22:30:00Z",
       "skills": [
-        "set-up-polkadot-validator-node"
+        "set-up-polkadot-validator-node",
+        "onboard-polkadot-validator"
       ],
       "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "onboard-polkadot-validator"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/stop-validating.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -253,15 +260,19 @@
     },
     "parachains/customize-runtime/add-existing-pallets.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "add-existing-pallet-to-runtime"
+      ],
+      "status": "up_to_date"
     },
     "parachains/customize-runtime/add-pallet-instances.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "configure-multiple-pallet-instances"
+      ],
+      "status": "up_to_date"
     },
     "parachains/customize-runtime/add-smart-contract-functionality.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -279,9 +290,11 @@
     },
     "parachains/customize-runtime/pallet-development/create-a-pallet.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "create-frame-pallet"
+      ],
+      "status": "up_to_date"
     },
     "parachains/customize-runtime/pallet-development/mock-runtime.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

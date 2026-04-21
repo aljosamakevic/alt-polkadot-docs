@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T22:00:00Z",
-  "content_hash": "sha256:d21e5d8b5f49bfbe607be397b1a3d2e3f923c45ef5c2179af0cfd6b866a020d8",
+  "generated": "2026-04-21T22:30:00Z",
+  "content_hash": "sha256:67195c73d7a85e6c1d368a9bd8352c188be89e897e6f94cd902ffb5c2d8dbc72",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -7647,6 +7647,805 @@
             "If still 0 peers after 15 minutes with correct firewall, check Polkadot status at https://polkadot.io/ecosystem"
           ],
           "result": "Firewall issue identified and resolved; node connects to peers and begins syncing"
+        }
+      ]
+    },
+    {
+      "id": "set-up-secure-wss-relay-node",
+      "title": "Set Up Secure WebSocket (WSS) for a Relay Chain Node",
+      "objective": "Configure a TLS-secured WebSocket endpoint (wss://) for a Polkadot relay chain node using nginx or Apache2 as a reverse proxy with a Let's Encrypt or self-signed SSL certificate.",
+      "description": "Adds a WSS (WebSocket Secure) reverse proxy in front of a Polkadot relay chain node so that wallets, dApps, and light clients can connect over wss:// instead of the unencrypted ws://. Covers installing nginx or Apache2, obtaining an SSL certificate with Let's Encrypt (certbot), writing the reverse proxy virtual host config, and verifying the WSS connection. Use when exposing a relay chain RPC endpoint publicly or when MetaMask or Polkadot.js Apps require a wss:// URL. Requires an existing running relay chain node (companion skill: set-up-relay-chain-full-node). Trigger phrases: 'secure websocket relay node', 'wss relay chain', 'nginx ssl polkadot node', 'let's encrypt polkadot rpc', 'configure wss endpoint'.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "conditional-branch",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-node/relay-chain/secure-wss.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-node/relay-chain/secure-wss.md",
+      "prerequisites": {
+        "runtime": [
+          "64-bit Linux server (Ubuntu 22.04+ recommended) with systemd",
+          "A running Polkadot relay chain node with RPC listening on localhost:9944 (see set-up-relay-chain-full-node)",
+          "A registered domain name with an A record pointing to the server's public IP (required for Let's Encrypt certificates)",
+          "nginx (apt install nginx) or Apache2 (apt install apache2) — choose one before starting",
+          "certbot for Let's Encrypt: apt install certbot python3-certbot-nginx (nginx) or python3-certbot-apache (Apache2)"
+        ],
+        "network": [
+          "TCP port 80 open (required by Let's Encrypt HTTP-01 challenge)",
+          "TCP port 443 open for WSS client connections",
+          "TCP port 9944 bound to localhost only on the Polkadot node (default)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install web server and certbot",
+          "working_directory": ".",
+          "commands": [
+            "sudo apt-get update",
+            "sudo apt-get install -y nginx certbot python3-certbot-nginx"
+          ],
+          "description": "Install nginx and the Let's Encrypt certbot plugin. If you prefer Apache2 instead, run: sudo apt-get install -y apache2 certbot python3-certbot-apache. Choose one web server and use it for all subsequent steps. Verify nginx is running: sudo systemctl status nginx."
+        },
+        {
+          "order": 2,
+          "action": "Obtain an SSL certificate from Let's Encrypt",
+          "working_directory": ".",
+          "commands": [
+            "sudo certbot --nginx -d YOUR_DOMAIN --non-interactive --agree-tos -m YOUR_EMAIL"
+          ],
+          "description": "Replace YOUR_DOMAIN with your actual domain name (e.g., rpc.mynode.example.com) and YOUR_EMAIL with a valid contact address. Certbot performs an HTTP-01 challenge on port 80 — ensure port 80 is open. On success, certificates are saved under /etc/letsencrypt/live/YOUR_DOMAIN/. For Apache2, replace --nginx with --apache. For self-signed certificates (no domain), skip this step and use openssl req -x509 -newkey rsa:4096 -keyout /etc/ssl/private/polkadot-selfsigned.key -out /etc/ssl/certs/polkadot-selfsigned.crt -days 365 -nodes -subj '/CN=localhost' instead; clients must disable certificate verification."
+        },
+        {
+          "order": 3,
+          "action": "Configure nginx reverse proxy for WSS",
+          "working_directory": ".",
+          "description": "Create /etc/nginx/sites-available/polkadot-wss with the following content, replacing YOUR_DOMAIN with your domain name:\n\nserver {\n    listen 443 ssl;\n    server_name YOUR_DOMAIN;\n\n    ssl_certificate /etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem;\n\n    location / {\n        proxy_pass http://localhost:9944;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection \"Upgrade\";\n        proxy_set_header Host $host;\n        proxy_read_timeout 86400;\n    }\n}\n\nserver {\n    listen 80;\n    server_name YOUR_DOMAIN;\n    return 301 https://$host$request_uri;\n}\n\nThen enable the site and reload:\nsudo ln -s /etc/nginx/sites-available/polkadot-wss /etc/nginx/sites-enabled/\nsudo nginx -t && sudo systemctl reload nginx\n\nFor Apache2 instead of nginx, create /etc/apache2/sites-available/polkadot-wss.conf:\n\n<VirtualHost *:443>\n    ServerName YOUR_DOMAIN\n    SSLEngine on\n    SSLCertificateFile /etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem\n    SSLCertificateKeyFile /etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem\n    ProxyRequests Off\n    ProxyPass / ws://localhost:9944/\n    ProxyPassReverse / ws://localhost:9944/\n    RewriteEngine On\n    RewriteCond %{HTTP:Upgrade} websocket [NC]\n    RewriteRule /(.*) ws://localhost:9944/$1 [P,L]\n</VirtualHost>\nThen: sudo a2enmod ssl proxy proxy_http proxy_wstunnel rewrite && sudo a2ensite polkadot-wss.conf && sudo systemctl reload apache2"
+        },
+        {
+          "order": 4,
+          "action": "Verify WSS connection",
+          "working_directory": ".",
+          "commands": [
+            "curl -s --include --no-buffer -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Host: YOUR_DOMAIN' -H 'Origin: https://YOUR_DOMAIN' -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' -H 'Sec-WebSocket-Version: 13' https://YOUR_DOMAIN/"
+          ],
+          "expected_output": "HTTP/1.1 101 Switching Protocols\nUpgrade: websocket\nConnection: Upgrade",
+          "description": "Replace YOUR_DOMAIN with your actual domain. A 101 Switching Protocols response confirms WSS is working. You can also test by connecting Polkadot.js Apps (https://polkadot.js.org/apps/) to wss://YOUR_DOMAIN — it should show the chain name and node peers in the top-left. If the curl command returns a 502, check that the Polkadot node RPC is listening on port 9944: sudo ss -tlnp | grep 9944."
+        },
+        {
+          "order": 5,
+          "action": "Enable certificate auto-renewal",
+          "working_directory": ".",
+          "commands": [
+            "sudo systemctl enable certbot.timer",
+            "sudo systemctl start certbot.timer",
+            "sudo certbot renew --dry-run"
+          ],
+          "description": "Let's Encrypt certificates expire after 90 days. The certbot timer runs twice daily and renews certificates expiring within 30 days. The --dry-run verifies renewal will succeed. Confirm the timer is active: sudo systemctl status certbot.timer."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "certbot: Error getting validation data / Failed authorization procedure",
+          "cause": "Let's Encrypt HTTP-01 challenge cannot reach port 80 on your domain. Usually a firewall rule or the domain's DNS A record is wrong.",
+          "resolution": "Verify: (1) sudo ufw allow 80/tcp; (2) curl http://YOUR_DOMAIN from an external machine returns nginx content; (3) dig YOUR_DOMAIN A returns the server's public IP. If the DNS hasn't propagated yet, wait up to 24 hours and retry."
+        },
+        {
+          "pattern": "nginx: [error] / 502 Bad Gateway when connecting to WSS",
+          "cause": "nginx cannot reach the Polkadot RPC on localhost:9944 — either the node is not running or it is not listening on the expected port.",
+          "resolution": "Check: sudo systemctl status polkadot (or equivalent service name). Verify port: sudo ss -tlnp | grep 9944. If the node is running but bound to 0.0.0.0 with a different port, update the proxy_pass URL in the nginx config to match."
+        },
+        {
+          "pattern": "WebSocket connection refused / ERR_SSL_PROTOCOL_ERROR in browser",
+          "cause": "The nginx or Apache2 configuration has a syntax error, or the reverse proxy upgrade headers are missing.",
+          "resolution": "Run sudo nginx -t (nginx) or sudo apachectl configtest (Apache2). Ensure the Upgrade and Connection headers are present in the location block. Reload after fixing: sudo systemctl reload nginx."
+        },
+        {
+          "pattern": "Self-signed certificate not trusted / NET::ERR_CERT_AUTHORITY_INVALID",
+          "cause": "Browsers and some clients reject self-signed certificates.",
+          "resolution": "For production, use Let's Encrypt (requires a domain). For local testing only, configure the client to accept the certificate: in Polkadot.js Apps, click 'Allow insecure connections' prompt. For programmatic clients, set rejectUnauthorized: false in TLS options (dev only — never in production)."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for the full relay chain node setup or to configure the node as a validator.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "Prerequisite: installing and running the Polkadot relay chain node that this WSS proxy sits in front of."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-bootnode",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-bootnode.md",
+            "relevance": "Configuring the node as a bootnode — WSS is required for bootnode multi-address advertisements."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator.md",
+            "relevance": "Validator node setup — WSS is needed if the validator exposes a public RPC."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: expose relay chain RPC over WSS with Let's Encrypt",
+          "user_says": "Set up WSS for my Polkadot relay chain node",
+          "actions": [
+            "Install nginx and certbot on the Ubuntu server",
+            "Obtain Let's Encrypt certificate for the domain name",
+            "Create /etc/nginx/sites-available/polkadot-wss with reverse proxy config, substituting the domain name",
+            "Enable the site and reload nginx",
+            "Verify with curl WebSocket handshake against wss://YOUR_DOMAIN"
+          ],
+          "result": "Polkadot RPC accessible at wss://YOUR_DOMAIN with a valid TLS certificate; wallets and Polkadot.js Apps can connect"
+        },
+        {
+          "scenario": "Edge case: no domain available, use self-signed certificate for local testing",
+          "user_says": "I don't have a domain name — can I still set up WSS locally?",
+          "actions": [
+            "Generate a self-signed certificate with openssl",
+            "Create nginx config pointing to the self-signed cert paths",
+            "Connect Polkadot.js Apps and accept the insecure-connection prompt"
+          ],
+          "result": "WSS works on localhost with a self-signed cert; clients must explicitly trust the certificate — not suitable for production"
+        }
+      ]
+    },
+    {
+      "id": "onboard-polkadot-validator",
+      "title": "Onboard as a Polkadot Validator (Full Flow)",
+      "objective": "Install, configure, and activate a Polkadot validator node from binary installation through session key registration, DOT bonding, and systemd service setup.",
+      "description": "Walks through the complete Polkadot validator onboarding workflow across three phases: (1) installing the polkadot binary and worker executables; (2) generating and registering session keys and the node identity key; (3) syncing the chain, bonding DOT via Polkadot.js Apps, submitting session keys on-chain, and configuring a systemd service for persistence. Use when setting up a new Polkadot validator node from scratch. Trigger phrases: 'become a Polkadot validator', 'onboard validator', 'set up validator node', 'bond DOT validator', 'register session keys', 'start validating Polkadot'. Prerequisite: a Linux server meeting hardware requirements (see set-up-polkadot-validator-node). Note: bonding and key submission steps involve Polkadot.js Apps GUI and must be delegated to the user.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md",
+        "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md",
+        "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md",
+      "prerequisites": {
+        "runtime": [
+          "64-bit Linux server (Ubuntu 22.04+ recommended), minimum 8 CPU cores, 32 GB RAM, 1+ TB NVMe SSD",
+          "systemd for service management",
+          "Polkadot binary, polkadot-execute-worker, and polkadot-prepare-worker installed (see set-up-relay-chain-full-node or compile from paritytech/polkadot-sdk stable branch)"
+        ],
+        "network": [
+          "TCP port 30333 open for P2P peer discovery",
+          "TCP port 9944 bound to localhost for RPC key operations",
+          "Stable internet connection for continuous chain sync"
+        ],
+        "tokens": [
+          "DOT tokens for bonding on Polkadot mainnet (minimum stake varies — check the minimum active nomination threshold)",
+          "Small amount of DOT in the stash account for transaction fees"
+        ],
+        "wallet": [
+          "Polkadot.js browser extension (https://polkadot.js.org/extension/) for stash and controller accounts",
+          "Stash account funded with bonding DOT amount plus fees",
+          "Controller account (can be same as stash) with a small DOT balance for extrinsic fees"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install validator node binaries",
+          "working_directory": ".",
+          "commands": [
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot -o polkadot",
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot-execute-worker -o polkadot-execute-worker",
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot-prepare-worker -o polkadot-prepare-worker",
+            "sudo install -m 755 polkadot polkadot-execute-worker polkadot-prepare-worker /usr/local/bin/",
+            "polkadot --version"
+          ],
+          "description": "Download all three binaries from the latest stable polkadot-sdk release. Replace 'polkadot-stable2412' with the latest stable tag from https://github.com/paritytech/polkadot-sdk/releases. All three binaries must be in the same directory — polkadot-execute-worker and polkadot-prepare-worker are required for parachain validation. Verify: polkadot --version should print the version string."
+        },
+        {
+          "order": 2,
+          "action": "Create system user and data directory",
+          "working_directory": ".",
+          "commands": [
+            "sudo useradd --system --no-create-home --shell /usr/sbin/nologin polkadot",
+            "sudo mkdir -p /var/lib/polkadot",
+            "sudo chown polkadot:polkadot /var/lib/polkadot"
+          ],
+          "description": "Create a dedicated non-login system user and a data directory for the validator. This limits the blast radius if the process is compromised."
+        },
+        {
+          "order": 3,
+          "action": "Start the node and wait for sync",
+          "working_directory": ".",
+          "commands": [
+            "sudo -u polkadot polkadot --base-path /var/lib/polkadot --chain polkadot --validator --name 'MY_VALIDATOR_NAME' --rpc-port 9944 --rpc-addr 127.0.0.1 &",
+            "sleep 30",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
+          ],
+          "description": "Replace MY_VALIDATOR_NAME with your chosen validator display name (visible on-chain and in dashboards). The --validator flag activates validator-specific logic. The node must be fully synced before key operations — this can take hours. Monitor sync: curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944 — wait until currentBlock equals highestBlock. For faster initial sync, add --sync=warp."
+        },
+        {
+          "order": 4,
+          "action": "Generate session keys",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"author_rotateKeys\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":\"0x...\",\"id\":1}",
+          "description": "author_rotateKeys generates new session keys (BABE, GRANDPA, ImOnline, AuthorityDiscovery) and stores them in the node's keystore at /var/lib/polkadot/chains/polkadot/keystore/. Save the hex string from 'result' — this is your session key blob needed in step 6. Do not share the individual key files; only the public session key blob is submitted on-chain."
+        },
+        {
+          "order": 5,
+          "action": "Generate node identity key",
+          "working_directory": ".",
+          "commands": [
+            "polkadot key generate-node-key --file /var/lib/polkadot/node-key",
+            "sudo chown polkadot:polkadot /var/lib/polkadot/node-key"
+          ],
+          "description": "Generates a persistent libp2p node identity key at /var/lib/polkadot/node-key. This key defines your node's peer ID on the P2P network. The node-key file must be preserved — if lost, the node gets a new peer ID and loses its P2P reputation. Add --node-key-file /var/lib/polkadot/node-key to the startup command in step 7."
+        },
+        {
+          "order": 6,
+          "action": "Bond DOT and set session keys (GUI — delegate to user)",
+          "working_directory": ".",
+          "description": "This step requires the Polkadot.js Apps GUI at https://polkadot.js.org/apps/#/staking/actions — delegate to the user:\n\n1. Go to Network > Staking > Accounts > + Stash\n2. Select your stash account, choose a value to bond (leave some DOT for fees), set reward destination\n3. Click Bond and sign the transaction with Polkadot.js extension\n4. After bonding confirms, click 'Set Session Key'\n5. Paste the session key hex string from step 4 into the 'session key' field\n6. Click Set Session Key and sign the transaction\n\nWait for both transactions to be included in a block before proceeding."
+        },
+        {
+          "order": 7,
+          "action": "Configure systemd service",
+          "working_directory": ".",
+          "description": "Create /etc/systemd/system/polkadot-validator.service:\n\n[Unit]\nDescription=Polkadot Validator Node\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot \\\n  --base-path=/var/lib/polkadot \\\n  --chain=polkadot \\\n  --validator \\\n  --name=MY_VALIDATOR_NAME \\\n  --node-key-file=/var/lib/polkadot/node-key \\\n  --rpc-port=9944 \\\n  --rpc-addr=127.0.0.1\nRestart=always\nRestartSec=10\nLimitNOFILE=65536\n\n[Install]\nWantedBy=multi-user.target\n\nReplace MY_VALIDATOR_NAME. Then:\nsudo systemctl daemon-reload && sudo systemctl enable polkadot-validator && sudo systemctl start polkadot-validator\n\nStop the manual node started in step 3 first: pkill polkadot"
+        },
+        {
+          "order": 8,
+          "action": "Validate validator is active",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":{\"peers\":5,\"isSyncing\":false,\"shouldHavePeers\":true,...}}",
+          "description": "Verify the node is healthy (peers > 0, isSyncing false). Your validator will be in the 'waiting' set until selected in the next era. Check validator status at https://polkadot.js.org/apps/#/staking — look for your validator name. Check logs: sudo journalctl -fu polkadot-validator."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "author_rotateKeys returns an error or empty result",
+          "cause": "The node RPC is not running or not listening on localhost:9944, or the node is still initializing.",
+          "resolution": "Check: curl http://localhost:9944 should return a connection (even if the response is malformed WS). Verify: sudo ss -tlnp | grep 9944. If the node is not running, start it with the command from step 3 and wait 30 seconds before retrying."
+        },
+        {
+          "pattern": "polkadot: error while loading shared libraries / polkadot-execute-worker: not found",
+          "cause": "polkadot-execute-worker and polkadot-prepare-worker are missing from $PATH or not installed.",
+          "resolution": "All three binaries must be in the same directory. Verify: which polkadot-execute-worker. Reinstall from the same GitHub release tag."
+        },
+        {
+          "pattern": "Validator stuck in 'waiting' set for multiple eras",
+          "cause": "Bonded amount may be below the minimum active nomination threshold, or session keys were not correctly submitted.",
+          "resolution": "Verify session keys are registered on-chain: Polkadot.js Apps > Developer > Chain State > session.nextKeys(YOUR_ACCOUNT) — should return the key blob. Check the minimum active nomination amount for the current era. Bond more DOT if below threshold."
+        },
+        {
+          "pattern": "Node reports 0 peers after 15 minutes",
+          "cause": "P2P port 30333 is blocked by a firewall.",
+          "resolution": "Open port 30333: sudo ufw allow 30333/tcp. For cloud VMs, add an inbound TCP rule for 30333 in the security group. Mainnet bootnodes are embedded in the chain spec — no manual bootnode configuration is needed."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for relay chain node prerequisites, WSS setup, or offboarding procedures.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator.md",
+            "relevance": "Binary installation and initial validator node configuration — Phase 1 of the onboarding flow."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management.md",
+            "relevance": "Session key generation, node key management, and keystore operations — Phase 2 of the onboarding flow."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-start-validating",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-start-validating.md",
+            "relevance": "Bonding, activating the validator, and verifying status — Phase 3 of the onboarding flow."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "Full relay chain node setup — validator node is a specialization of the full node setup."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: onboard a new Polkadot validator from scratch",
+          "user_says": "Set up a Polkadot validator node and start validating",
+          "actions": [
+            "Download and install polkadot binary and worker executables from the latest stable release",
+            "Create polkadot system user and /var/lib/polkadot data directory",
+            "Start the node with --validator flag and wait for full chain sync",
+            "Generate session keys via author_rotateKeys RPC — save the hex result",
+            "Generate a persistent node identity key",
+            "Delegate GUI steps to user: bond DOT via Polkadot.js Apps, submit session key hex on-chain",
+            "Create and enable polkadot-validator systemd service with node-key-file flag",
+            "Verify health via system_health RPC"
+          ],
+          "result": "Validator node running as a systemd service, session keys registered, and validator appearing in the waiting set on-chain"
+        },
+        {
+          "scenario": "Edge case: session key registration unclear — verify keys are set correctly",
+          "user_says": "How do I verify my session keys are registered on-chain?",
+          "actions": [
+            "Open Polkadot.js Apps > Developer > Chain State",
+            "Query session.nextKeys(STASH_ACCOUNT_ADDRESS)",
+            "Compare returned hex blob with the output from author_rotateKeys in step 4",
+            "If the query returns None, the setKeys extrinsic was not submitted or did not finalize — repeat step 6"
+          ],
+          "result": "Confirmed session keys are registered; validator will be included in the active set in the next era after bonding threshold is met"
+        }
+      ]
+    },
+    {
+      "id": "add-existing-pallet-to-runtime",
+      "title": "Add an Existing Pallet to a Parachain Runtime",
+      "objective": "Integrate a Polkadot SDK pallet (such as pallet-utility) into a parachain runtime by adding the Cargo dependency, implementing the Config trait, and registering it in construct_runtime!.",
+      "description": "Integrates an existing Polkadot SDK pallet into a local parachain runtime. Covers adding the pallet crate to Cargo.toml, implementing the pallet's Config trait in runtime/src/lib.rs, registering the pallet in the construct_runtime! macro, compiling the runtime, generating a chain spec, and running the parachain locally to verify the pallet is active. Use when extending a Polkadot SDK parachain template with standard SDK pallets (pallet-utility, pallet-multisig, pallet-proxy, etc.). Trigger phrases: 'add pallet to runtime', 'integrate pallet parachain', 'pallet-utility runtime', 'extend parachain runtime', 'construct_runtime pallet'. Prerequisite: working parachain template dev environment (see set-up-the-parachain-template). Final GUI verification uses Polkadot.js Apps.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/add-existing-pallets.md"
+      ],
+      "primary_page": "parachains/customize-runtime/add-existing-pallets.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with the wasm32-unknown-unknown target (rustup target add wasm32-unknown-unknown)",
+          "Polkadot SDK system dependencies installed (see parachains/install-polkadot-sdk.md)",
+          "A working parachain template checkout with a successful local build (see parachains/launch-a-parachain/set-up-the-parachain-template.md)"
+        ],
+        "network": [
+          "No external network required — all compilation and testing is local"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Identify the pallet version to use",
+          "working_directory": ".",
+          "commands": [
+            "grep 'polkadot-sdk' runtime/Cargo.toml | head -5"
+          ],
+          "description": "Check the existing Polkadot SDK version in your runtime's Cargo.toml. All new pallets must use the same version to avoid dependency conflicts. Look for entries like polkadot-sdk = { version = \"0.X.0\", ... } or per-crate pins. Note the version — you will use it in step 2. The docs use pallet-utility as the example pallet; substitute any SDK pallet name."
+        },
+        {
+          "order": 2,
+          "action": "Add the pallet dependency to runtime/Cargo.toml",
+          "working_directory": ".",
+          "description": "Open runtime/Cargo.toml and add pallet-utility (or your target pallet) to the [dependencies] section. Use the same version and features pattern as existing pallets:\n\n[dependencies]\n...\npallet-utility = { version = \"<SDK_VERSION>\", default-features = false }\n\nAlso add pallet-utility to the std features list so it compiles correctly for native (non-WASM) targets:\n\n[features]\nstd = [\n    ...\n    \"pallet-utility/std\",\n]\n\nReplace <SDK_VERSION> with the version you identified in step 1. After editing, run: cargo check -p runtime 2>&1 | head -20 — the output should not show dependency resolution errors."
+        },
+        {
+          "order": 3,
+          "action": "Implement the pallet's Config trait in runtime/src/lib.rs",
+          "working_directory": ".",
+          "description": "Open runtime/src/lib.rs. Add the Config implementation for the pallet. For pallet-utility, add:\n\nimpl pallet_utility::Config for Runtime {\n    type RuntimeEvent = RuntimeEvent;\n    type RuntimeCall = RuntimeCall;\n    type PalletsOrigin = OriginCaller;\n    type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;\n}\n\nFor other pallets, refer to the pallet's documentation or source for required Config fields. Each required associated type must be specified — the Rust compiler will list missing types if any are omitted. Place this impl block near other pallet Config impls for consistency."
+        },
+        {
+          "order": 4,
+          "action": "Register the pallet in construct_runtime!",
+          "working_directory": ".",
+          "description": "Find the construct_runtime! macro invocation in runtime/src/lib.rs (typically near the bottom of the file). Add the new pallet entry following the existing pattern:\n\nconstruct_runtime!(\n    pub enum Runtime where\n        Block = Block,\n        NodeBlock = opaque::Block,\n        UncheckedExtrinsic = UncheckedExtrinsic\n    {\n        // ... existing pallets ...\n        Utility: pallet_utility,\n    }\n);\n\nThe name before the colon (Utility) is the on-chain pallet name used in storage keys and extrinsic prefixes — choose carefully as it cannot be changed without a migration. Save the file."
+        },
+        {
+          "order": 5,
+          "action": "Compile the runtime",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release 2>&1 | tail -20"
+          ],
+          "description": "Build the full parachain node (includes the runtime WASM blob). This typically takes 5-15 minutes on first build. A successful build ends with: Compiling node-template vX.X.X ... Finished release [optimized] target(s). If compilation fails with 'the trait `Config` for `pallet_utility` is not satisfied', check that all required associated types are implemented in step 3."
+        },
+        {
+          "order": 6,
+          "action": "Generate a fresh chain spec and start the node locally",
+          "working_directory": ".",
+          "commands": [
+            "./target/release/parachain-template-node build-spec --disable-default-bootnode --chain local > /tmp/local-spec.json",
+            "./target/release/parachain-template-node --dev --tmp --chain /tmp/local-spec.json"
+          ],
+          "description": "Generate a development chain spec and start the node in --dev mode. The --tmp flag stores chain data in a temporary directory. Once the node is running and producing blocks (look for: Imported #1 in logs), open Polkadot.js Apps at https://polkadot.js.org/apps/?rpc=ws://localhost:9944 and navigate to Developer > Extrinsics. Verify that 'utility' appears in the pallet dropdown as a callable extrinsic module."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0277]: the trait `pallet_utility::Config` is not implemented for `Runtime`",
+          "cause": "The impl pallet_utility::Config for Runtime block is missing or has a typo in runtime/src/lib.rs.",
+          "resolution": "Ensure the impl block is present and all required associated types are specified. Run cargo check -p runtime to see the full list of missing types. Each missing type will be listed as 'required by this bound in pallet_utility::Config'."
+        },
+        {
+          "pattern": "error[E0432]: unresolved import `pallet_utility`",
+          "cause": "pallet-utility was not added to runtime/Cargo.toml, or it was added but Cargo has not re-resolved dependencies.",
+          "resolution": "Add pallet-utility to runtime/Cargo.toml [dependencies] with the correct version and default-features = false. Run cargo build again — Cargo will fetch and compile the new dependency."
+        },
+        {
+          "pattern": "Utility pallet does not appear in Polkadot.js Apps extrinsics",
+          "cause": "The pallet was registered in construct_runtime! but with the wrong name, or the node is running an old binary without the updated runtime.",
+          "resolution": "Stop the node, rebuild with cargo build --release, regenerate the chain spec, and restart. Verify the construct_runtime! entry name exactly matches what you expect to see in the UI."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for parachain template setup or for adding multiple pallet instances.",
+        "pages": [
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Rust toolchain and system dependencies required before building any parachain runtime."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Prerequisite: setting up the parachain template development environment."
+          },
+          {
+            "slug": "parachains-customize-runtime-add-pallet-instances",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-add-pallet-instances.md",
+            "relevance": "Next step: adding multiple instances of the same pallet (e.g., two pallet-collective instances)."
+          },
+          {
+            "slug": "parachains-customize-runtime-pallet-development-create-a-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-create-a-pallet.md",
+            "relevance": "Building a custom FRAME pallet from scratch and integrating it into the runtime."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: add pallet-utility to a parachain runtime",
+          "user_says": "Add pallet-utility to my parachain runtime",
+          "actions": [
+            "Check the existing Polkadot SDK version in runtime/Cargo.toml",
+            "Add pallet-utility dependency with matching version and default-features = false",
+            "Add pallet-utility/std to the std feature list",
+            "Implement pallet_utility::Config for Runtime in runtime/src/lib.rs with all required associated types",
+            "Add Utility: pallet_utility entry to construct_runtime!",
+            "Run cargo build --release",
+            "Generate chain spec and start node with --dev --tmp",
+            "Verify 'utility' appears in Polkadot.js Apps extrinsics"
+          ],
+          "result": "pallet-utility integrated into the runtime; utility.batch, utility.batchAll, and utility.dispatchAs are callable on-chain"
+        },
+        {
+          "scenario": "Edge case: compilation fails with missing associated type in Config",
+          "user_says": "I get a compiler error about missing associated types in my Config impl",
+          "actions": [
+            "Read the full compiler error — each missing type is listed with 'required by this bound'",
+            "Add each missing associated type to the impl block",
+            "Refer to the pallet's source (src/lib.rs) or docs for the expected type definitions",
+            "Re-run cargo build --release"
+          ],
+          "result": "All required Config associated types satisfied; compilation succeeds"
+        }
+      ]
+    },
+    {
+      "id": "configure-multiple-pallet-instances",
+      "title": "Configure Multiple Instances of a Pallet in a Runtime",
+      "objective": "Add two named instances of an instantiable Polkadot SDK pallet (e.g., pallet-collective as TechnicalCommittee and Council) to a parachain runtime with independent configurations.",
+      "description": "Configures two independent instances of an instantiable Polkadot SDK pallet within a single parachain runtime. Uses pallet-collective as the example to demonstrate adding TechnicalCommittee (Instance1) and Council (Instance2) with separate membership and voting parameters. Covers identifying instantiable pallets, adding per-instance Cargo dependencies, implementing Config(Instance1) and Config(Instance2) traits, registering both instances in construct_runtime!, compiling, and verifying instance independence. Use when a runtime needs two separate governance bodies, two token pools, or any other scenario requiring two isolated instances of the same pallet logic. Trigger phrases: 'multiple pallet instances', 'two collective instances', 'pallet-collective council technical committee', 'instantiable pallet runtime'. Prerequisite: working parachain template (see add-existing-pallet-to-runtime).",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/add-pallet-instances.md"
+      ],
+      "primary_page": "parachains/customize-runtime/add-pallet-instances.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target",
+          "Polkadot SDK system dependencies (see parachains/install-polkadot-sdk.md)",
+          "Working parachain template with a successful build (see set-up-the-parachain-template.md)",
+          "Familiarity with adding a single pallet to a runtime (see add-existing-pallet-to-runtime)"
+        ],
+        "network": [
+          "No external network required — local development only"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Verify pallet supports instantiation",
+          "working_directory": ".",
+          "description": "Not all pallets support multiple instances. An instantiable pallet uses a second generic type parameter (the Instance) in its Config trait definition, e.g.: pub trait Config<I: 'static = ()>: frame_system::Config. Check the pallet's source or documentation for this pattern. pallet-collective and pallet-membership are standard examples. If the pallet does not have the Instance generic, it cannot be instantiated multiple times."
+        },
+        {
+          "order": 2,
+          "action": "Add pallet dependencies to runtime/Cargo.toml",
+          "working_directory": ".",
+          "description": "Open runtime/Cargo.toml. A single pallet crate covers all instances — add it once:\n\n[dependencies]\n...\npallet-collective = { version = \"<SDK_VERSION>\", default-features = false }\npallet-membership = { version = \"<SDK_VERSION>\", default-features = false }\n\nReplace <SDK_VERSION> with the version matching your other SDK pallets (check existing entries). Add both to the std feature list:\n\n[features]\nstd = [\n    ...\n    \"pallet-collective/std\",\n    \"pallet-membership/std\",\n]\n\nVerify: cargo check -p runtime 2>&1 | head -20"
+        },
+        {
+          "order": 3,
+          "action": "Implement Config<Instance1> for TechnicalCommittee",
+          "working_directory": ".",
+          "description": "Open runtime/src/lib.rs. Add the first instance's Config implementation. For pallet-collective as TechnicalCommittee:\n\ntype TechnicalCommitteeInstance = pallet_collective::Instance1;\n\nimpl pallet_collective::Config<TechnicalCommitteeInstance> for Runtime {\n    type RuntimeOrigin = RuntimeOrigin;\n    type Proposal = RuntimeCall;\n    type RuntimeEvent = RuntimeEvent;\n    type MotionDuration = ConstU32<5>;\n    type MaxProposals = ConstU32<100>;\n    type MaxMembers = ConstU32<100>;\n    type DefaultVote = pallet_collective::PrimeDefaultVote;\n    type WeightInfo = pallet_collective::weights::SubstrateWeight<Runtime>;\n    type SetMembersOrigin = EnsureRoot<AccountId>;\n    type MaxProposalWeight = BlockWeights;\n}\n\nSubstitute ConstU32 values with the desired governance parameters."
+        },
+        {
+          "order": 4,
+          "action": "Implement Config<Instance2> for Council",
+          "working_directory": ".",
+          "description": "Add the second instance's Config implementation immediately after the first:\n\ntype CouncilInstance = pallet_collective::Instance2;\n\nimpl pallet_collective::Config<CouncilInstance> for Runtime {\n    type RuntimeOrigin = RuntimeOrigin;\n    type Proposal = RuntimeCall;\n    type RuntimeEvent = RuntimeEvent;\n    type MotionDuration = ConstU32<7>;\n    type MaxProposals = ConstU32<50>;\n    type MaxMembers = ConstU32<20>;\n    type DefaultVote = pallet_collective::PrimeDefaultVote;\n    type WeightInfo = pallet_collective::weights::SubstrateWeight<Runtime>;\n    type SetMembersOrigin = EnsureRoot<AccountId>;\n    type MaxProposalWeight = BlockWeights;\n}\n\nThe instances share the same pallet code but maintain completely independent storage — MotionDuration, MaxProposals, and MaxMembers can differ per instance."
+        },
+        {
+          "order": 5,
+          "action": "Register both instances in construct_runtime!",
+          "working_directory": ".",
+          "description": "Find construct_runtime! in runtime/src/lib.rs and add both instances with unique names:\n\nconstruct_runtime!(\n    pub enum Runtime where ... {\n        // ... existing pallets ...\n        TechnicalCommittee: pallet_collective::<Instance1>,\n        Council: pallet_collective::<Instance2>,\n    }\n);\n\nThe names TechnicalCommittee and Council become the on-chain pallet identifiers for storage and extrinsics — choose carefully as renaming requires a migration. The ::<Instance1> and ::<Instance2> syntax routes to the correct Config impl."
+        },
+        {
+          "order": 6,
+          "action": "Compile the runtime",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release 2>&1 | tail -20"
+          ],
+          "description": "Build the parachain node. Compilation succeeds when both instance Config impls are complete and construct_runtime! entries are correct. Expected output: Finished release [optimized] target(s). If you see 'conflicting implementations of trait Config<Instance1>', check that each instance type alias (TechnicalCommitteeInstance, CouncilInstance) is distinct."
+        },
+        {
+          "order": 7,
+          "action": "Verify instance independence",
+          "working_directory": ".",
+          "commands": [
+            "./target/release/parachain-template-node build-spec --disable-default-bootnode --chain local > /tmp/instances-spec.json",
+            "./target/release/parachain-template-node --dev --tmp --chain /tmp/instances-spec.json"
+          ],
+          "description": "Generate a fresh dev chain spec and start the node. Open Polkadot.js Apps at https://polkadot.js.org/apps/?rpc=ws://localhost:9944. Navigate to Developer > Extrinsics — verify both 'technicalCommittee' and 'council' appear as separate callable modules. Navigate to Developer > Chain State and confirm both pallet storage namespaces exist independently."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0119]: conflicting implementations of trait `pallet_collective::Config<Instance1>`",
+          "cause": "Two impl blocks are targeting the same instance type — usually because both use the default instance () instead of Instance1/Instance2.",
+          "resolution": "Ensure each impl block explicitly names a different instance: impl pallet_collective::Config<Instance1> and impl pallet_collective::Config<Instance2>. Type aliases (type TechnicalCommitteeInstance = pallet_collective::Instance1;) help clarify intent."
+        },
+        {
+          "pattern": "error: the pallet does not implement the Instance trait",
+          "cause": "The pallet does not support instantiation — it lacks the I: 'static = () generic in its Config trait.",
+          "resolution": "Only instantiable pallets (those with a second generic parameter) can be used this way. Check the pallet source or use a different pallet that supports multiple instances."
+        },
+        {
+          "pattern": "Only one instance visible in Polkadot.js Apps",
+          "cause": "One construct_runtime! entry is missing or has a typo.",
+          "resolution": "Verify both entries are present in construct_runtime! with distinct names and correct instance specifiers: TechnicalCommittee: pallet_collective::<Instance1> and Council: pallet_collective::<Instance2>. Rebuild and restart the node."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for single pallet integration or custom pallet development.",
+        "pages": [
+          {
+            "slug": "parachains-customize-runtime-add-existing-pallets",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-add-existing-pallets.md",
+            "relevance": "Prerequisite: adding a single pallet to a runtime — covers the Cargo, Config, and construct_runtime! basics."
+          },
+          {
+            "slug": "parachains-customize-runtime-pallet-development-create-a-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-create-a-pallet.md",
+            "relevance": "Building a custom pallet from scratch — next step after mastering pallet integration."
+          },
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Rust toolchain and build dependency installation."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: add TechnicalCommittee and Council as two pallet-collective instances",
+          "user_says": "Add a TechnicalCommittee and a Council to my parachain runtime using pallet-collective",
+          "actions": [
+            "Verify pallet-collective has the I: 'static = () generic — confirm it is instantiable",
+            "Add pallet-collective to runtime/Cargo.toml with default-features = false and add to std features",
+            "Implement pallet_collective::Config<Instance1> as TechnicalCommitteeInstance with committee-appropriate parameters",
+            "Implement pallet_collective::Config<Instance2> as CouncilInstance with council-appropriate parameters",
+            "Add TechnicalCommittee: pallet_collective::<Instance1> and Council: pallet_collective::<Instance2> to construct_runtime!",
+            "Run cargo build --release",
+            "Start node in --dev mode and verify both 'technicalCommittee' and 'council' appear in Polkadot.js Apps"
+          ],
+          "result": "Two independent pallet-collective instances registered — TechnicalCommittee and Council operate with independent storage, membership, and voting parameters"
+        },
+        {
+          "scenario": "Edge case: runtime compiles but only one instance shows in the UI",
+          "user_says": "My runtime compiled but I only see one collective in Polkadot.js Apps",
+          "actions": [
+            "Check construct_runtime! for both TechnicalCommittee and Council entries",
+            "Verify each entry uses the correct instance specifier: ::<Instance1> and ::<Instance2>",
+            "Rebuild with cargo build --release",
+            "Regenerate chain spec and restart node"
+          ],
+          "result": "Both collective instances visible and callable in Polkadot.js Apps"
+        }
+      ]
+    },
+    {
+      "id": "create-frame-pallet",
+      "title": "Create a Custom FRAME Pallet",
+      "objective": "Build a custom FRAME pallet from scratch inside the Polkadot SDK parachain template, defining storage, events, errors, and extrinsics, then integrate it into the runtime.",
+      "description": "Guides through building a custom FRAME pallet from scratch using the Polkadot SDK. Uses a counter pallet (increment and decrement extrinsics with bounded storage) as the example to demonstrate all core FRAME patterns: pallet directory layout, Cargo.toml configuration, #[pallet::config], #[pallet::storage], #[pallet::event], #[pallet::error], #[pallet::call], and genesis config. After implementing the pallet, integrates it into the parachain runtime (Cargo dependency, Config impl, construct_runtime!), compiles, and runs locally. Use when building any new runtime module with on-chain state and extrinsics. Trigger phrases: 'create FRAME pallet', 'custom pallet from scratch', 'write a pallet', 'FRAME storage events extrinsics', 'build counter pallet'. Prerequisites: Polkadot SDK installed, parachain template set up. Verification step uses Polkadot.js Apps GUI.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/customize-runtime/pallet-development/create-a-pallet.md"
+      ],
+      "primary_page": "parachains/customize-runtime/pallet-development/create-a-pallet.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target (rustup target add wasm32-unknown-unknown)",
+          "Polkadot SDK system dependencies (see parachains/install-polkadot-sdk.md)",
+          "Working parachain template checkout with a successful build (see set-up-the-parachain-template.md)"
+        ],
+        "network": [
+          "No external network required — all work is local"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create the pallet directory and Cargo.toml",
+          "working_directory": ".",
+          "commands": [
+            "mkdir -p pallets/counter/src",
+            "touch pallets/counter/src/lib.rs"
+          ],
+          "description": "Create the pallet directory structure inside the parachain template workspace. The pallet name (counter) becomes the crate name. Create pallets/counter/Cargo.toml with the following content, replacing <SDK_VERSION> with the version matching your other workspace pallets:\n\n[package]\nname = \"pallet-counter\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\ncodec = { package = \"parity-scale-codec\", version = \"3\", default-features = false, features = [\"derive\"] }\nscale-info = { version = \"2\", default-features = false, features = [\"derive\"] }\nframe-support = { version = \"<SDK_VERSION>\", default-features = false }\nframe-system = { version = \"<SDK_VERSION>\", default-features = false }\nframe-benchmarking = { version = \"<SDK_VERSION>\", default-features = false, optional = true }\n\n[features]\ndefault = [\"std\"]\nstd = [\n    \"codec/std\",\n    \"scale-info/std\",\n    \"frame-support/std\",\n    \"frame-system/std\",\n]\nruntime-benchmarks = [\"frame-benchmarking/runtime-benchmarks\"]\n\nAlso add pallet-counter to the workspace's root Cargo.toml members list:\nmembers = [\n    ...\n    \"pallets/counter\",\n]"
+        },
+        {
+          "order": 2,
+          "action": "Implement the pallet in pallets/counter/src/lib.rs",
+          "working_directory": ".",
+          "description": "Write the pallet implementation in pallets/counter/src/lib.rs. A minimal counter pallet contains:\n\n#![cfg_attr(not(feature = \"std\"), no_std)]\n\npub use pallet::*;\n\n#[frame_support::pallet]\npub mod pallet {\n    use frame_support::pallet_prelude::*;\n    use frame_system::pallet_prelude::*;\n\n    #[pallet::pallet]\n    pub struct Pallet<T>(_);\n\n    #[pallet::config]\n    pub trait Config: frame_system::Config {\n        type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;\n        #[pallet::constant]\n        type MaxValue: Get<u32>;\n    }\n\n    #[pallet::storage]\n    pub type CounterValue<T> = StorageValue<_, u32, ValueQuery>;\n\n    #[pallet::event]\n    #[pallet::generate_deposit(pub(super) fn deposit_event)]\n    pub enum Event<T: Config> {\n        CounterIncremented { new_value: u32 },\n        CounterDecremented { new_value: u32 },\n    }\n\n    #[pallet::error]\n    pub enum Error<T> {\n        CounterOverflow,\n        CounterUnderflow,\n    }\n\n    #[pallet::call]\n    impl<T: Config> Pallet<T> {\n        #[pallet::call_index(0)]\n        #[pallet::weight(10_000)]\n        pub fn increment(origin: OriginFor<T>) -> DispatchResult {\n            ensure_signed(origin)?;\n            let val = CounterValue::<T>::get();\n            let new_val = val.checked_add(1).ok_or(Error::<T>::CounterOverflow)?;\n            ensure!(new_val <= T::MaxValue::get(), Error::<T>::CounterOverflow);\n            CounterValue::<T>::put(new_val);\n            Self::deposit_event(Event::CounterIncremented { new_value: new_val });\n            Ok(())\n        }\n\n        #[pallet::call_index(1)]\n        #[pallet::weight(10_000)]\n        pub fn decrement(origin: OriginFor<T>) -> DispatchResult {\n            ensure_signed(origin)?;\n            let val = CounterValue::<T>::get();\n            let new_val = val.checked_sub(1).ok_or(Error::<T>::CounterUnderflow)?;\n            CounterValue::<T>::put(new_val);\n            Self::deposit_event(Event::CounterDecremented { new_value: new_val });\n            Ok(())\n        }\n    }\n}\n\nThe MaxValue constant bounds the counter to prevent overflow. checked_add/checked_sub replace panicking arithmetic."
+        },
+        {
+          "order": 3,
+          "action": "Add pallet-counter to runtime/Cargo.toml",
+          "working_directory": ".",
+          "description": "Open runtime/Cargo.toml and add pallet-counter as a workspace dependency:\n\n[dependencies]\n...\npallet-counter = { path = \"../pallets/counter\", default-features = false }\n\nAdd to the std feature list:\n[features]\nstd = [\n    ...\n    \"pallet-counter/std\",\n]\n\nNote: path = \"../pallets/counter\" is a relative path from the runtime/ directory to the pallet directory."
+        },
+        {
+          "order": 4,
+          "action": "Implement pallet_counter::Config in runtime/src/lib.rs",
+          "working_directory": ".",
+          "description": "Open runtime/src/lib.rs. Add the Config implementation for the counter pallet:\n\nimpl pallet_counter::Config for Runtime {\n    type RuntimeEvent = RuntimeEvent;\n    type MaxValue = ConstU32<100>;\n}\n\nConstU32<100> sets the MaxValue constant to 100 — adjust as needed. ConstU32 is from frame_support::traits and is already imported in the parachain template runtime."
+        },
+        {
+          "order": 5,
+          "action": "Register the pallet in construct_runtime!",
+          "working_directory": ".",
+          "description": "Find construct_runtime! in runtime/src/lib.rs and add the counter pallet:\n\nconstruct_runtime!(\n    pub enum Runtime where ... {\n        // ... existing pallets ...\n        Counter: pallet_counter,\n    }\n);\n\nThe name Counter is the on-chain pallet identifier. Save the file."
+        },
+        {
+          "order": 6,
+          "action": "Compile and run locally",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release 2>&1 | tail -20",
+            "./target/release/parachain-template-node build-spec --disable-default-bootnode --chain local > /tmp/counter-spec.json",
+            "./target/release/parachain-template-node --dev --tmp --chain /tmp/counter-spec.json"
+          ],
+          "description": "Build the entire parachain node including the new pallet. Expected: Finished release [optimized]. Then generate a dev chain spec and start the node. Once running, open Polkadot.js Apps at https://polkadot.js.org/apps/?rpc=ws://localhost:9944 and navigate to Developer > Extrinsics — 'counter' should appear with increment and decrement callables. Submit an increment extrinsic signed with Alice (//Alice) and verify the CounterValue storage changes via Developer > Chain State > counter.counterValue."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0412]: cannot find type `ConstU32` in this scope",
+          "cause": "ConstU32 is not imported in runtime/src/lib.rs.",
+          "resolution": "Add to the use statement at the top of runtime/src/lib.rs: use frame_support::traits::ConstU32; (or verify it is already imported via frame_support::prelude::*). The parachain template runtime usually imports it — search for existing ConstU32 usages to confirm."
+        },
+        {
+          "pattern": "error[E0277]: the trait `pallet_counter::Config` is not implemented",
+          "cause": "The impl pallet_counter::Config for Runtime block is missing or has a missing associated type.",
+          "resolution": "Ensure the impl block is in runtime/src/lib.rs and all required types are specified. The Rust compiler lists each missing associated type — add them one by one."
+        },
+        {
+          "pattern": "error: failed to select a version for `pallet-counter` / could not find Cargo.toml",
+          "cause": "The path in runtime/Cargo.toml does not match the actual pallet directory location.",
+          "resolution": "Verify the relative path: from runtime/, pallets/counter/ should be at ../pallets/counter. Run ls ../pallets/counter/Cargo.toml from inside the runtime/ directory to confirm the path exists."
+        },
+        {
+          "pattern": "CounterOverflow error when submitting increment",
+          "cause": "The counter has reached MaxValue (100 by default).",
+          "resolution": "Decrement first to free up space, or increase MaxValue in the runtime Config (type MaxValue = ConstU32<1000>;) and rebuild. This behavior is by design — the error confirms the overflow protection is working."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for runtime setup prerequisites or next steps in pallet development.",
+        "pages": [
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Rust and system dependencies required before building any FRAME pallet."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Setting up the parachain template workspace where the custom pallet lives."
+          },
+          {
+            "slug": "parachains-customize-runtime-add-existing-pallets",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-add-existing-pallets.md",
+            "relevance": "Adding an existing SDK pallet to a runtime — prerequisite concepts for runtime integration."
+          },
+          {
+            "slug": "parachains-customize-runtime-pallet-development-set-up-pallet-mock-runtime",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-set-up-pallet-mock-runtime.md",
+            "relevance": "Next step: setting up a mock runtime for unit testing the custom pallet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: build a counter pallet with increment and decrement extrinsics",
+          "user_says": "Create a custom FRAME pallet from scratch",
+          "actions": [
+            "Create pallets/counter/src/ directory and lib.rs file",
+            "Write Cargo.toml with frame-support, frame-system, parity-scale-codec, and scale-info dependencies",
+            "Add pallet-counter to workspace root Cargo.toml members",
+            "Implement the pallet in lib.rs: Config trait, StorageValue, Event enum, Error enum, and two call extrinsics (increment/decrement) with overflow/underflow protection",
+            "Add pallet-counter path dependency to runtime/Cargo.toml",
+            "Implement pallet_counter::Config for Runtime with MaxValue = ConstU32<100>",
+            "Add Counter: pallet_counter to construct_runtime!",
+            "Run cargo build --release",
+            "Start node in --dev mode; submit increment extrinsic via Polkadot.js Apps; verify CounterValue storage"
+          ],
+          "result": "Custom counter pallet deployed locally; increment and decrement extrinsics callable on-chain; CounterValue storage updates correctly with overflow protection"
+        },
+        {
+          "scenario": "Edge case: adding a genesis config to set an initial counter value",
+          "user_says": "How do I set the initial counter value to 10 at genesis?",
+          "actions": [
+            "Add a #[pallet::genesis_config] struct and #[pallet::genesis_build] impl to the pallet's lib.rs to accept an initial_value",
+            "In the runtime's chain_spec.rs (or equivalent), include Counter: CounterConfig { initial_value: 10 } in the genesis state",
+            "Rebuild and regenerate the chain spec to include the genesis config"
+          ],
+          "result": "Node starts with CounterValue pre-set to 10; visible in Developer > Chain State > counter.counterValue immediately after genesis"
         }
       ]
     }

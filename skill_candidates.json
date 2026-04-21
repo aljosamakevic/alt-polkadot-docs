@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T21:30:00Z",
+  "generated": "2026-04-21T22:30:00Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -729,7 +729,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Tutorial for enabling WSS on a running Polkadot node via nginx or Apache2 reverse proxy with SSL (Let's Encrypt or self-signed). P1+P2+P3+P4 all present — numbered steps, apt commands, nginx/apache2 config files, and connection verification. K1=0 (requires an existing running node; companion to set-up-relay-chain-full-node). K3=0 (no explicit prerequisites section). No cookbook badge.",
       "scoring": {
         "signals": [
@@ -749,7 +749,8 @@
           "not_applicable": 0
         },
         "priority_score": 14
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "manage-validator-session-keys",
@@ -850,7 +851,7 @@
       "category": "tutorial",
       "composite": true,
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Composite skill spanning the three validator onboarding pages. Together they cover the complete workflow: install binaries (set-up-validator), generate and register session keys and node key (key-management), sync chain, bond DOT, activate validator, and configure systemd (start-validating). K1 re-evaluated to 5 for the combined set. GUI-dependent bonding and on-chain key submission remain (S1=0, S2=0), limiting priority to medium. Priority score 15 → medium.",
       "scoring": {
         "signals": [
@@ -870,7 +871,8 @@
           "not_applicable": 0
         },
         "priority_score": 15
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "set-up-validator-monitoring-stack",
@@ -950,7 +952,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Complete guide for integrating a new pallet (pallet-utility as example) into a Polkadot SDK parachain runtime: add Cargo.toml dependency, implement Config trait in mod.rs, register in runtime construct in lib.rs, compile, generate chain spec, and run locally. P1+P2+P3+P4 all present. K1=0 — requires an existing working parachain template dev environment (set-up-the-parachain-template.md as prerequisite). K4 present (cookbook CI badge). Final verification step uses Polkadot.js Apps GUI (S1 absent). Same applies to adding any SDK pallet. Priority score 16 → medium.",
       "scoring": {
         "signals": [
@@ -971,7 +973,8 @@
           "not_applicable": 0
         },
         "priority_score": 16
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "configure-multiple-pallet-instances",
@@ -981,7 +984,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Demonstrates adding two instances of pallet-collective (TechnicalCommittee and Council) to a parachain runtime. Covers identifying instantiable pallets, defining instance parameters, implementing Config<Instance1> and Config<Instance2> traits, registering both in the runtime construct, compiling, generating a chain spec, and launching the node. P1+P2+P3+P4 all present. K1=0 — requires existing parachain template setup; also builds on add-existing-pallets.md concepts. K4 present (cookbook CI badge). Final instance-independence test uses Polkadot.js Apps GUI (S1 absent). Priority score 16 → medium.",
       "scoring": {
         "signals": [
@@ -1002,7 +1005,8 @@
           "not_applicable": 0
         },
         "priority_score": 16
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "create-frame-pallet",
@@ -1012,7 +1016,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Step-by-step guide building a counter pallet from scratch inside the Polkadot SDK parachain template: create Cargo project, configure FRAME dependencies, define Config trait, add events/errors/storage/genesis/extrinsics, integrate into runtime, generate chain spec, and launch locally. Verification step uses Polkadot.js Apps GUI (S1=0). K1=0 — requires parachains/install-polkadot-sdk and parachains/launch-a-parachain/set-up-the-parachain-template as prerequisites. Primary code blocks use MkDocs snippet includes (--8<--) but complete inline reference is available in a collapsible (K2=4). Cookbook CI badge present. Next in series: set-up-pallet-mock-runtime, unit-test-frame-pallet, benchmark-frame-pallet.",
       "scoring": {
         "signals": [
@@ -1034,7 +1038,8 @@
           "not_applicable": 0
         },
         "priority_score": 16
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "set-up-pallet-mock-runtime",
