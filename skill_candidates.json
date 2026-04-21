@@ -80,7 +80,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:30:00Z",
       "notes": "Covers querying account balances, asset metadata, and block info via curl against the Sidecar REST API. P3 absent (no files to create, only curl commands). Reference tables for response fields contribute to reference score but procedural score still meets tutorial threshold. Has cookbook CI badge (K4).",
       "scoring": {
         "signals": [
@@ -182,7 +183,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:30:00Z",
       "notes": "Covers fee estimation using PAPI and Polkadot.js SDK. Includes a GUI section via Polkadot.js Apps (S2 notes this adds non-deterministic path) but the primary SDK workflow is fully programmatic. No cookbook badge (K4 absent).",
       "scoring": {
         "signals": [
@@ -305,7 +307,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:30:00Z",
       "notes": "Covers full XCM transfer workflow using ParaSpell SDK: build transaction, dry-run, verify existential deposit, get fee estimates, and submit. Uses Paseo testnet with faucet tokens. Self-contained. No cookbook badge.",
       "scoring": {
         "signals": [
@@ -337,7 +340,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:30:00Z",
       "notes": "Demonstrates paying DOT transfer fees in USDT using PAPI, Polkadot.js, or Subxt against a Chopsticks local fork (Alice dev account \u2014 no real tokens needed). Self-contained. No cookbook badge.",
       "scoring": {
         "signals": [
@@ -586,7 +590,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:30:00Z",
       "notes": "Comprehensive setup guide for any parachain RPC node (archive or pruned) via Docker or systemd. Uses People Chain as example; substitution table provided for other system parachains. Covers snapshot download, binary install, service config, and sync verification. Node/validator setup shape.",
       "scoring": {
         "signals": [

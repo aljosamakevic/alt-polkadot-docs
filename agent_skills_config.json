@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T18:00:00Z",
-  "content_hash": "sha256:a1b2c3d4e5f67890abcdef1234567890abcdef1234567890abcdef1234567890ab",
+  "generated": "2026-04-21T18:30:00Z",
+  "content_hash": "sha256:26851c13bf056e9e048cb53d995b3cc73a64a4adeca6d834d1340df902ae430c",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -1610,6 +1610,714 @@
             "Create .env with PRIVATE_KEY= and add .env to .gitignore"
           ],
           "result": "Project loads private key from .env; works in agent shells and CI without interactive prompts"
+        }
+      ]
+    },
+    {
+      "id": "query-chain-data-sidecar-rest",
+      "title": "Query On-Chain Data with Sidecar REST API",
+      "objective": "Run Substrate API Sidecar locally connected to Polkadot Hub TestNet and query account balances, asset metadata, and block data via curl commands.",
+      "description": "Runs the Substrate API Sidecar REST service connected to Polkadot Hub TestNet and queries on-chain data via curl. Use when you need account balances, asset info, or block data without writing SDK code. Covers Sidecar installation, startup with a TestNet endpoint, and the primary query endpoints: /accounts/{addr}/balance-info, /assets/{id}/asset-info, and /blocks/{id}. Trigger phrases: 'query with Sidecar', 'Sidecar REST API', 'curl Polkadot balance', 'query chain data REST', 'Substrate API Sidecar'. No private key required — read-only operations only.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/query-data/query-rest.md"],
+      "primary_page": "chain-interactions/query-data/query-rest.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+ and npm (to install and run @substrate/api-sidecar)",
+          "curl (pre-installed on macOS and Linux; use WSL on Windows)",
+          "jq (optional, for formatted JSON output — install with: apt install jq  or  brew install jq)"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Substrate API Sidecar",
+          "working_directory": ".",
+          "commands": ["npm install -g @substrate/api-sidecar"],
+          "description": "Install Sidecar globally. This makes the 'substrate-api-sidecar' command available in your shell. If you prefer not to install globally, invoke it with 'npx @substrate/api-sidecar' in step 2 instead."
+        },
+        {
+          "order": 2,
+          "action": "Start Sidecar connected to Polkadot Hub TestNet",
+          "working_directory": ".",
+          "commands": ["SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network substrate-api-sidecar"],
+          "expected_output": "SAS listening on http://127.0.0.1:8080/",
+          "description": "Start Sidecar with SAS_SUBSTRATE_URL pointing to the Polkadot Hub TestNet WebSocket endpoint. The service listens on http://127.0.0.1:8080/ by default. Run this in a dedicated terminal and keep it running while executing the following steps. If using npx: SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network npx @substrate/api-sidecar. Polkadot Hub TestNet can be unstable — if the WebSocket connection drops, restart Sidecar."
+        },
+        {
+          "order": 3,
+          "action": "Query account balance",
+          "working_directory": ".",
+          "commands": ["curl -s \"http://127.0.0.1:8080/accounts/INSERT_SS58_ADDRESS/balance-info\" | jq ."],
+          "expected_output": "{\"at\":{\"hash\":\"0x...\",\"height\":\"12345\"},\"nonce\":\"0\",\"tokenSymbol\":\"PAS\",\"free\":\"...\",\"reserved\":\"...\"}",
+          "description": "Query the balance-info endpoint. Replace 'INSERT_SS58_ADDRESS' with the target SS58 address. Response fields: free — spendable planck; reserved — locked/staked; miscFrozen / feeFrozen — frozen amounts; nonce — transaction count. Divide raw planck values by 10^10 to convert to PAS. Omit '| jq .' if jq is not installed."
+        },
+        {
+          "order": 4,
+          "action": "Query block information",
+          "working_directory": ".",
+          "commands": [
+            "curl -s \"http://127.0.0.1:8080/blocks/head\" | jq .",
+            "curl -s \"http://127.0.0.1:8080/blocks/1000\" | jq ."
+          ],
+          "expected_output": "{\"number\":\"12345\",\"hash\":\"0x...\",\"parentHash\":\"0x...\",\"extrinsics\":[...]}",
+          "description": "The first command fetches the latest finalized block; the second fetches block 1000 by number. Replace '1000' with any block number. The response includes block number, hash, parentHash, stateRoot, extrinsicsRoot, and extrinsics list."
+        },
+        {
+          "order": 5,
+          "action": "Query asset metadata",
+          "working_directory": ".",
+          "commands": ["curl -s \"http://127.0.0.1:8080/assets/1984/asset-info\" | jq ."],
+          "expected_output": "{\"at\":{...},\"items\":[{\"id\":\"1984\",\"name\":\"USDT\",\"symbol\":\"USDT\",\"decimals\":\"6\"}]}",
+          "description": "Query metadata for asset ID 1984 (USDT on Polkadot Hub). Replace '1984' with any registered asset ID. If the asset does not exist on TestNet, items will be empty — this is expected since not all mainnet assets are bridged to TestNet."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "ECONNREFUSED 127.0.0.1:8080",
+          "cause": "Sidecar is not running or not yet ready.",
+          "resolution": "Start Sidecar in a separate terminal: SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network substrate-api-sidecar. Wait for the 'SAS listening' message before sending curl requests."
+        },
+        {
+          "pattern": "Sidecar starts but shows repeated WebSocket error messages",
+          "cause": "Polkadot Hub TestNet WebSocket endpoint is temporarily unavailable. TestNet drops connections under load.",
+          "resolution": "Wait 2-5 minutes and restart Sidecar. Check the Polkadot Discord for TestNet outage notices."
+        },
+        {
+          "pattern": "balance-info returns all-zero values for free/reserved/nonce",
+          "cause": "The queried account has no on-chain entry — it has never received any tokens.",
+          "resolution": "Fund the account at https://faucet.polkadot.io/ and wait 1-2 minutes for confirmation. Re-query the endpoint."
+        },
+        {
+          "pattern": "curl: (6) Could not resolve host",
+          "cause": "Using the WebSocket URL (wss://) in curl instead of the Sidecar HTTP endpoint.",
+          "resolution": "Curl queries go to the Sidecar HTTP endpoint: http://127.0.0.1:8080. The wss:// URL is only used to start Sidecar, not to query it."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user wants SDK-based querying as an alternative or needs to understand Sidecar response fields.",
+        "pages": [
+          {
+            "slug": "chain-interactions-query-data-query-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-query-sdks.md",
+            "relevance": "SDK-based alternative to Sidecar — query the same on-chain data using PAPI or Polkadot.js TypeScript code."
+          },
+          {
+            "slug": "reference-tools-sidecar",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-sidecar.md",
+            "relevance": "Full Sidecar API reference listing all available endpoints, query parameters, and response schemas."
+          },
+          {
+            "slug": "chain-interactions-accounts-query-accounts",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-accounts-query-accounts.md",
+            "relevance": "SDK approach to querying the same account balance data returned by the Sidecar balance-info endpoint."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: query account balance via REST without writing code",
+          "user_says": "Query the balance of a Polkadot Hub address using the REST API",
+          "actions": [
+            "Install @substrate/api-sidecar globally with npm install -g",
+            "Start Sidecar in a separate terminal with SAS_SUBSTRATE_URL pointing to wss://asset-hub-paseo.dotters.network",
+            "Run curl against http://127.0.0.1:8080/accounts/{address}/balance-info",
+            "Divide the free field value by 10^10 to convert planck to PAS"
+          ],
+          "result": "Account nonce and full balance breakdown (free, reserved, frozen) returned as JSON"
+        },
+        {
+          "scenario": "Edge case: account shows zero balance across all fields",
+          "user_says": "The balance-info response returns zero for everything",
+          "actions": [
+            "Confirm the address format is correct SS58 (not 0x hex)",
+            "Fund the address at https://faucet.polkadot.io/ and wait 1-2 minutes for confirmation",
+            "Re-query the balance-info endpoint"
+          ],
+          "result": "After funding, the free balance reflects the received testnet PAS"
+        }
+      ]
+    },
+    {
+      "id": "calculate-transaction-fees-papi",
+      "title": "Estimate Transaction Fees with PAPI",
+      "objective": "Calculate the estimated fee for a Balances.transfer_keep_alive transaction on Polkadot Hub TestNet using PAPI getPaymentInfo before submitting.",
+      "description": "Estimates the fee for a Polkadot Hub balance transfer using the PAPI TypeScript library's getPaymentInfo method. Use when you need to preview gas costs before submitting — for fee UIs, budget checks, or preflight validation. Returns partial_fee in planck, human-readable PAS, and weight breakdown. Also covers the Polkadot.js paymentInfo alternative described in the source page. Trigger phrases: 'estimate transaction fee', 'calculate fee Polkadot', 'getPaymentInfo PAPI', 'how much does a transaction cost', 'fee estimation Polkadot Hub'. No private key or testnet tokens required — fee estimation is read-only.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/send-transactions/calculate-transaction-fees.md"],
+      "primary_page": "chain-interactions/send-transactions/calculate-transaction-fees.md",
+      "prerequisites": {
+        "runtime": ["Node.js v18+ and npm or pnpm"],
+        "network": ["WebSocket RPC endpoint for Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network"]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir papi-fee-estimate && cd papi-fee-estimate",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory 'papi-fee-estimate' and initialize it as an ESM Node.js project. The type=module flag is required — polkadot-api uses ESM imports."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "papi-fee-estimate",
+          "commands": [
+            "npm install polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install polkadot-api (PAPI) and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Generate PAPI type descriptors",
+          "working_directory": "papi-fee-estimate",
+          "commands": ["npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"],
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Downloads chain metadata and produces the 'polkadotTestNet' export in @polkadot-api/descriptors. Polkadot Hub TestNet can be unstable — retry after a few minutes if the connection fails."
+        },
+        {
+          "order": 4,
+          "action": "Create the fee estimation script",
+          "working_directory": "papi-fee-estimate",
+          "description": "Create a file named 'estimate-fees.ts' in papi-fee-estimate with this content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { polkadotTestNet } from \"@polkadot-api/descriptors\";\n\nconst WS_ENDPOINT = \"INSERT_WS_ENDPOINT\";\nconst SENDER_ADDRESS = \"INSERT_SENDER_ADDRESS\";\nconst DEST_ADDRESS = \"INSERT_DEST_ADDRESS\";\n\nasync function main() {\n  const client = createClient(getWsProvider(WS_ENDPOINT));\n  const api = client.getTypedApi(polkadotTestNet);\n  const tx = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: DEST_ADDRESS },\n    value: 10_000_000_000n,\n  });\n  const info = await tx.getPaymentInfo(SENDER_ADDRESS);\n  console.log(\"Fee (planck):\", info.partial_fee.toString());\n  console.log(\"Fee (PAS):\", (Number(info.partial_fee) / 1e10).toFixed(6));\n  console.log(\"Weight ref_time:\", info.weight.ref_time.toString());\n  client.destroy();\n}\nmain().catch(console.error);\n\nAfter creating the file, apply these substitutions: (1) Replace INSERT_WS_ENDPOINT with your WS endpoint (e.g. 'wss://asset-hub-paseo.dotters.network'). (2) Replace INSERT_SENDER_ADDRESS with any valid funded SS58 address — sender address affects fee because weight depends on account state. (3) Replace INSERT_DEST_ADDRESS with any valid SS58 recipient address. Save the file."
+        },
+        {
+          "order": 5,
+          "action": "Run the fee estimation script",
+          "working_directory": "papi-fee-estimate",
+          "commands": ["npx tsx estimate-fees.ts"],
+          "expected_output": "Fee (planck): 15000000000\nFee (PAS): 0.001500\nWeight ref_time: 200000000",
+          "description": "Execute the script. It constructs an unsigned Balances.transfer_keep_alive transaction for 1 PAS and calls getPaymentInfo to retrieve the fee estimate without submitting. Fees on Polkadot Hub TestNet are higher than Ethereum due to the 1000 gwei base fee."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors'",
+          "cause": "PAPI type descriptors were not generated.",
+          "resolution": "Run 'npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network' in the papi-fee-estimate directory."
+        },
+        {
+          "pattern": "WebSocket connection failed / ECONNREFUSED on papi add or script start",
+          "cause": "Polkadot Hub TestNet endpoint is temporarily unavailable.",
+          "resolution": "Wait 2-5 minutes and retry. Check the Polkadot Discord for TestNet status."
+        },
+        {
+          "pattern": "TypeError: tx.getPaymentInfo is not a function",
+          "cause": "Descriptor export name does not match the import, or polkadot-api version is below 1.0.0.",
+          "resolution": "Verify the import name matches the name used in 'npx papi add' (polkadotTestNet). Check version: npm list polkadot-api — version 1.0.0+ required."
+        },
+        {
+          "pattern": "SyntaxError: Cannot use import statement in a module",
+          "cause": "Project is not configured as ESM.",
+          "resolution": "Run 'npm pkg set type=module' in the papi-fee-estimate directory, then re-run."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user wants to submit the transaction after fee estimation or needs to understand fee mechanics.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-with-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-with-sdks.md",
+            "relevance": "How to sign and submit the same transaction whose fee was estimated — the natural next step."
+          },
+          {
+            "slug": "reference-tools-papi",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-papi.md",
+            "relevance": "Full PAPI reference including getPaymentInfo signatures and other typed transaction methods."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: preview fee before sending a transfer",
+          "user_says": "How much will it cost to send 1 PAS on Polkadot Hub?",
+          "actions": [
+            "Scaffold 'papi-fee-estimate/' as an ESM Node.js project",
+            "Install polkadot-api and tsx",
+            "Generate descriptors with npx papi add polkadotTestNet",
+            "Create estimate-fees.ts with inline script; substitute WS endpoint and addresses",
+            "Run npx tsx estimate-fees.ts"
+          ],
+          "result": "Estimated fee in planck and PAS printed; user can budget before submitting the transfer"
+        },
+        {
+          "scenario": "Edge case: fee appears unusually high compared to Ethereum",
+          "user_says": "The fee estimate shows 0.001 PAS — that seems expensive",
+          "actions": [
+            "Explain that Polkadot Hub TestNet has a base fee of 1000 gwei — significantly higher than Ethereum mainnet",
+            "Note that PAS testnet fees do not reflect real economic cost",
+            "Get testnet tokens from https://faucet.polkadot.io/ if the sender balance is insufficient"
+          ],
+          "result": "User understands TestNet fee mechanics and obtains testnet PAS if needed"
+        }
+      ]
+    },
+    {
+      "id": "transfer-assets-parachains-paraspell",
+      "title": "Transfer Assets Between Parachains with ParaSpell XCM SDK",
+      "objective": "Use the ParaSpell XCM SDK to build, dry-run, estimate fees for, and submit an asset transfer between two Polkadot parachains on Paseo testnet.",
+      "description": "Transfers assets cross-chain between Polkadot parachains using the ParaSpell XCM SDK. Covers the full workflow: install the SDK, build an XCM transfer, dry-run for feasibility, verify existential deposit requirements, estimate fees, and submit against Paseo testnet. Use when you need to move tokens programmatically between parachains (e.g., Asset Hub to another system parachain). Requires a funded Paseo testnet mnemonic. Trigger phrases: 'XCM transfer ParaSpell', 'cross-chain transfer Polkadot', 'transfer assets between parachains', 'send tokens XCM', 'ParaSpell SDK'. Uses dotenv for mnemonic security.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md"],
+      "primary_page": "chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md",
+      "prerequisites": {
+        "runtime": ["Node.js v18+ and npm"],
+        "network": [
+          "WebSocket RPC for Paseo Asset Hub (source): wss://sys.ibp.network/asset-hub-paseo",
+          "Destination parachain WebSocket RPC (e.g., wss://sys.ibp.network/people-paseo for People Chain Paseo)"
+        ],
+        "tokens": [
+          "Paseo testnet PAS in the sender account — get from https://faucet.polkadot.io/ (select Paseo, then Asset Hub Paseo). Minimum 2 PAS recommended."
+        ],
+        "wallet": ["SR25519 account mnemonic phrase for the sender account, funded with Paseo testnet PAS"]
+      },
+      "env_vars": [
+        {
+          "name": "MNEMONIC",
+          "description": "12-word BIP39 mnemonic for the sender on Paseo Asset Hub. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        },
+        {
+          "name": "SOURCE_RPC",
+          "description": "WebSocket RPC URL for the source parachain (e.g., wss://sys.ibp.network/asset-hub-paseo).",
+          "required": true
+        },
+        {
+          "name": "DEST_ADDRESS",
+          "description": "SS58-encoded recipient address on the destination parachain.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir paraspell-xcm-transfer && cd paraspell-xcm-transfer",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create a new directory 'paraspell-xcm-transfer' and initialize it as an ESM Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "paraspell-xcm-transfer",
+          "commands": [
+            "npm install @paraspell/sdk-pjs @polkadot/api @polkadot/keyring dotenv",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Install the ParaSpell SDK (pjs variant), Polkadot.js API, keyring for signing, and dotenv for secure mnemonic loading."
+        },
+        {
+          "order": 3,
+          "action": "Create .env and .gitignore for mnemonic",
+          "working_directory": "paraspell-xcm-transfer",
+          "commands": [
+            "printf 'MNEMONIC=\\nSOURCE_RPC=wss://sys.ibp.network/asset-hub-paseo\\nDEST_ADDRESS=\\n' > .env",
+            "echo '.env' > .gitignore"
+          ],
+          "description": "Create a .env file with three placeholders and a .gitignore to exclude it. Stop here and ask the user to edit .env directly: fill MNEMONIC with their 12-word Paseo testnet mnemonic, confirm SOURCE_RPC, and set DEST_ADDRESS to the recipient SS58 address on the destination chain. Do NOT ask for the mnemonic in chat. Wait for confirmation before continuing."
+        },
+        {
+          "order": 4,
+          "action": "Create the XCM transfer script",
+          "working_directory": "paraspell-xcm-transfer",
+          "description": "Create a file named 'xcm-transfer.ts' with the following content:\n\nimport \"dotenv/config\";\nimport { ApiPromise, WsProvider } from \"@polkadot/api\";\nimport { Keyring } from \"@polkadot/keyring\";\nimport { Builder } from \"@paraspell/sdk-pjs\";\n\nconst SOURCE_RPC = process.env.SOURCE_RPC!;\nconst MNEMONIC = process.env.MNEMONIC!;\nconst DEST_ADDRESS = process.env.DEST_ADDRESS!;\nconst SOURCE_CHAIN = \"AssetHubPaseo\";\nconst DEST_CHAIN = \"PeopleChainPaseo\";\nconst AMOUNT = \"10000000000\"; // 1 PAS (10 decimals)\n\nasync function main() {\n  const api = await ApiPromise.create({ provider: new WsProvider(SOURCE_RPC) });\n  const keyring = new Keyring({ type: \"sr25519\" });\n  const sender = keyring.addFromMnemonic(MNEMONIC);\n  console.log(\"Sender:\", sender.address);\n\n  const dryResult = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).dryRun(sender);\n  console.log(\"Dry-run:\", dryResult.success ? \"OK\" : \"FAILED\");\n  if (!dryResult.success) { console.error(dryResult); process.exit(1); }\n\n  const fee = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).getOriginXcmFee();\n  console.log(\"Estimated fee:\", fee.toString());\n\n  const tx = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).build();\n  await tx.signAndSend(sender, { nonce: -1 }, ({ status, txHash }) => {\n    console.log(\"Status:\", status.type);\n    if (status.isFinalized) {\n      console.log(\"Finalized:\", status.asFinalized.toString(), \"tx:\", txHash.toString());\n      process.exit(0);\n    }\n  });\n}\nmain().catch((err) => { console.error(err); process.exit(1); });\n\nSubstitutions: (1) Replace SOURCE_CHAIN ('AssetHubPaseo') and DEST_CHAIN ('PeopleChainPaseo') with the actual chain names from the ParaSpell supported chains list if your transfer uses different parachains — chain names are case-sensitive. (2) PAS has 10 decimals on Paseo; '10000000000' equals 1 PAS. Verify the decimal count for the asset being transferred."
+        },
+        {
+          "order": 5,
+          "action": "Verify sender is funded and run the script",
+          "working_directory": "paraspell-xcm-transfer",
+          "commands": ["npx tsx xcm-transfer.ts"],
+          "expected_output": "Sender: ...\nDry-run: OK\nEstimated fee: ...\nStatus: InBlock\nFinalized: 0x...",
+          "description": "Before running, confirm the sender has at least 2 PAS on Paseo Asset Hub. If not, visit https://faucet.polkadot.io/ (select Paseo > Asset Hub Paseo). Execute the script. It dry-runs first — if dry-run fails, check the error before re-attempting. If the TestNet is unstable and the transaction does not finalize within 2 minutes, re-run the script."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Insufficient funds / Inability to pay some fees",
+          "cause": "Sender account has insufficient PAS to cover transfer amount plus XCM execution fees.",
+          "resolution": "Fund the sender on Paseo Asset Hub at https://faucet.polkadot.io/ (select Paseo > Asset Hub Paseo). Wait 2 minutes for confirmation."
+        },
+        {
+          "pattern": "Dry-run failed: destination existential deposit not met",
+          "cause": "Transfer amount is below the existential deposit on the destination chain, or recipient has no balance.",
+          "resolution": "Increase the transfer AMOUNT above the destination chain's existential deposit, or ensure the recipient already has a balance on the destination chain."
+        },
+        {
+          "pattern": "Error: chain 'AssetHubPaseo' not found in ParaSpell",
+          "cause": "Chain name does not match the ParaSpell supported chain list for the SDK version installed.",
+          "resolution": "Check the supported chains list for your @paraspell/sdk-pjs version. Chain names are case-sensitive and version-specific. Update SOURCE_CHAIN and DEST_CHAIN in the script accordingly."
+        },
+        {
+          "pattern": "Transaction submitted but never finalizes",
+          "cause": "Paseo TestNet instability — the TestNet can drop transactions under load.",
+          "resolution": "Check if the transaction was included using subscan.io (paseo.subscan.io). If not included, re-run the script — nonce: -1 fetches the current nonce automatically."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for background on XCM mechanics, fee estimation, or to debug a failing transfer.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-estimate-xcm-fees.md",
+            "relevance": "Detailed XCM fee estimation covering local, delivery, and remote execution components."
+          },
+          {
+            "slug": "reference-tools-paraspell",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-paraspell.md",
+            "relevance": "Full ParaSpell SDK reference including supported chains, asset IDs, and Builder API documentation."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-debug-and-preview-xcms",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-debug-and-preview-xcms.md",
+            "relevance": "How to debug a failing XCM transfer by replaying it with Chopsticks before submitting to TestNet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: transfer PAS from Asset Hub Paseo to People Chain Paseo",
+          "user_says": "Transfer 1 PAS from Asset Hub to People Chain on Paseo testnet",
+          "actions": [
+            "Scaffold 'paraspell-xcm-transfer/' as an ESM project",
+            "Install @paraspell/sdk-pjs, @polkadot/api, keyring, dotenv",
+            "Create .env; ask user to fill MNEMONIC and DEST_ADDRESS without asking in chat",
+            "Create xcm-transfer.ts with the inline script",
+            "Verify sender has 2+ PAS at https://faucet.polkadot.io/",
+            "Run npx tsx xcm-transfer.ts"
+          ],
+          "result": "Dry-run passes, fee estimated, transaction finalized, PAS transferred cross-chain"
+        },
+        {
+          "scenario": "Edge case: dry-run fails with existential deposit error",
+          "user_says": "The dry-run fails saying the destination existential deposit is not met",
+          "actions": [
+            "Check the existential deposit for the destination chain using the ParaSpell SDK",
+            "Increase AMOUNT in the script above the existential deposit threshold",
+            "Re-run xcm-transfer.ts"
+          ],
+          "result": "Dry-run passes once the transfer amount covers the destination existential deposit"
+        }
+      ]
+    },
+    {
+      "id": "pay-fees-alternative-token",
+      "title": "Pay Transaction Fees with an Alternative Token",
+      "objective": "Fork Polkadot Hub state locally with Chopsticks and submit a transaction with fees paid in USDT (asset ID 1984) instead of native PAS using PAPI, demonstrating the asset-conversion fee proxy mechanism.",
+      "description": "Forks Polkadot Hub state locally with Chopsticks and submits a transaction where fees are paid in USDT (asset ID 1984) rather than native PAS, using PAPI's ChargeAssetTxPayment signed extension. Use when demonstrating or testing the asset-conversion fee proxy mechanism without spending real testnet tokens. Uses Alice's dev account via Chopsticks mock-signature mode — no faucet required. Trigger phrases: 'pay fees in USDT', 'alternative fee token Polkadot', 'ChargeAssetTxPayment', 'fee proxy Polkadot Hub', 'Chopsticks fee demo'. Covers PAPI, Polkadot.js, and Subxt alternatives from the source page.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/send-transactions/pay-fees-with-different-tokens.md"],
+      "primary_page": "chain-interactions/send-transactions/pay-fees-with-different-tokens.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+ and npm",
+          "npx (bundled with npm v5.2+ — no separate install needed)"
+        ],
+        "network": [
+          "Internet connection to fork chain state from wss://asset-hub-paseo.dotters.network — Chopsticks downloads state on first run"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and install dependencies",
+          "working_directory": ".",
+          "commands": [
+            "mkdir fee-proxy-demo && cd fee-proxy-demo",
+            "npm init -y && npm pkg set type=module",
+            "npm install @acala-network/chopsticks polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Create a new directory 'fee-proxy-demo', initialize as ESM, and install Chopsticks and PAPI. Chopsticks forks Polkadot Hub state locally; PAPI constructs and submits the fee-proxy transaction against the fork."
+        },
+        {
+          "order": 2,
+          "action": "Create Chopsticks configuration",
+          "working_directory": "fee-proxy-demo",
+          "description": "Create a file named 'chopsticks.yml' with the following content:\n\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db.sqlite\nport: 8000\nmock-signature-host: true\n\nThe 'mock-signature-host: true' setting allows transactions to be submitted with Alice's well-known dev key without a real private key — this is what makes the demo work without real credentials. The 'db' field caches forked state locally so subsequent runs start faster."
+        },
+        {
+          "order": 3,
+          "action": "Start the Chopsticks fork",
+          "working_directory": "fee-proxy-demo",
+          "commands": ["npx @acala-network/chopsticks --config=chopsticks.yml"],
+          "expected_output": "Listening on port 8000",
+          "description": "Start the Chopsticks fork in a dedicated terminal. Chopsticks downloads Polkadot Hub state from the TestNet endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite. Once 'Listening on port 8000' appears, keep this running and open a second terminal for step 4."
+        },
+        {
+          "order": 4,
+          "action": "Generate PAPI type descriptors for the local fork",
+          "working_directory": "fee-proxy-demo",
+          "commands": ["npx papi add localFork -w ws://localhost:8000"],
+          "description": "Run this command in a second terminal while Chopsticks (step 3) is still running. Generates compile-time type descriptors named 'localFork' for the forked chain. Produces the 'localFork' export in @polkadot-api/descriptors. The descriptors reflect the exact runtime version of the forked state."
+        },
+        {
+          "order": 5,
+          "action": "Create the fee-proxy script",
+          "working_directory": "fee-proxy-demo",
+          "description": "Create a file named 'fee-proxy.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { localFork } from \"@polkadot-api/descriptors\";\nimport { getPolkadotSigner } from \"polkadot-api/signer\";\n\nconst ALICE = \"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\";\nconst BOB = \"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\";\nconst USDT_ID = 1984;\n\nasync function main() {\n  const client = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const api = client.getTypedApi(localFork);\n\n  const transfer = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: BOB },\n    value: 1_000_000_000n,\n  });\n\n  // Wrap in asset-conversion fee proxy — pay fees in USDT\n  const feeProxyTx = api.tx.AssetConversionTxPayment.asset_conversion_fee_proxy(\n    USDT_ID,\n    transfer\n  );\n\n  // Mock signer works because Chopsticks has mock-signature-host: true\n  const mockSigner = getPolkadotSigner(\n    ALICE,\n    \"Sr25519\",\n    async () => new Uint8Array(64)\n  );\n\n  const result = await feeProxyTx.signAndSubmit(mockSigner);\n  console.log(\"Included in block:\", result.block.hash);\n  console.log(\"Fees paid in USDT asset ID:\", USDT_ID);\n  client.destroy();\n}\nmain().catch(console.error);\n\nNote: The exact pallet name for fee proxy varies by runtime version. If 'AssetConversionTxPayment' is not in the typed API, check the source page for the correct pallet and extrinsic name for the chain version in your fork. The mock signer returns an empty signature accepted by Chopsticks."
+        },
+        {
+          "order": 6,
+          "action": "Run the fee-proxy script against the local fork",
+          "working_directory": "fee-proxy-demo",
+          "commands": ["npx tsx fee-proxy.ts"],
+          "expected_output": "Included in block: 0x...\nFees paid in USDT asset ID: 1984",
+          "description": "Execute the script while Chopsticks is still running. The script submits the fee-proxy transaction; Chopsticks validates it against the forked state and includes it in a mock block. If the pallet name 'AssetConversionTxPayment' does not exist in localFork, inspect api.tx in the TypeScript IDE and check the source page for the correct name."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "ECONNREFUSED ws://localhost:8000",
+          "cause": "Chopsticks is not running.",
+          "resolution": "Start Chopsticks first: npx @acala-network/chopsticks --config=chopsticks.yml. Wait for 'Listening on port 8000' before running the script or the papi add command."
+        },
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors' or localFork is undefined",
+          "cause": "PAPI type descriptors were not generated against the Chopsticks fork endpoint.",
+          "resolution": "With Chopsticks running, execute: npx papi add localFork -w ws://localhost:8000. Then re-run the script."
+        },
+        {
+          "pattern": "api.tx.AssetConversionTxPayment is undefined",
+          "cause": "The forked chain version uses a different pallet name for asset-based fee payment.",
+          "resolution": "Check available pallets by inspecting api.tx in a TypeScript IDE, or consult the source page for the correct pallet name. The pallet may be named 'AssetTxPayment' depending on the runtime version."
+        },
+        {
+          "pattern": "Alice has insufficient USDT balance to pay fees",
+          "cause": "Alice's account in the forked state does not hold USDT (asset ID 1984).",
+          "resolution": "Use Chopsticks' dev_setStorage RPC method to seed Alice's USDT asset balance in the forked state, or identify a USDT-holding account in the forked state and use that address instead."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages to understand fee mechanics, Chopsticks setup, or to compare with standard fee estimation.",
+        "pages": [
+          {
+            "slug": "reference-tools-chopsticks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-chopsticks.md",
+            "relevance": "Full Chopsticks reference including all config options, RPC override methods, and mock-signature-host details."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-calculate-transaction-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-calculate-transaction-fees.md",
+            "relevance": "How to estimate fees for a standard transaction — compare with the fee proxy approach to understand the difference."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: demonstrate paying fees in USDT on a local fork",
+          "user_says": "Show me how to pay Polkadot Hub transaction fees in USDT instead of PAS",
+          "actions": [
+            "Create 'fee-proxy-demo/' with ESM Node.js init",
+            "Install Chopsticks and polkadot-api",
+            "Create chopsticks.yml pointing to wss://asset-hub-paseo.dotters.network with mock-signature-host: true",
+            "Start Chopsticks in a dedicated terminal; wait for 'Listening on port 8000'",
+            "Generate PAPI descriptors with npx papi add localFork -w ws://localhost:8000",
+            "Create fee-proxy.ts with inline script; run npx tsx fee-proxy.ts"
+          ],
+          "result": "Transaction included in a local mock block; fees deducted from Alice's USDT balance instead of PAS"
+        },
+        {
+          "scenario": "Edge case: Alice has no USDT in the forked state",
+          "user_says": "The script fails saying Alice has no USDT balance",
+          "actions": [
+            "Use Chopsticks' dev_setStorage RPC to set Alice's USDT asset balance in the forked state",
+            "Alternatively, query the forked state for an account with USDT balance and use that address as sender",
+            "Re-run fee-proxy.ts"
+          ],
+          "result": "Script succeeds once Alice's USDT balance is seeded or a funded account is substituted"
+        }
+      ]
+    },
+    {
+      "id": "run-parachain-rpc-node",
+      "title": "Run a Parachain RPC Node",
+      "objective": "Set up and run a Polkadot system parachain RPC node (People Chain as example) in archive or pruned mode using Docker or a systemd service, and verify it syncs and serves RPC requests.",
+      "description": "Runs a Polkadot system parachain RPC node (using People Chain as example) in archive or pruned mode via Docker or systemd. Covers Docker image selection, binary installation, systemd service configuration, and sync verification. A substitution table adapts the steps for Collectives, BridgeHub, and other system parachains. Use when you need a self-hosted parachain RPC endpoint. Trigger phrases: 'run parachain node', 'People Chain RPC node', 'parachain RPC Docker', 'set up system parachain node', 'run parachain RPC systemd'. No tokens required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["node-infrastructure/run-a-node/parachain-rpc.md"],
+      "primary_page": "node-infrastructure/run-a-node/parachain-rpc.md",
+      "prerequisites": {
+        "runtime": [
+          "Docker v24+ (for Docker method) OR a 64-bit Linux server with systemd (for binary method)",
+          "Disk: minimum 500 GB SSD for pruned node; 2+ TB SSD for archive node",
+          "RAM: minimum 8 GB; 16 GB recommended for archive nodes",
+          "CPU: 4+ cores recommended"
+        ],
+        "network": [
+          "Open TCP ports: 30333 (P2P), 9944 (WebSocket RPC), 9615 (Prometheus metrics, optional)",
+          "Stable broadband connection for initial sync (several hundred GB download)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Choose deployment method and sync type",
+          "working_directory": ".",
+          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (steps 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (requires 2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nParachain substitution table — replace chain names and image tags accordingly:\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Paseo: --chain=people-paseo, relay --chain=paseo\nAll use the parity/polkadot-parachain Docker image."
+        },
+        {
+          "order": 2,
+          "action": "Run the parachain node via Docker",
+          "working_directory": ".",
+          "commands": [
+            "docker pull parity/polkadot-parachain:stable",
+            "mkdir -p /var/lib/people-chain",
+            "docker run -d --name people-chain-rpc --restart unless-stopped -p 30333:30333 -p 9944:9944 -p 9615:9615 -v /var/lib/people-chain:/data parity/polkadot-parachain:stable --chain=people-polkadot --base-path=/data --rpc-external --rpc-port=9944 --rpc-cors=all --prometheus-external --prometheus-port=9615 --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast"
+          ],
+          "description": "Pull the stable polkadot-parachain image and start the People Chain RPC node. Key arguments: --chain=people-polkadot selects the People Chain spec; --base-path=/data stores chain data in the mounted volume; --state-pruning=1000 --blocks-pruning=1000 keeps the last 1000 blocks (change both to 'archive' for a full archive node); --rpc-external exposes the WebSocket RPC; the -- separator and --chain=polkadot configure the embedded relay chain client. Replace /var/lib/people-chain with your data directory. For Paseo testnet People Chain, use --chain=people-paseo and --chain=paseo after the -- separator."
+        },
+        {
+          "order": 3,
+          "action": "Run the parachain node via systemd (binary method alternative)",
+          "working_directory": ".",
+          "description": "For the systemd binary method (skip if using Docker in step 2): (1) Create system user: sudo useradd --system --no-create-home --shell /usr/sbin/nologin polkadot. (2) Create data dir: sudo mkdir -p /var/lib/people-chain && sudo chown polkadot:polkadot /var/lib/people-chain. (3) Download polkadot-parachain binary from https://github.com/paritytech/polkadot-sdk/releases (stable, amd64 or arm64) and install: sudo install -m 755 polkadot-parachain /usr/local/bin/. (4) Create /etc/systemd/system/people-chain-rpc.service:\n\n[Unit]\nDescription=People Chain RPC Node\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot-parachain --chain=people-polkadot --base-path=/var/lib/people-chain --rpc-external --rpc-port=9944 --rpc-cors=all --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast\nRestart=always\nRestartSec=10\n\n[Install]\nWantedBy=multi-user.target\n\n(5) Enable and start: sudo systemctl daemon-reload && sudo systemctl enable people-chain-rpc && sudo systemctl start people-chain-rpc. Apply the same chain substitutions as in step 2."
+        },
+        {
+          "order": 4,
+          "action": "Monitor sync progress",
+          "working_directory": ".",
+          "commands": [
+            "docker logs -f people-chain-rpc 2>&1 | grep -E 'Syncing|Idle|Best|Peers'",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"startingBlock\":0,\"currentBlock\":12000,\"highestBlock\":15000},\"id\":1}",
+          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f people-chain-rpc' with 'sudo journalctl -fu people-chain-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync — initial sync can take hours to days depending on hardware."
+        },
+        {
+          "order": 5,
+          "action": "Verify the RPC endpoint is operational",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_chain\",\"params\":[]}' http://localhost:9944",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":\"Polkadot People\",...}\n{\"result\":{\"peers\":5,\"isSyncing\":false,\"shouldHavePeers\":true},...}",
+          "description": "Confirm the node serves RPC requests. system_chain should return 'Polkadot People' for the mainnet People Chain. system_health should show isSyncing: false and peers greater than 0. If peers is 0, verify port 30333 is open in your firewall. If isSyncing is true, wait for sync to complete before pointing applications at this endpoint."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: No space left on device / database write error",
+          "cause": "The data volume has run out of disk space.",
+          "resolution": "Increase the volume size, or switch from archive to pruned mode (--state-pruning=1000 --blocks-pruning=1000). Check usage with: du -sh /var/lib/people-chain"
+        },
+        {
+          "pattern": "EADDRINUSE port 9944 or 30333",
+          "cause": "Another process is already using the required ports.",
+          "resolution": "Change the port with --rpc-port=NEW_PORT for RPC and --port=NEW_P2P_PORT for P2P. Update firewall rules accordingly."
+        },
+        {
+          "pattern": "Peers count stays at 0 after several minutes",
+          "cause": "P2P port 30333 is blocked by firewall, or bootnodes are temporarily unavailable.",
+          "resolution": "Open TCP port 30333: sudo ufw allow 30333/tcp. For cloud VMs, update the security group to allow inbound TCP on 30333. If peers still do not connect after 10 minutes, check the Polkadot network status page."
+        },
+        {
+          "pattern": "Sync stalls at the same block for more than 30 minutes",
+          "cause": "Node cannot find peers with required state, or the embedded relay chain client is not syncing.",
+          "resolution": "Restart the container or service: docker restart people-chain-rpc or sudo systemctl restart people-chain-rpc. If stalling persists, try switching sync mode: replace --sync=fast with --sync=warp."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs to add TLS/WSS or run the Polkadot Hub RPC node specifically.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-polkadot-hub-rpc",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-polkadot-hub-rpc.md",
+            "relevance": "How to run an RPC node for Polkadot Hub specifically — different chain spec and optional Ethereum RPC adapter."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
+            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx — required for production endpoints."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "How to run a standalone Polkadot relay chain full node, separate from the embedded relay client."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: run a pruned People Chain RPC node via Docker",
+          "user_says": "Run a People Chain RPC node on Polkadot using Docker",
+          "actions": [
+            "Pull parity/polkadot-parachain:stable",
+            "Create data directory /var/lib/people-chain",
+            "Run docker with --chain=people-polkadot, --state-pruning=1000, --blocks-pruning=1000, ports 30333 and 9944 exposed",
+            "Monitor sync with docker logs and system_syncState RPC",
+            "Verify with system_chain and system_health once currentBlock equals highestBlock"
+          ],
+          "result": "People Chain RPC node running, synced, serving requests on ws://localhost:9944"
+        },
+        {
+          "scenario": "Edge case: node stalls at the same block for 30+ minutes",
+          "user_says": "The node has been stuck at block 12345 for 30 minutes",
+          "actions": [
+            "Check both parachain and relay chain sync progress separately in the logs",
+            "Verify peers > 0 via system_health and that port 30333 is open",
+            "Restart: docker restart people-chain-rpc",
+            "If stalling persists after restart, switch to --sync=warp"
+          ],
+          "result": "Node resumes syncing after restart or sync mode change"
         }
       ]
     }
