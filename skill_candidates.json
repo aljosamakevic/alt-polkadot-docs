@@ -280,7 +280,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Covers bridging ERC-20 tokens (WETH) from Ethereum mainnet to Polkadot Hub using ParaSpell SDK and Snowbridge. K1 absent — requires real mainnet WETH tokens which an agent cannot autonomously obtain. S2 absent — bridge relay takes ~30 minutes with variable external state. Priority reduced to medium.",
       "scoring": {
         "signals": [
@@ -299,7 +299,8 @@
           "not_applicable": 0
         },
         "priority_score": 11
-      }
+      },
+      "built_at": "2026-04-21T22:00:00Z"
     },
     {
       "skill_id": "transfer-assets-parachains-paraspell",
@@ -409,7 +410,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Covers creating liquidity pools, adding/removing liquidity, and swapping assets using the AssetConversion pallet via Polkadot.js Apps UI. P3 absent (no source files to create); workflow is GUI-dependent (S1 absent). K2 absent. Reaches tutorial threshold via P1+P2+P4=15 with P4 present. Priority medium due to GUI-only execution and absence of programmatic code.",
       "scoring": {
         "signals": [
@@ -428,7 +429,8 @@
           "not_applicable": 0
         },
         "priority_score": 11
-      }
+      },
+      "built_at": "2026-04-21T22:00:00Z"
     },
     {
       "skill_id": "register-foreign-asset-polkadot-hub",
@@ -438,7 +440,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Walks through registering a foreign asset via two-step XCM: generate encoded call data on Polkadot Hub, then dispatch via source parachain. Uses Polkadot.js Apps UI (GUI-dependent, S1 absent). P3 absent. Reaches tutorial threshold via P1+P2+P4=15. Priority medium due to GUI-only workflow.",
       "scoring": {
         "signals": [
@@ -457,7 +459,8 @@
           "not_applicable": 0
         },
         "priority_score": 11
-      }
+      },
+      "built_at": "2026-04-21T22:00:00Z"
     },
     {
       "skill_id": "register-local-asset-polkadot-hub",
@@ -467,7 +470,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Step-by-step guide for creating a local (integer-ID) asset on Polkadot Hub via the Network > Assets UI in Polkadot.js Apps. GUI-dependent throughout (S1 absent). P3 absent. Reaches tutorial threshold via P1+P2+P4=15. Priority medium due to GUI-only execution.",
       "scoring": {
         "signals": [
@@ -486,7 +489,8 @@
           "not_applicable": 0
         },
         "priority_score": 11
-      }
+      },
+      "built_at": "2026-04-21T22:00:00Z"
     },
     {
       "skill_id": "install-polkadot-sdk",
@@ -694,7 +698,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Guide covering binary installation (pre-built, compiled, snap, Docker) and startup commands for pruned, custom-pruned, and archive nodes. P1 absent (section headings, not numbered lists); no source files to create (P3 absent). Procedural score 9 → Rule 6 guide. K1=0 — prerequisites reference parachains/install-polkadot-sdk for system dependencies not covered on this page. Companion pages: secure-wss.md (WSS layer), polkadot-hub-rpc.md (hub-specific config).",
       "scoring": {
         "signals": [
@@ -714,7 +718,8 @@
           "not_applicable": 0
         },
         "priority_score": 17
-      }
+      },
+      "built_at": "2026-04-21T22:00:00Z"
     },
     {
       "skill_id": "set-up-secure-wss-relay-node",

@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T21:30:00Z",
+  "generated": "2026-04-21T22:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 45,
+    "up_to_date": 50,
     "stale": 0,
-    "uncovered": 91,
+    "uncovered": 86,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -75,9 +75,11 @@
     },
     "chain-interactions/send-transactions/interoperability/transfer-assets-into-polkadot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:00:00Z",
+      "skills": [
+        "bridge-eth-to-polkadot-snowbridge"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -105,21 +107,27 @@
     },
     "chain-interactions/token-operations/convert-assets.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:00:00Z",
+      "skills": [
+        "convert-assets-asset-hub"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/token-operations/register-foreign-asset.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:00:00Z",
+      "skills": [
+        "register-foreign-asset-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/token-operations/register-local-asset.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:00:00Z",
+      "skills": [
+        "register-local-asset-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "get-support.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -161,9 +169,11 @@
     },
     "node-infrastructure/run-a-node/relay-chain/full-node.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:00:00Z",
+      "skills": [
+        "set-up-relay-chain-full-node"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-node/relay-chain/secure-wss.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

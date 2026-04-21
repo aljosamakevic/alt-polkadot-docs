@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T21:30:00Z",
-  "content_hash": "sha256:32b6e5c1582a6fcf331c6656c737ffe90ffdbd4c3f9c1dd7f5772cc621ce21d6",
+  "generated": "2026-04-21T22:00:00Z",
+  "content_hash": "sha256:d21e5d8b5f49bfbe607be397b1a3d2e3f923c45ef5c2179af0cfd6b866a020d8",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -6914,6 +6914,739 @@
             "Recommend Ethers.js (deploy-contracts-ethers-js) or viem (deploy-contracts-viem) as actively maintained alternatives"
           ],
           "result": "User directed to deploy-contracts-ethers-js or deploy-contracts-viem for modern contract interaction"
+        }
+      ]
+    },
+    {
+      "id": "bridge-eth-to-polkadot-snowbridge",
+      "title": "Bridge Assets from Ethereum to Polkadot via Snowbridge",
+      "objective": "Use the ParaSpell SDK to bridge ERC-20 tokens from Ethereum mainnet to Polkadot Hub Asset Hub via the Snowbridge protocol.",
+      "description": "Bridges ERC-20 tokens from Ethereum mainnet to Polkadot Hub Asset Hub using the ParaSpell SDK's Snowbridge integration. Covers Node.js project setup, ERC-20 approval on Ethereum, building a Snowbridge transfer with the ParaSpell Builder API, signing with ethers.js, submitting, and monitoring bridge relay status. Use when a user needs to move WETH or other ERC-20s from Ethereum to the Polkadot ecosystem. Trigger phrases: 'bridge Ethereum to Polkadot', 'Snowbridge transfer', 'send WETH Polkadot Hub', 'ParaSpell Snowbridge', 'ERC-20 Polkadot bridge'. Requires real Ethereum mainnet ETH and ERC-20 tokens — no testnet path exists. Bridge relay takes 15-30 minutes. Uses dotenv for private key security.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/send-transactions/interoperability/transfer-assets-into-polkadot.md"
+      ],
+      "primary_page": "chain-interactions/send-transactions/interoperability/transfer-assets-into-polkadot.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+ and npm"
+        ],
+        "network": [
+          "Ethereum mainnet RPC endpoint (Infura, Alchemy, or public provider)",
+          "Polkadot Hub Asset Hub is the destination — no additional RPC needed on the Polkadot side"
+        ],
+        "tokens": [
+          "Real ERC-20 tokens (e.g., WETH) on Ethereum mainnet — testnet tokens cannot be used with Snowbridge",
+          "ETH on Ethereum mainnet to pay bridge transaction gas fees"
+        ],
+        "wallet": [
+          "Ethereum private key (0x-prefixed) for the sender account on Ethereum mainnet"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "Ethereum private key (0x-prefixed) for the sender. Must hold ETH for gas and the ERC-20 tokens to bridge. Never commit to version control.",
+          "required": true
+        },
+        {
+          "name": "ETH_RPC_URL",
+          "description": "Ethereum mainnet RPC URL (e.g., from Infura or Alchemy).",
+          "required": true
+        },
+        {
+          "name": "DEST_POLKADOT_ADDRESS",
+          "description": "SS58-encoded destination address on Polkadot Hub Asset Hub.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize the project",
+          "working_directory": ".",
+          "commands": [
+            "mkdir snowbridge-transfer && cd snowbridge-transfer",
+            "npm init -y && npm pkg set type=module"
+          ],
+          "description": "Create 'snowbridge-transfer' and initialize it as an ESM Node.js project. ESM is required because @paraspell/sdk uses ES modules."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "snowbridge-transfer",
+          "commands": [
+            "npm install @paraspell/sdk ethers dotenv",
+            "npm install --save-dev typescript tsx @types/node"
+          ],
+          "description": "Install the ParaSpell SDK (includes Snowbridge API), Ethers.js v6 for Ethereum signing, and dotenv for secure key loading."
+        },
+        {
+          "order": 3,
+          "action": "Create .env and .gitignore",
+          "working_directory": "snowbridge-transfer",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\nETH_RPC_URL=\\nDEST_POLKADOT_ADDRESS=\\n' > .env",
+            "echo '.env' > .gitignore"
+          ],
+          "description": "Create .env with three empty placeholders and .gitignore to exclude it. Stop and ask the user to edit .env directly: fill PRIVATE_KEY with an 0x-prefixed Ethereum private key that holds ETH and the token to bridge; ETH_RPC_URL with their Ethereum mainnet RPC endpoint; DEST_POLKADOT_ADDRESS with the SS58-formatted destination on Polkadot Hub Asset Hub. Do NOT ask the user to paste their private key in chat. Wait for confirmation before continuing."
+        },
+        {
+          "order": 4,
+          "action": "Create the Snowbridge transfer script",
+          "working_directory": "snowbridge-transfer",
+          "description": "Create a file named 'bridge.ts' with the following content:\n\nimport 'dotenv/config';\nimport { ethers } from 'ethers';\nimport { Builder } from '@paraspell/sdk';\n\nconst PRIVATE_KEY = process.env.PRIVATE_KEY!;\nconst ETH_RPC_URL = process.env.ETH_RPC_URL!;\nconst DEST = process.env.DEST_POLKADOT_ADDRESS!;\n// Token to bridge — WETH on Ethereum mainnet\nconst TOKEN_SYMBOL = 'WETH';\n// Amount in smallest units (WETH has 18 decimals; 1e15 = 0.001 WETH)\nconst AMOUNT = '1000000000000000';\n\nasync function main() {\n  const provider = new ethers.JsonRpcProvider(ETH_RPC_URL);\n  const signer = new ethers.Wallet(PRIVATE_KEY, provider);\n  console.log('Sender:', signer.address);\n  const bal = await provider.getBalance(signer.address);\n  console.log('ETH balance:', ethers.formatEther(bal));\n\n  const tx = await Builder()\n    .from('Ethereum')\n    .to('AssetHubPolkadot')\n    .currency({ symbol: TOKEN_SYMBOL, amount: AMOUNT })\n    .address(DEST)\n    .buildEthTransfer({ ethSigner: signer });\n\n  console.log('Submitting Snowbridge transfer...');\n  const receipt = await tx.wait();\n  console.log('Transaction hash:', receipt.hash);\n  console.log('Relay in progress — monitor at https://bridge.polkadot.io/');\n  console.log('Tokens typically arrive in 15-30 minutes.');\n}\n\nmain().catch(e => { console.error(e); process.exit(1); });\n\nSubstitutions: (1) TOKEN_SYMBOL — change 'WETH' to the ERC-20 symbol you are bridging (must be supported by Snowbridge). (2) AMOUNT — change '1000000000000000' to your intended amount in smallest units; WETH has 18 decimals so 1e18 = 1 WETH. (3) If buildEthTransfer is not available in your installed @paraspell/sdk version, consult https://paraspell.github.io/docs for the correct Snowbridge API."
+        },
+        {
+          "order": 5,
+          "action": "Execute the bridge transfer",
+          "working_directory": "snowbridge-transfer",
+          "commands": [
+            "npx tsx bridge.ts"
+          ],
+          "expected_output": "Sender: 0x...\nETH balance: ...\nSubmitting Snowbridge transfer...\nTransaction hash: 0x...\nRelay in progress...",
+          "description": "Run the script. If the Ethereum transaction fails with 'insufficient funds', add ETH to the sender wallet. After submission the Snowbridge relay picks up the lock event and mints tokens on Polkadot Hub Asset Hub — this takes 15-30 minutes. Do not re-run the script during this period to avoid double-submissions."
+        },
+        {
+          "order": 6,
+          "action": "Verify token arrival on Polkadot Hub",
+          "working_directory": ".",
+          "description": "After 15-30 minutes, verify arrival at DEST_POLKADOT_ADDRESS by connecting Polkadot.js Apps (https://polkadot.js.org/apps/?rpc=wss://polkadot-asset-hub-rpc.polkadot.io) to Asset Hub. Go to Developer > Chain State > foreignAssets > account and query using the WETH foreign asset multilocation. Alternatively search the destination address at https://assethub-polkadot.subscan.io/. If no tokens appear after 45 minutes, check bridge relay status at https://bridge.polkadot.io/ using the Ethereum transaction hash."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "insufficient funds for intrinsic transaction cost",
+          "cause": "Ethereum sender wallet does not have enough ETH to pay gas for the Snowbridge transaction.",
+          "resolution": "Add ETH to the sender wallet on Ethereum mainnet. Gas costs for a Snowbridge transfer are typically 0.003-0.01 ETH at normal gas prices. Retry after funding."
+        },
+        {
+          "pattern": "buildEthTransfer is not a function / Builder().from is not a function",
+          "cause": "The installed @paraspell/sdk version does not expose the Ethereum source chain builder or Snowbridge API.",
+          "resolution": "Check your @paraspell/sdk version in package.json and consult https://paraspell.github.io/docs for the correct Snowbridge API. The Ethereum-to-Polkadot transfer API varies across SDK major versions."
+        },
+        {
+          "pattern": "Tokens not arrived on Polkadot Hub after 60 minutes",
+          "cause": "Snowbridge relay is processing slowly or experiencing delays. Ethereum finality (15-20 minutes) plus relay processing adds latency.",
+          "resolution": "Check https://bridge.polkadot.io/ with your Ethereum transaction hash. If status is 'Pending', wait up to 2 hours. If 'Failed', check the Polkadot Discord #snowbridge channel for relay outages. Do not resubmit without confirming tokens have not arrived — double-submission will lock funds."
+        },
+        {
+          "pattern": "ERC-20 token not supported / token not registered in Snowbridge",
+          "cause": "Only tokens registered with the Snowbridge gateway contract on Ethereum can be bridged.",
+          "resolution": "Check supported tokens at https://bridge.polkadot.io/. For unsupported tokens, the Snowbridge gateway must register the token via governance before it can be bridged."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for parachain XCM transfers, fee estimation, or to understand how bridged assets behave on Polkadot Hub.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-transfer-assets-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-transfer-assets-parachains.md",
+            "relevance": "How to transfer assets between Polkadot parachains using ParaSpell XCM — use when tokens are already in the Polkadot ecosystem."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-estimate-xcm-fees.md",
+            "relevance": "Understanding XCM fees on the Polkadot side when bridged assets arrive on Polkadot Hub."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: bridge 0.001 WETH from Ethereum to Polkadot Hub",
+          "user_says": "Bridge some WETH from Ethereum mainnet to my Polkadot Hub address",
+          "actions": [
+            "Scaffold 'snowbridge-transfer/' as an ESM Node.js project",
+            "Install @paraspell/sdk, ethers, dotenv",
+            "Create .env; ask user to fill PRIVATE_KEY, ETH_RPC_URL, DEST_POLKADOT_ADDRESS without asking in chat",
+            "Create bridge.ts with the Snowbridge transfer script",
+            "Run npx tsx bridge.ts and capture transaction hash",
+            "Wait 15-30 minutes and verify token arrival at destination on Polkadot Hub Asset Hub"
+          ],
+          "result": "WETH bridged from Ethereum mainnet; transaction confirmed on Ethereum; tokens arrive at Polkadot Hub address after relay processing"
+        },
+        {
+          "scenario": "Edge case: no tokens arrived after 60 minutes",
+          "user_says": "I submitted the Snowbridge transaction but my WETH hasn't appeared on Polkadot Hub after an hour",
+          "actions": [
+            "Ask user for their Ethereum transaction hash",
+            "Direct to https://bridge.polkadot.io/ to check bridge relay status for that hash",
+            "If status is Pending, advise waiting up to 2 hours total",
+            "If status is Failed, check Polkadot Discord #snowbridge for relay outages",
+            "Warn user not to resubmit without confirming tokens are not in transit"
+          ],
+          "result": "User identifies relay status and decides next steps without risking double-submission"
+        }
+      ]
+    },
+    {
+      "id": "convert-assets-asset-hub",
+      "title": "Convert Assets on Asset Hub via AMM",
+      "objective": "Use the AssetConversion pallet on Polkadot Hub Asset Hub via Polkadot.js Apps to create liquidity pools, add or remove liquidity, and swap assets.",
+      "description": "Demonstrates the AssetConversion AMM pallet on Polkadot Hub Asset Hub — creating token pools, managing liquidity, and swapping assets via the Polkadot.js Apps browser UI. Use when a user wants to create a liquidity pool between DOT and a local or foreign asset, add or withdraw liquidity, or swap tokens via the AssetConversion extrinsics. Trigger phrases: 'convert assets Asset Hub', 'create liquidity pool Polkadot', 'swap tokens AMM', 'AssetConversion pallet', 'add liquidity Polkadot Hub'. Requires DOT and a second fungible asset on Asset Hub. All workflow steps use Polkadot.js Apps browser UI — no CLI tooling required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/token-operations/convert-assets.md"
+      ],
+      "primary_page": "chain-interactions/token-operations/convert-assets.md",
+      "prerequisites": {
+        "runtime": [
+          "A modern web browser (Chrome or Firefox recommended)"
+        ],
+        "network": [
+          "Polkadot Hub Asset Hub — wss://polkadot-asset-hub-rpc.polkadot.io (mainnet) or wss://asset-hub-paseo-rpc.dotters.network (Paseo TestNet)"
+        ],
+        "tokens": [
+          "DOT on Polkadot Hub Asset Hub for pool creation deposit and as one side of the pair",
+          "A second fungible asset (local integer-ID or foreign multilocation asset) already registered on Asset Hub"
+        ],
+        "wallet": [
+          "Polkadot.js browser extension with an account funded with DOT and the second asset on Asset Hub"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Open Polkadot.js Apps and connect to Asset Hub",
+          "working_directory": ".",
+          "description": "Navigate to https://polkadot.js.org/apps/ in the browser. In the top-left network selector, choose 'Polkadot Hub' under Polkadot (wss://polkadot-asset-hub-rpc.polkadot.io). For Paseo TestNet use wss://asset-hub-paseo-rpc.dotters.network. Verify the connected account in Accounts has DOT and the second asset. If testing with Paseo, get testnet PAS at https://faucet.polkadot.io/."
+        },
+        {
+          "order": 2,
+          "action": "Create a liquidity pool",
+          "working_directory": ".",
+          "description": "Navigate to Developer > Extrinsics. Select the 'assetConversion' pallet and 'createPool' extrinsic. Fill in:\n- asset1: the first asset MultiLocation or AssetId (for native DOT use { parents: 1, interior: Here })\n- asset2: the second asset (local integer AssetId or foreign MultiLocation)\nClick 'Submit Transaction' and sign. A pool creation deposit is charged from the account. Verify the pool exists at Developer > Chain State > assetConversion > pools."
+        },
+        {
+          "order": 3,
+          "action": "Add liquidity to the pool",
+          "working_directory": ".",
+          "description": "Navigate to Developer > Extrinsics > assetConversion > addLiquidity. Fill in:\n- asset1 and asset2: same identifiers as pool creation\n- amount1Desired: amount of asset1 to provide in smallest units\n- amount2Desired: amount of asset2 to provide in smallest units\n- amount1Min, amount2Min: set to 95% of desired amounts to allow for slippage\n- mintTo: account address to receive LP tokens\nSubmit and sign. Confirm LP token receipt at Developer > Chain State > assetConversion > poolAssets > account."
+        },
+        {
+          "order": 4,
+          "action": "Swap assets in the pool",
+          "working_directory": ".",
+          "description": "Navigate to Developer > Extrinsics > assetConversion > swapExactTokensForTokens. Fill in:\n- path: array of asset identifiers for the swap route (e.g., [asset1, asset2])\n- amountIn: exact amount of asset1 to sell in smallest units\n- amountOutMin: minimum amount of asset2 to receive (set to ~95% of expected output)\n- sendTo: destination account for the received tokens\n- keepAlive: true to prevent existential deposit issues\nSubmit and sign. Verify updated balances at Accounts > your account."
+        },
+        {
+          "order": 5,
+          "action": "Remove liquidity from the pool (optional)",
+          "working_directory": ".",
+          "description": "Navigate to Developer > Extrinsics > assetConversion > removeLiquidity. Fill in:\n- asset1 and asset2: same identifiers as pool creation\n- lpTokenBurn: amount of LP tokens to burn\n- amount1MinReceive, amount2MinReceive: minimum amounts to receive (~95% of expected)\n- withdrawTo: account address for withdrawn assets\nSubmit and sign. Confirm withdrawn amounts at Accounts > your account."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Dispatch Error: assetConversion.PoolNotFound",
+          "cause": "Attempting to add liquidity or swap before the pool has been created.",
+          "resolution": "Complete step 2 (createPool) first. Verify the pool exists at Developer > Chain State > assetConversion > pools before calling addLiquidity or swap extrinsics."
+        },
+        {
+          "pattern": "Dispatch Error: assetConversion.InsufficientLiquidity",
+          "cause": "The pool has insufficient reserves to fulfill the swap at the specified slippage tolerance.",
+          "resolution": "Reduce the swap amount or increase pool reserves by adding more liquidity. Check current reserves at Developer > Chain State > assetConversion > pools."
+        },
+        {
+          "pattern": "Dispatch Error: assetConversion.SlippageBoundsExceeded",
+          "cause": "The swap output was less than amountOutMin, or add-liquidity amounts violated the current price ratio.",
+          "resolution": "Increase slippage tolerance (lower amountOutMin) or resubmit after the price stabilizes."
+        },
+        {
+          "pattern": "Insufficient balance to pay pool creation deposit",
+          "cause": "The account creating the pool lacks the required DOT deposit.",
+          "resolution": "Fund the account with additional DOT. Query the exact deposit amount at Developer > Chain State > assetConversion > poolSetupFee."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for asset registration context or to understand Asset Hub fungible asset mechanics.",
+        "pages": [
+          {
+            "slug": "chain-interactions-token-operations-register-local-asset",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-token-operations-register-local-asset.md",
+            "relevance": "How to register a new local integer-ID asset on Asset Hub before using it in an AssetConversion pool."
+          },
+          {
+            "slug": "chain-interactions-token-operations-register-foreign-asset",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-token-operations-register-foreign-asset.md",
+            "relevance": "How to register a foreign cross-chain asset on Asset Hub, which can then be used in an AssetConversion pool."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: create a DOT/USDT liquidity pool on Asset Hub",
+          "user_says": "Create a liquidity pool between DOT and USDT on Polkadot Hub Asset Hub",
+          "actions": [
+            "Open Polkadot.js Apps connected to Asset Hub mainnet",
+            "Navigate to Developer > Extrinsics > assetConversion > createPool with DOT and USDT asset IDs",
+            "Submit and sign the pool creation transaction",
+            "Navigate to assetConversion > addLiquidity with desired DOT and USDT amounts and 95% slippage tolerance",
+            "Confirm LP tokens received at Developer > Chain State > assetConversion > poolAssets > account"
+          ],
+          "result": "Liquidity pool created; LP tokens minted to account; pool visible in assetConversion > pools chain state"
+        },
+        {
+          "scenario": "Edge case: swap fails with SlippageBoundsExceeded error",
+          "user_says": "My asset swap failed with a slippage error",
+          "actions": [
+            "Query current pool reserves at Developer > Chain State > assetConversion > pools",
+            "Recalculate expected output based on current reserves using constant product formula (x * y = k)",
+            "Resubmit swapExactTokensForTokens with amountOutMin set to 90% of the recalculated expected output"
+          ],
+          "result": "Swap retried with adjusted slippage tolerance; transaction succeeds"
+        }
+      ]
+    },
+    {
+      "id": "register-foreign-asset-polkadot-hub",
+      "title": "Register a Foreign Asset on Polkadot Hub",
+      "objective": "Register an asset from another parachain as a foreign asset on Polkadot Hub Asset Hub via a two-step XCM governance dispatch using Polkadot.js Apps.",
+      "description": "Registers a cross-chain asset from another parachain on Polkadot Hub Asset Hub using the foreignAssets pallet. Covers generating the encoded forceCreate call data on Asset Hub, funding the source parachain sovereign account on Asset Hub, and dispatching the registration XCM from the source parachain. Use when a parachain team needs their token available on Polkadot Hub for swapping or bridging. Trigger phrases: 'register foreign asset Polkadot Hub', 'foreignAssets forceCreate', 'XCM asset registration', 'list token Asset Hub', 'register cross-chain asset'. Requires sudo or governance rights on the source parachain. All steps use Polkadot.js Apps — no CLI required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/token-operations/register-foreign-asset.md"
+      ],
+      "primary_page": "chain-interactions/token-operations/register-foreign-asset.md",
+      "prerequisites": {
+        "runtime": [
+          "A modern web browser (Chrome or Firefox recommended)"
+        ],
+        "network": [
+          "Polkadot Hub Asset Hub RPC (wss://polkadot-asset-hub-rpc.polkadot.io)",
+          "Source parachain RPC endpoint where the asset originates"
+        ],
+        "tokens": [
+          "DOT on Polkadot Hub Asset Hub sovereign account for the source parachain (to pay XCM execution fees)",
+          "Native tokens on source parachain to pay fees for the XCM send extrinsic"
+        ],
+        "wallet": [
+          "Polkadot.js browser extension with an account that has sudo or governance rights on the source parachain"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Determine the asset MultiLocation",
+          "working_directory": ".",
+          "description": "Determine the canonical MultiLocation for the asset to register. For a parachain's native token the MultiLocation is typically: { parents: 1, interior: { X1: [{ Parachain: <para-id> }] } }. For tokens in the source parachain's assets pallet: { parents: 1, interior: { X3: [{ Parachain: <para-id> }, { PalletInstance: <assets-pallet-id> }, { GeneralIndex: <asset-id> }] } }. Verify the MultiLocation with the parachain team and record it — it will be the assetId parameter in step 2."
+        },
+        {
+          "order": 2,
+          "action": "Encode the foreignAssets.forceCreate call on Asset Hub",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to Asset Hub (wss://polkadot-asset-hub-rpc.polkadot.io), navigate to Developer > Extrinsics. Select 'foreignAssets' pallet > 'forceCreate' extrinsic. Fill in:\n- id: the MultiLocation from step 1\n- owner: account that will own the registered asset (e.g., sovereign account of source parachain, or a designated admin)\n- isSufficient: false (foreign assets should not be sufficient for account existence)\n- minBalance: 1 (or higher as specified by the asset team)\nDo NOT submit. Click the clipboard icon to copy the encoded call data hex. Record this hex — it will be used as the Transact call in step 4."
+        },
+        {
+          "order": 3,
+          "action": "Fund the source parachain sovereign account on Asset Hub",
+          "working_directory": ".",
+          "description": "The XCM execution on Asset Hub deducts fees from the source parachain's sovereign account on Asset Hub. The sovereign account address is derived from the parachain ID using the 'sibl' prefix for sibling chains. Use the Polkadot.js Apps Developer > JavaScript console or https://polkadot.subscan.io/tools/format_transform to derive the address from the para ID. In Polkadot.js Apps on Asset Hub, verify the sovereign account balance at Accounts. If insufficient, transfer at least 0.5 DOT to the sovereign account from a funded account before proceeding."
+        },
+        {
+          "order": 4,
+          "action": "Dispatch the registration XCM from the source parachain",
+          "working_directory": ".",
+          "description": "Switch Polkadot.js Apps to the source parachain endpoint. Navigate to Developer > Extrinsics > polkadotXcm (or xcmPallet) > send. Configure:\n- dest: { V3: { parents: 1, interior: { X1: [{ Parachain: 1000 }] } } } (Asset Hub para ID 1000 on Polkadot mainnet; 1000 on Paseo TestNet)\n- message: V3 XCM with instructions: (1) UnpaidExecution { weight_limit: Unlimited, check_origin: None }, (2) Transact { origin_kind: Superuser, require_weight_at_most: { ref_time: 1000000000, proof_size: 65536 }, call: <hex from step 2> }, (3) RefundSurplus, (4) DepositAsset targeting the sovereign account for fee refunds\nSubmit and sign with a sudo or governance account on the source parachain."
+        },
+        {
+          "order": 5,
+          "action": "Verify the foreign asset is registered",
+          "working_directory": ".",
+          "description": "After 1-2 blocks, switch Polkadot.js Apps back to Asset Hub. Navigate to Developer > Chain State > foreignAssets > asset and query with the MultiLocation from step 1. A successful registration shows owner, minBalance, and isSufficient. If the asset is not found, check XCM result events on the source parachain (xcmPallet events) and on Asset Hub (system > ExtrinsicFailed or foreignAssets > Created events)."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "XCM Barrier not passed / NotHoldingFees",
+          "cause": "The sovereign account on Asset Hub has insufficient DOT to pay XCM execution fees, or the XCM message lacks a fee payment instruction.",
+          "resolution": "Fund the sovereign account with additional DOT (step 3). If the barrier error persists, add a BuyExecution instruction before Transact to explicitly purchase execution from sovereign account DOT."
+        },
+        {
+          "pattern": "foreignAssets.AlreadyExists on Asset Hub",
+          "cause": "An asset with this MultiLocation is already registered on Asset Hub.",
+          "resolution": "Query Developer > Chain State > foreignAssets > asset with the target MultiLocation before registration. If it already exists, skip registration or update metadata with foreignAssets.forceSetMetadata instead."
+        },
+        {
+          "pattern": "XCM Transact decoded incorrectly / wrong runtime version",
+          "cause": "Encoded call data was generated against a different Asset Hub runtime version, or the extrinsic index changed after a runtime upgrade.",
+          "resolution": "Re-generate the encoded call data in step 2 against the current Asset Hub node. Verify by decoding it: Developer > Extrinsics > Decode and paste the hex — it should resolve to foreignAssets.forceCreate."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for XCM message construction, sovereign account derivation, or asset mechanics.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-transfer-assets-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-transfer-assets-parachains.md",
+            "relevance": "How to transfer assets between parachains via XCM — useful for understanding how foreign assets flow after registration."
+          },
+          {
+            "slug": "chain-interactions-token-operations-convert-assets",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-token-operations-convert-assets.md",
+            "relevance": "How to create AMM liquidity pools on Asset Hub — foreign assets can be used in AssetConversion pools after registration."
+          },
+          {
+            "slug": "reference-parachains-interoperability",
+            "url": "https://docs.polkadot.com/ai/pages/reference-parachains-interoperability.md",
+            "relevance": "XCM instruction set reference, MultiLocation syntax, and sovereign account derivation."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: register a parachain native token on Asset Hub",
+          "user_says": "Register our parachain's token as a foreign asset on Polkadot Hub Asset Hub",
+          "actions": [
+            "Determine the token MultiLocation based on the parachain ID",
+            "In Polkadot.js Apps on Asset Hub, build foreignAssets.forceCreate and copy encoded call hex",
+            "Fund the source parachain sovereign account on Asset Hub with at least 0.5 DOT",
+            "In Polkadot.js Apps on source parachain, dispatch XCM send with Transact wrapping the forceCreate hex",
+            "Verify foreignAssets.asset entry on Asset Hub after XCM execution"
+          ],
+          "result": "Foreign asset registered on Asset Hub; visible at Developer > Chain State > foreignAssets > asset"
+        },
+        {
+          "scenario": "Edge case: XCM Transact failed with fee barrier error",
+          "user_says": "The XCM registration failed with a barrier or fee error on Asset Hub",
+          "actions": [
+            "Check sovereign account DOT balance on Asset Hub at Developer > Chain State > system > account",
+            "Transfer 1 DOT to the sovereign account if balance is insufficient",
+            "Add BuyExecution instruction before Transact in the XCM message",
+            "Re-encode and resubmit the XCM from the source parachain"
+          ],
+          "result": "XCM passes the barrier; Transact executes forceCreate; foreign asset registered"
+        }
+      ]
+    },
+    {
+      "id": "register-local-asset-polkadot-hub",
+      "title": "Register a Local Asset on Polkadot Hub",
+      "objective": "Create a new local integer-ID fungible asset on Polkadot Hub Asset Hub using the Assets pallet via the Polkadot.js Apps Network > Assets UI.",
+      "description": "Creates a new local fungible asset with an integer asset ID on Polkadot Hub Asset Hub using the Assets pallet, accessible through the Polkadot.js Apps Network-Assets interface. Covers asset creation, setting metadata (name, symbol, decimals), minting initial supply, and verification. Use when a team needs to create a new token on Polkadot Hub's native asset pallet — stablecoins, project tokens, or test assets. Trigger phrases: 'create local asset Polkadot Hub', 'register asset Asset Hub', 'Assets pallet create', 'mint token Asset Hub', 'new fungible asset Polkadot'. Requires a DOT-funded account for the creation deposit. All steps use Polkadot.js Apps — no CLI required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "chain-interactions/token-operations/register-local-asset.md"
+      ],
+      "primary_page": "chain-interactions/token-operations/register-local-asset.md",
+      "prerequisites": {
+        "runtime": [
+          "A modern web browser (Chrome or Firefox recommended)"
+        ],
+        "network": [
+          "Polkadot Hub Asset Hub — wss://polkadot-asset-hub-rpc.polkadot.io (mainnet) or wss://asset-hub-paseo-rpc.dotters.network (Paseo TestNet)"
+        ],
+        "tokens": [
+          "DOT on Polkadot Hub Asset Hub to pay the asset creation deposit (query Developer > Chain State > assets > assetDeposit for the current amount)"
+        ],
+        "wallet": [
+          "Polkadot.js browser extension with an account funded with DOT on Asset Hub"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Open Polkadot.js Apps and navigate to Network > Assets",
+          "working_directory": ".",
+          "description": "Navigate to https://polkadot.js.org/apps/?rpc=wss://polkadot-asset-hub-rpc.polkadot.io in the browser. For Paseo TestNet use wss://asset-hub-paseo-rpc.dotters.network. Click 'Network' in the top navigation and select 'Assets'. The Assets page lists all existing assets on Asset Hub. Click '+ Create' to begin asset creation."
+        },
+        {
+          "order": 2,
+          "action": "Fill in asset creation form — Step 1: Asset details",
+          "working_directory": ".",
+          "description": "In the asset creation wizard, fill in the first step:\n- asset id: a unique integer ID not already in use (verify on the Assets page). Well-known IDs to avoid: 1984 (USDT), 1337 (USDC). Choose a number that fits your project (e.g., 100-999 for project tokens)\n- creator: connected wallet account (auto-populated)\n- default admin: account controlling asset operations (typically same as creator)\nClick 'Next' to proceed."
+        },
+        {
+          "order": 3,
+          "action": "Fill in asset creation form — Step 2: Metadata",
+          "working_directory": ".",
+          "description": "In step 2 of the wizard, fill in the asset metadata:\n- name: full token name (e.g., 'My Project Token')\n- symbol: short ticker symbol (e.g., 'MPT')\n- decimals: number of decimal places (6 for stablecoins, 10 for DOT-compatible, 18 for ETH-compatible)\n- minimum balance: existential deposit for this asset; set to 1 unless specified otherwise\nVerify the total estimated deposit shown in the form. Ensure the account has enough DOT."
+        },
+        {
+          "order": 4,
+          "action": "Submit and sign the asset creation transaction",
+          "working_directory": ".",
+          "description": "Review all details. Click 'Create' then 'Sign and Submit' in the confirmation dialog. Sign with the Polkadot.js extension. The creation deposit is charged from the creator's DOT balance. Wait for the transaction to be included in a block (10-30 seconds on mainnet). The new asset should appear in the Assets list with status 'Active'. Click the asset ID to verify the metadata (name, symbol, decimals, owner)."
+        },
+        {
+          "order": 5,
+          "action": "Mint initial supply (optional)",
+          "working_directory": ".",
+          "description": "To mint tokens, navigate to Developer > Extrinsics > assets > mint. Fill in:\n- id: the asset ID from step 2\n- beneficiary: account to receive the minted tokens\n- amount: number of tokens in smallest units (e.g., for 1000 tokens at 6 decimals, enter 1000000000)\nSubmit and sign with the asset issuer account. Verify the balance at Developer > Chain State > assets > account by querying the asset ID and beneficiary address."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Dispatch Error: assets.InUse / assets.AlreadyExists",
+          "cause": "The asset ID entered is already taken by another asset on Asset Hub.",
+          "resolution": "Check the Assets page for existing asset IDs and choose a different unused integer ID. Well-known reserved IDs include 1984 (USDT) and 1337 (USDC) — avoid those ranges."
+        },
+        {
+          "pattern": "Dispatch Error: assets.DepositNeeded / BalanceLow",
+          "cause": "The creator account does not have enough DOT to pay the asset creation deposit.",
+          "resolution": "Fund the account with additional DOT. Query the exact deposit amount at Developer > Chain State > assets > assetDeposit."
+        },
+        {
+          "pattern": "Dispatch Error: assets.NoPermission when minting",
+          "cause": "The account attempting to mint is not the designated issuer for the asset.",
+          "resolution": "Mint must be signed by the asset issuer account. Check the issuer address at Developer > Chain State > assets > asset for your asset ID, then switch to that account in the Polkadot.js extension."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for liquidity pool creation or to contrast local vs foreign asset registration.",
+        "pages": [
+          {
+            "slug": "chain-interactions-token-operations-convert-assets",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-token-operations-convert-assets.md",
+            "relevance": "How to create an AssetConversion liquidity pool using the newly registered local asset."
+          },
+          {
+            "slug": "chain-interactions-token-operations-register-foreign-asset",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-token-operations-register-foreign-asset.md",
+            "relevance": "How to register a cross-chain foreign asset on Asset Hub — contrast with the local integer-ID asset registration covered here."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: create a new local token on Asset Hub TestNet",
+          "user_says": "Create a new fungible token on Polkadot Hub Asset Hub",
+          "actions": [
+            "Open Polkadot.js Apps connected to Asset Hub Paseo TestNet",
+            "Navigate to Network > Assets > + Create",
+            "Enter an unused asset ID and set the admin to the connected account",
+            "Fill in name, symbol, decimals, and min balance; confirm deposit amount",
+            "Submit and sign the creation transaction",
+            "Optionally mint initial supply via Developer > Extrinsics > assets > mint"
+          ],
+          "result": "New local asset created on Asset Hub; visible in Network > Assets with correct metadata; initial supply minted to beneficiary"
+        },
+        {
+          "scenario": "Edge case: asset ID already taken",
+          "user_says": "My asset creation failed with an InUse error",
+          "actions": [
+            "Navigate to Network > Assets on Polkadot.js Apps to review all existing asset IDs",
+            "Select a different unused integer ID not appearing in the current list",
+            "Retry asset creation with the new ID"
+          ],
+          "result": "Asset created successfully with a unique integer ID"
+        }
+      ]
+    },
+    {
+      "id": "set-up-relay-chain-full-node",
+      "title": "Set Up a Polkadot Relay Chain Full Node",
+      "objective": "Install and run a Polkadot relay chain node in pruned or archive mode using a pre-built binary, Docker, Snap package, or compiled from source.",
+      "description": "Installs and starts a Polkadot relay chain full node using one of four methods: pre-built binary, Docker, Snap, or compiled from source. Covers binary selection and installation, pruned vs archive sync mode, systemd service configuration, and sync verification. Use when running a self-hosted Polkadot relay chain node for RPC access, validator setup, or personal infrastructure. Trigger phrases: 'run Polkadot relay chain node', 'install polkadot full node', 'polkadot archive node', 'relay chain sync', 'self-hosted Polkadot node'. Requires a Linux server with 100 GB+ SSD (pruned) or 2+ TB SSD (archive). No tokens required. Companion skills: set-up-relay-chain-bootnode, set-up-polkadot-validator-node.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "conditional-branch",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-node/relay-chain/full-node.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-node/relay-chain/full-node.md",
+      "prerequisites": {
+        "runtime": [
+          "64-bit Linux server (Ubuntu 22.04+ or similar) with systemd",
+          "For Docker method: Docker v24+",
+          "For compile-from-source: Rust toolchain and SDK build dependencies (see parachains/install-polkadot-sdk.md)",
+          "Disk: 100+ GB SSD for pruned node; 2+ TB SSD for archive node",
+          "RAM: minimum 8 GB; 16 GB recommended for archive nodes; 4+ CPU cores for compilation"
+        ],
+        "network": [
+          "Open TCP port 30333 for P2P (required for peer discovery)",
+          "Port 9944 for WebSocket RPC (bind to localhost for private nodes; open only if public RPC is needed)",
+          "Stable broadband for initial chain sync"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Choose installation method and sync mode",
+          "working_directory": ".",
+          "description": "Choose an installation method before proceeding:\n(A) Pre-built binary — fastest setup; continue with step 2\n(B) Docker — containerized with managed restarts; skip to step 3\n(C) Snap — managed updates on Ubuntu; skip to step 4\n(D) Compile from source — requires parachains/install-polkadot-sdk.md prerequisites; skip to step 5\n\nAlso choose sync mode:\n- Pruned (--state-pruning=1000 --blocks-pruning=1000): retains last 1000 blocks; ~100 GB disk; recommended for most use cases\n- Archive (no pruning flags): full historical state; 2+ TB disk; required for historical queries\n- Warp sync (--sync=warp): downloads state snapshot first, fastest initial sync; recommended for pruned nodes"
+        },
+        {
+          "order": 2,
+          "action": "Install via pre-built binary (Method A)",
+          "working_directory": ".",
+          "commands": [
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot -o polkadot",
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot-execute-worker -o polkadot-execute-worker",
+            "curl -sL https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2412/polkadot-prepare-worker -o polkadot-prepare-worker",
+            "sudo install -m 755 polkadot polkadot-execute-worker polkadot-prepare-worker /usr/local/bin/"
+          ],
+          "description": "Download the stable polkadot release from GitHub. All three binaries are required — polkadot-execute-worker and polkadot-prepare-worker are needed for parachain validation. Replace 'polkadot-stable2412' with the latest stable release tag from https://github.com/paritytech/polkadot-sdk/releases. Verify: polkadot --version. Proceed to step 6."
+        },
+        {
+          "order": 3,
+          "action": "Install via Docker (Method B)",
+          "working_directory": ".",
+          "commands": [
+            "docker pull parity/polkadot:stable",
+            "mkdir -p /var/lib/polkadot",
+            "docker run -d --name polkadot-relay --restart unless-stopped -p 30333:30333 -v /var/lib/polkadot:/data parity/polkadot:stable --base-path=/data --chain=polkadot --sync=warp --state-pruning=1000 --blocks-pruning=1000 --rpc-port=9944"
+          ],
+          "description": "Pull the stable polkadot Docker image and run the relay chain node. Replace '/var/lib/polkadot' with your preferred data directory. For archive mode, remove --state-pruning and --blocks-pruning. Add -p 9944:9944 to expose RPC externally. Monitor: docker logs -f polkadot-relay. Proceed to step 7."
+        },
+        {
+          "order": 4,
+          "action": "Install via Snap (Method C)",
+          "working_directory": ".",
+          "commands": [
+            "sudo snap install polkadot",
+            "sudo snap connect polkadot:removable-media"
+          ],
+          "description": "Install polkadot via snap on Ubuntu. The snap manages updates automatically and includes all required binaries. Verify: polkadot --version. Start: sudo snap start polkadot. For custom startup flags, edit the snap service configuration. Proceed to step 7."
+        },
+        {
+          "order": 5,
+          "action": "Compile from source (Method D)",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/paritytech/polkadot-sdk.git --branch stable2412 --depth 1",
+            "cd polkadot-sdk && cargo build --release -p polkadot -p polkadot-execute-worker -p polkadot-prepare-worker",
+            "sudo install -m 755 target/release/polkadot target/release/polkadot-execute-worker target/release/polkadot-prepare-worker /usr/local/bin/"
+          ],
+          "description": "Clone the polkadot-sdk repo and compile. Requires Rust toolchain and SDK dependencies — complete parachains/install-polkadot-sdk.md first. Replace 'stable2412' with the target stable branch. Compilation takes 20-45 minutes on 4+ cores. Verify: polkadot --version. Proceed to step 6."
+        },
+        {
+          "order": 6,
+          "action": "Create a systemd service (Methods A, C, D)",
+          "working_directory": ".",
+          "description": "Create a polkadot system user and data directory, then configure systemd:\n\nsudo useradd --system --no-create-home --shell /usr/sbin/nologin polkadot\nsudo mkdir -p /var/lib/polkadot && sudo chown polkadot:polkadot /var/lib/polkadot\n\nCreate /etc/systemd/system/polkadot.service:\n\n[Unit]\nDescription=Polkadot Relay Chain Node\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot --base-path=/var/lib/polkadot --chain=polkadot --sync=warp --state-pruning=1000 --blocks-pruning=1000 --rpc-port=9944 --rpc-addr=127.0.0.1:9944\nRestart=always\nRestartSec=10\n\n[Install]\nWantedBy=multi-user.target\n\nFor archive mode, remove --state-pruning and --blocks-pruning. For public RPC, replace --rpc-addr=127.0.0.1:9944 with --rpc-external. Then enable and start:\n\nsudo systemctl daemon-reload && sudo systemctl enable polkadot && sudo systemctl start polkadot"
+        },
+        {
+          "order": 7,
+          "action": "Monitor sync progress and verify",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":{\"currentBlock\":N,\"highestBlock\":M,...}}\n{\"result\":{\"peers\":5,\"isSyncing\":false,...}}",
+          "description": "For systemd: sudo journalctl -fu polkadot. For Docker: docker logs -f polkadot-relay. The node is fully synced when system_syncState currentBlock equals highestBlock and system_health isSyncing is false. Warp sync completes in minutes; archive sync can take days."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "polkadot: error while loading shared libraries / polkadot-execute-worker: not found",
+          "cause": "The polkadot binary requires polkadot-execute-worker and polkadot-prepare-worker to be installed in the same $PATH directory.",
+          "resolution": "Ensure all three binaries are in the same directory with chmod 755. Verify: which polkadot-execute-worker should return a path. Reinstall from the same release version if workers are missing."
+        },
+        {
+          "pattern": "Peers count stays at 0 after 10 minutes",
+          "cause": "P2P port 30333 is blocked by a firewall or cloud security group.",
+          "resolution": "Open TCP port 30333: sudo ufw allow 30333/tcp. For cloud VMs, add an inbound rule for port 30333 in the security group. Mainnet bootnodes are embedded in the chain spec — no manual bootnode configuration is needed."
+        },
+        {
+          "pattern": "Error: database version mismatch / RocksDB migration required",
+          "cause": "The polkadot binary version is incompatible with the existing database.",
+          "resolution": "Stop the service, purge the database: polkadot purge-chain --chain=polkadot -y, then restart. The node will re-sync from scratch. For archive nodes, consider downloading a fresh snapshot to avoid a full re-sync."
+        },
+        {
+          "pattern": "System disk usage growing unexpectedly fast",
+          "cause": "Running in archive mode without pruning flags, or warp sync completed and the node is now downloading full state.",
+          "resolution": "Add --state-pruning=1000 --blocks-pruning=1000 to the service ExecStart for a pruned node. Stop the service, purge the old database, restart with pruning flags. Check disk usage: du -sh /var/lib/polkadot."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for WSS/TLS setup, bootnode configuration, or validator node prerequisites.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
+            "relevance": "How to add a WSS (TLS) reverse proxy via nginx — required for production public RPC endpoints."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-bootnode",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-bootnode.md",
+            "relevance": "How to configure a relay chain node as a bootnode with P2P, WS, and WSS endpoints."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator.md",
+            "relevance": "Setting up a Polkadot validator — builds on relay chain full node installation as a prerequisite."
+          },
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Install Rust and Polkadot SDK system dependencies — required before compiling polkadot from source."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: run a pruned relay chain node via pre-built binary",
+          "user_says": "Run a Polkadot relay chain full node",
+          "actions": [
+            "Download polkadot, polkadot-execute-worker, and polkadot-prepare-worker from GitHub stable release",
+            "Install all three binaries to /usr/local/bin with chmod 755",
+            "Create polkadot system user and /var/lib/polkadot data directory",
+            "Create /etc/systemd/system/polkadot.service with warp sync, pruning, and localhost RPC",
+            "Enable and start the service",
+            "Verify sync with system_syncState and system_health JSON-RPC queries"
+          ],
+          "result": "Polkadot relay chain node running and synced; JSON-RPC available on localhost:9944"
+        },
+        {
+          "scenario": "Edge case: node starts but stays at 0 peers",
+          "user_says": "My relay chain node shows 0 peers and is not syncing",
+          "actions": [
+            "Check firewall: sudo ufw status — port 30333 must be open for TCP",
+            "For cloud VMs, verify the security group allows inbound TCP port 30333",
+            "Confirm the node responds to RPC: curl http://localhost:9944",
+            "Check logs for 'Connecting to boot node' messages",
+            "If still 0 peers after 15 minutes with correct firewall, check Polkadot status at https://polkadot.io/ecosystem"
+          ],
+          "result": "Firewall issue identified and resolved; node connects to peers and begins syncing"
         }
       ]
     }
