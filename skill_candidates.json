@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:53:59Z",
+  "generated": "2026-04-21T15:59:18Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2358,6 +2358,132 @@
         },
         "priority_score": 21
       }
+    },
+    {
+      "skill_id": "use-wagmi-polkadot-hub",
+      "title": "Use Wagmi to Interact with Smart Contracts on Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/libraries/wagmi.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Walks through creating a Next.js + Wagmi v3 dApp: project setup, provider config, wallet connection, querying chain data, and calling a pre-deployed Storage contract. No explicit prerequisites section and no verifiable CLI outcome (P4 absent) — hence guide rather than tutorial. Runtime wallet interaction is GUI-driven (S1=0). Code snippets use --8<-- includes with placeholder values (K2=0).",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "K1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 11
+      }
+    },
+    {
+      "skill_id": "deploy-interact-contracts-web3js",
+      "title": "Deploy and Interact with Smart Contracts on Polkadot Hub Using Web3.js",
+      "source_pages": [
+        "smart-contracts/libraries/web3-js.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete end-to-end tutorial: project init, provider setup, Solidity compilation, contract deployment, and interaction — all via CLI Node.js scripts. Explicit prerequisites section (K3) and fully CLI-driven workflow (S1). Priority score hits the high threshold at 18. Note: the page carries a sunset warning for Web3.js and recommends Ethers.js or Viem instead; a skill built from this page should include that deprecation notice.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "deploy-interact-contracts-web3py",
+      "title": "Deploy and Interact with Smart Contracts on Polkadot Hub Using Web3.py",
+      "source_pages": [
+        "smart-contracts/libraries/web3-py.md"
+      ],
+      "category": "tutorial",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Complete Python workflow: project setup with virtualenv, py-solc-x compilation of a Solidity contract, deployment via Web3.py, and read/write interaction — all CLI-driven. No explicit prerequisites section (K3=0) keeps priority below high. Code uses --8<-- includes with unfilled placeholders (K2=0). Parallel to the Web3.js tutorial but targets Python developers.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 3,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 15
+      }
+    },
+    {
+      "skill_id": "interact-erc20-precompile-polkadot-hub",
+      "title": "Interact with the ERC20 Precompile on Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/precompiles/erc20.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Predominantly a reference page (function signatures, parameter tables, address format specs, asset ID table) with a numbered procedural section for using the precompile via Remix IDE. Scores are close: procedural=10 vs reference=12 (within 3-point ambiguity threshold). Rule 3 fires first (procedural ≥ 10) assigning guide, but the reference character is strong. The interaction steps are GUI-only in Remix (S1=0), which limits skill-fit. Code examples are complete Solidity snippets with real precompile addresses (K2=4).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C3",
+          "K1",
+          "K2",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 12,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "priority_score": 15,
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ]
+      }
     }
   ],
   "supplementary_only": [
@@ -3667,6 +3793,24 @@
       "page": "smart-contracts/get-started.md",
       "category": "not_applicable",
       "reason": "Navigation hub / landing page. Content is primarily link tables across Quick Starts, Build and Test, Cookbooks, Libraries, Integrations, and Precompiles sections. The Ethereum Tool Differences block is brief conceptual prose but secondary to the navigation function. No procedures, CLI commands, or files to create.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3",
+          "N1"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 4
+        }
+      }
+    },
+    {
+      "page": "smart-contracts/overview.md",
+      "category": "not_applicable",
+      "reason": "Landing/overview page. Explains the dual-VM architecture and Ethereum compatibility at a high level, then ends with a card grid pointing to Get Started, Cookbook, Ethereum Developers, and Precompiles sections. No CLI commands, no files to create, no verifiable outcome.",
       "scoring": {
         "signals": [
           "C1",
