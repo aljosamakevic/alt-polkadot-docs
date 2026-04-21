@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T19:00:00Z",
+  "generated": "2026-04-21T19:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 10,
+    "up_to_date": 25,
     "stale": 0,
-    "uncovered": 126,
+    "uncovered": 111,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -153,9 +153,11 @@
     },
     "node-infrastructure/run-a-node/relay-chain/bootnode.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:30:00Z",
+      "skills": [
+        "set-up-relay-chain-bootnode"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-node/relay-chain/full-node.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -177,9 +179,11 @@
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:30:00Z",
+      "skills": [
+        "set-up-polkadot-validator-node"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -286,7 +290,9 @@
     "parachains/install-polkadot-sdk.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
       "last_scanned": "2026-04-21T18:00:00Z",
-      "skills": ["install-polkadot-sdk"],
+      "skills": [
+        "install-polkadot-sdk"
+      ],
       "status": "up_to_date"
     },
     "parachains/integrations/indexers.md": {
@@ -371,9 +377,11 @@
     },
     "parachains/testing/fork-a-parachain.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:30:00Z",
+      "skills": [
+        "fork-parachain-chopsticks"
+      ],
+      "status": "up_to_date"
     },
     "parachains/testing/run-a-parachain-network.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -551,9 +559,11 @@
     },
     "reference/tools/chopsticks.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:30:00Z",
+      "skills": [
+        "set-up-chopsticks-fork"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/dedot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -569,9 +579,11 @@
     },
     "reference/tools/moonwall.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:30:00Z",
+      "skills": [
+        "set-up-e2e-testing-moonwall"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/omninode.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -660,7 +672,9 @@
     "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
       "last_scanned": "2026-04-21T18:00:00Z",
-      "skills": ["deploy-basic-contract-hardhat"],
+      "skills": [
+        "deploy-basic-contract-hardhat"
+      ],
       "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-remix.md": {
@@ -672,7 +686,9 @@
     "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
       "last_scanned": "2026-04-21T18:00:00Z",
-      "skills": ["deploy-erc20-token-hardhat"],
+      "skills": [
+        "deploy-erc20-token-hardhat"
+      ],
       "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-remix.md": {
@@ -702,13 +718,17 @@
     "smart-contracts/dev-environments/hardhat-polkadot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
       "last_scanned": "2026-04-21T18:00:00Z",
-      "skills": ["set-up-hardhat-pvm"],
+      "skills": [
+        "set-up-hardhat-pvm"
+      ],
       "status": "up_to_date"
     },
     "smart-contracts/dev-environments/hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
       "last_scanned": "2026-04-21T18:00:00Z",
-      "skills": ["set-up-hardhat-evm"],
+      "skills": [
+        "set-up-hardhat-evm"
+      ],
       "status": "up_to_date"
     },
     "smart-contracts/dev-environments/local-dev-node.md": {

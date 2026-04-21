@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T19:00:00Z",
-  "content_hash": "sha256:8485a48f93b2cb44e7133e092f81b6099f0ec82dc9e654569426e64baceb462a",
+  "generated": "2026-04-21T19:30:00Z",
+  "content_hash": "sha256:8ed8b7a64289ec4c369ca55066779f7794ed229e6be2b6485dfe07be7b7a8951",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -1623,7 +1623,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/query-data/query-rest.md"],
+      "source_pages": [
+        "chain-interactions/query-data/query-rest.md"
+      ],
       "primary_page": "chain-interactions/query-data/query-rest.md",
       "prerequisites": {
         "runtime": [
@@ -1641,14 +1643,18 @@
           "order": 1,
           "action": "Install Substrate API Sidecar",
           "working_directory": ".",
-          "commands": ["npm install -g @substrate/api-sidecar"],
+          "commands": [
+            "npm install -g @substrate/api-sidecar"
+          ],
           "description": "Install Sidecar globally. This makes the 'substrate-api-sidecar' command available in your shell. If you prefer not to install globally, invoke it with 'npx @substrate/api-sidecar' in step 2 instead."
         },
         {
           "order": 2,
           "action": "Start Sidecar connected to Polkadot Hub TestNet",
           "working_directory": ".",
-          "commands": ["SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network substrate-api-sidecar"],
+          "commands": [
+            "SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network substrate-api-sidecar"
+          ],
           "expected_output": "SAS listening on http://127.0.0.1:8080/",
           "description": "Start Sidecar with SAS_SUBSTRATE_URL pointing to the Polkadot Hub TestNet WebSocket endpoint. The service listens on http://127.0.0.1:8080/ by default. Run this in a dedicated terminal and keep it running while executing the following steps. If using npx: SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network npx @substrate/api-sidecar. Polkadot Hub TestNet can be unstable — if the WebSocket connection drops, restart Sidecar."
         },
@@ -1656,7 +1662,9 @@
           "order": 3,
           "action": "Query account balance",
           "working_directory": ".",
-          "commands": ["curl -s \"http://127.0.0.1:8080/accounts/INSERT_SS58_ADDRESS/balance-info\" | jq ."],
+          "commands": [
+            "curl -s \"http://127.0.0.1:8080/accounts/INSERT_SS58_ADDRESS/balance-info\" | jq ."
+          ],
           "expected_output": "{\"at\":{\"hash\":\"0x...\",\"height\":\"12345\"},\"nonce\":\"0\",\"tokenSymbol\":\"PAS\",\"free\":\"...\",\"reserved\":\"...\"}",
           "description": "Query the balance-info endpoint. Replace 'INSERT_SS58_ADDRESS' with the target SS58 address. Response fields: free — spendable planck; reserved — locked/staked; miscFrozen / feeFrozen — frozen amounts; nonce — transaction count. Divide raw planck values by 10^10 to convert to PAS. Omit '| jq .' if jq is not installed."
         },
@@ -1675,7 +1683,9 @@
           "order": 5,
           "action": "Query asset metadata",
           "working_directory": ".",
-          "commands": ["curl -s \"http://127.0.0.1:8080/assets/1984/asset-info\" | jq ."],
+          "commands": [
+            "curl -s \"http://127.0.0.1:8080/assets/1984/asset-info\" | jq ."
+          ],
           "expected_output": "{\"at\":{...},\"items\":[{\"id\":\"1984\",\"name\":\"USDT\",\"symbol\":\"USDT\",\"decimals\":\"6\"}]}",
           "description": "Query metadata for asset ID 1984 (USDT on Polkadot Hub). Replace '1984' with any registered asset ID. If the asset does not exist on TestNet, items will be empty — this is expected since not all mainnet assets are bridged to TestNet."
         }
@@ -1761,11 +1771,17 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/send-transactions/calculate-transaction-fees.md"],
+      "source_pages": [
+        "chain-interactions/send-transactions/calculate-transaction-fees.md"
+      ],
       "primary_page": "chain-interactions/send-transactions/calculate-transaction-fees.md",
       "prerequisites": {
-        "runtime": ["Node.js v18+ and npm or pnpm"],
-        "network": ["WebSocket RPC endpoint for Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network"]
+        "runtime": [
+          "Node.js v18+ and npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network"
+        ]
       },
       "env_vars": [],
       "steps": [
@@ -1793,7 +1809,9 @@
           "order": 3,
           "action": "Generate PAPI type descriptors",
           "working_directory": "papi-fee-estimate",
-          "commands": ["npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"],
+          "commands": [
+            "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
+          ],
           "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Downloads chain metadata and produces the 'polkadotTestNet' export in @polkadot-api/descriptors. Polkadot Hub TestNet can be unstable — retry after a few minutes if the connection fails."
         },
         {
@@ -1806,7 +1824,9 @@
           "order": 5,
           "action": "Run the fee estimation script",
           "working_directory": "papi-fee-estimate",
-          "commands": ["npx tsx estimate-fees.ts"],
+          "commands": [
+            "npx tsx estimate-fees.ts"
+          ],
           "expected_output": "Fee (planck): 15000000000\nFee (PAS): 0.001500\nWeight ref_time: 200000000",
           "description": "Execute the script. It constructs an unsigned Balances.transfer_keep_alive transaction for 1 PAS and calls getPaymentInfo to retrieve the fee estimate without submitting. Fees on Polkadot Hub TestNet are higher than Ethereum due to the 1000 gwei base fee."
         }
@@ -1888,10 +1908,14 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md"],
+      "source_pages": [
+        "chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md"
+      ],
       "primary_page": "chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md",
       "prerequisites": {
-        "runtime": ["Node.js v18+ and npm"],
+        "runtime": [
+          "Node.js v18+ and npm"
+        ],
         "network": [
           "WebSocket RPC for Paseo Asset Hub (source): wss://sys.ibp.network/asset-hub-paseo",
           "Destination parachain WebSocket RPC (e.g., wss://sys.ibp.network/people-paseo for People Chain Paseo)"
@@ -1899,7 +1923,9 @@
         "tokens": [
           "Paseo testnet PAS in the sender account — get from https://faucet.polkadot.io/ (select Paseo, then Asset Hub Paseo). Minimum 2 PAS recommended."
         ],
-        "wallet": ["SR25519 account mnemonic phrase for the sender account, funded with Paseo testnet PAS"]
+        "wallet": [
+          "SR25519 account mnemonic phrase for the sender account, funded with Paseo testnet PAS"
+        ]
       },
       "env_vars": [
         {
@@ -1959,7 +1985,9 @@
           "order": 5,
           "action": "Verify sender is funded and run the script",
           "working_directory": "paraspell-xcm-transfer",
-          "commands": ["npx tsx xcm-transfer.ts"],
+          "commands": [
+            "npx tsx xcm-transfer.ts"
+          ],
           "expected_output": "Sender: ...\nDry-run: OK\nEstimated fee: ...\nStatus: InBlock\nFinalized: 0x...",
           "description": "Before running, confirm the sender has at least 2 PAS on Paseo Asset Hub. If not, visit https://faucet.polkadot.io/ (select Paseo > Asset Hub Paseo). Execute the script. It dry-runs first — if dry-run fails, check the error before re-attempting. If the TestNet is unstable and the transaction does not finalize within 2 minutes, re-run the script."
         }
@@ -2047,7 +2075,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/send-transactions/pay-fees-with-different-tokens.md"],
+      "source_pages": [
+        "chain-interactions/send-transactions/pay-fees-with-different-tokens.md"
+      ],
       "primary_page": "chain-interactions/send-transactions/pay-fees-with-different-tokens.md",
       "prerequisites": {
         "runtime": [
@@ -2082,7 +2112,9 @@
           "order": 3,
           "action": "Start the Chopsticks fork",
           "working_directory": "fee-proxy-demo",
-          "commands": ["npx @acala-network/chopsticks --config=chopsticks.yml"],
+          "commands": [
+            "npx @acala-network/chopsticks --config=chopsticks.yml"
+          ],
           "expected_output": "Listening on port 8000",
           "description": "Start the Chopsticks fork in a dedicated terminal. Chopsticks downloads Polkadot Hub state from the TestNet endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite. Once 'Listening on port 8000' appears, keep this running and open a second terminal for step 4."
         },
@@ -2090,7 +2122,9 @@
           "order": 4,
           "action": "Generate PAPI type descriptors for the local fork",
           "working_directory": "fee-proxy-demo",
-          "commands": ["npx papi add localFork -w ws://localhost:8000"],
+          "commands": [
+            "npx papi add localFork -w ws://localhost:8000"
+          ],
           "description": "Run this command in a second terminal while Chopsticks (step 3) is still running. Generates compile-time type descriptors named 'localFork' for the forked chain. Produces the 'localFork' export in @polkadot-api/descriptors. The descriptors reflect the exact runtime version of the forked state."
         },
         {
@@ -2103,7 +2137,9 @@
           "order": 6,
           "action": "Run the fee-proxy script against the local fork",
           "working_directory": "fee-proxy-demo",
-          "commands": ["npx tsx fee-proxy.ts"],
+          "commands": [
+            "npx tsx fee-proxy.ts"
+          ],
           "expected_output": "Included in block: 0x...\nFees paid in USDT asset ID: 1984",
           "description": "Execute the script while Chopsticks is still running. The script submits the fee-proxy transaction; Chopsticks validates it against the forked state and includes it in a mock block. If the pallet name 'AssetConversionTxPayment' does not exist in localFork, inspect api.tx in the TypeScript IDE and check the source page for the correct name."
         }
@@ -2186,7 +2222,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["node-infrastructure/run-a-node/parachain-rpc.md"],
+      "source_pages": [
+        "node-infrastructure/run-a-node/parachain-rpc.md"
+      ],
       "primary_page": "node-infrastructure/run-a-node/parachain-rpc.md",
       "prerequisites": {
         "runtime": [
@@ -2320,8 +2358,7 @@
           "result": "Node resumes syncing after restart or sync mode change"
         }
       ]
-    }
-    ,
+    },
     {
       "id": "replay-dry-run-xcm-chopsticks",
       "title": "Replay and Dry-Run XCMs Using Chopsticks",
@@ -2332,7 +2369,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md"],
+      "source_pages": [
+        "chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md"
+      ],
       "primary_page": "chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md",
       "prerequisites": {
         "runtime": [
@@ -2368,7 +2407,9 @@
           "order": 3,
           "action": "Start the Chopsticks fork",
           "working_directory": "xcm-chopsticks-debug",
-          "commands": ["npx @acala-network/chopsticks --config=chopsticks.yml"],
+          "commands": [
+            "npx @acala-network/chopsticks --config=chopsticks.yml"
+          ],
           "expected_output": "Listening on port 8000",
           "description": "Start Chopsticks in a dedicated terminal. It downloads chain state from the configured endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite cache. Keep this terminal open during all following steps."
         },
@@ -2473,7 +2514,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md"],
+      "source_pages": [
+        "chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md"
+      ],
       "primary_page": "chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md",
       "prerequisites": {
         "runtime": [
@@ -2536,7 +2579,9 @@
           "order": 6,
           "action": "Run the fee estimation script",
           "working_directory": "xcm-fee-estimate",
-          "commands": ["npx tsx estimate-xcm-fees.ts"],
+          "commands": [
+            "npx tsx estimate-xcm-fees.ts"
+          ],
           "expected_output": "Local execution fee (planck): 1500000000000000\nDelivery fee assets: [...]\nRemote execution fee (planck): 500000000000000",
           "description": "Execute the script while both Chopsticks forks are running. The output shows all three fee components in planck. Divide by 10^18 to convert to PAS. The sum of all three components is the total fee budget to include in the XCM BuyExecution instruction. If any XcmPaymentApi method is not available, check the source page for the correct API method names for your chain runtime version."
         }
@@ -2624,7 +2669,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["parachains/launch-a-parachain/set-up-the-parachain-template.md"],
+      "source_pages": [
+        "parachains/launch-a-parachain/set-up-the-parachain-template.md"
+      ],
       "primary_page": "parachains/launch-a-parachain/set-up-the-parachain-template.md",
       "prerequisites": {
         "runtime": [
@@ -2656,7 +2703,9 @@
           "order": 3,
           "action": "Build the parachain node in release mode",
           "working_directory": "polkadot-sdk-parachain-template",
-          "commands": ["cargo build --release"],
+          "commands": [
+            "cargo build --release"
+          ],
           "expected_output": "Compiling parachain-template-node v0.1.0\n...\nFinished release [optimized] target(s)",
           "description": "Compile the parachain node and runtime in release mode. This step is time-consuming (20-60 minutes on first build) because it compiles the entire Polkadot SDK dependency tree. Subsequent builds use the Rust incremental cache and are significantly faster. If compilation fails with 'linker not found', install the build-essential package (Linux) or Xcode command line tools (macOS). On low-memory machines (less than 8 GB RAM), reduce parallel jobs: CARGO_BUILD_JOBS=2 cargo build --release."
         },
@@ -2664,7 +2713,9 @@
           "order": 4,
           "action": "Verify the binary was produced",
           "working_directory": "polkadot-sdk-parachain-template",
-          "commands": ["./target/release/parachain-template-node --version"],
+          "commands": [
+            "./target/release/parachain-template-node --version"
+          ],
           "expected_output": "parachain-template-node 0.1.0-...",
           "description": "Confirm the binary exists and reports its version. If the command fails with 'No such file or directory', the build did not complete successfully — review the cargo build output for compilation errors."
         },
@@ -2672,7 +2723,9 @@
           "order": 5,
           "action": "Run the node in local development mode",
           "working_directory": "polkadot-sdk-parachain-template",
-          "commands": ["./target/release/parachain-template-node --dev"],
+          "commands": [
+            "./target/release/parachain-template-node --dev"
+          ],
           "expected_output": "Running in --dev mode\n...\nIdle (0 peers)",
           "description": "Start the node in development mode. In --dev mode the node runs as a single collator without a relay chain connection, using a local chain spec and instant block production. This verifies the binary works correctly. The node will not produce blocks in this mode without a connected relay chain — the 'Idle' output is expected. Press Ctrl+C to stop. The next step in the parachain launch series covers connecting to a relay chain."
         }
@@ -2759,7 +2812,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["node-infrastructure/run-a-collator.md"],
+      "source_pages": [
+        "node-infrastructure/run-a-collator.md"
+      ],
       "primary_page": "node-infrastructure/run-a-collator.md",
       "prerequisites": {
         "runtime": [
@@ -2923,7 +2978,9 @@
       "invocation": "user",
       "workflow_pattern": "sequential",
       "license": "CC-BY-4.0",
-      "source_pages": ["node-infrastructure/run-a-node/polkadot-hub-rpc.md"],
+      "source_pages": [
+        "node-infrastructure/run-a-node/polkadot-hub-rpc.md"
+      ],
       "primary_page": "node-infrastructure/run-a-node/polkadot-hub-rpc.md",
       "prerequisites": {
         "runtime": [
@@ -3065,6 +3122,708 @@
             "Update MetaMask network settings with the correct chain ID and RPC URL http://localhost:8545"
           ],
           "result": "MetaMask connects successfully with the correct Polkadot Hub chain ID and eth-rpc adapter"
+        }
+      ]
+    },
+    {
+      "id": "set-up-relay-chain-bootnode",
+      "title": "Set Up a Relay Chain Bootnode",
+      "objective": "Configure and run a Polkadot relay chain bootnode with P2P, WebSocket, and secure WSS endpoints so other nodes can discover and join the network.",
+      "description": "Configures a Polkadot relay chain bootnode exposing P2P, WebSocket, and secure WSS endpoints for peer discovery. Covers node key generation, polkadot startup flags, nginx SSL reverse-proxy configuration for WSS, and three-protocol connection testing. Use when you need to run a stable, publicly accessible bootnode for a Polkadot relay chain. Trigger phrases: 'set up a bootnode', 'run Polkadot bootnode', 'configure bootnode nginx', 'P2P WSS bootnode'. Prerequisites: polkadot binary in PATH and nginx installed. Output: bootnode reachable on P2P (30310), WS (30311), and WSS (30312).",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-node/relay-chain/bootnode.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-node/relay-chain/bootnode.md",
+      "prerequisites": {
+        "runtime": [
+          "Linux VPS or dedicated server with a public IP and DNS name",
+          "polkadot binary installed and available in $PATH",
+          "nginx installed (https://nginx.org/en/docs/install.html)"
+        ],
+        "network": [
+          "Open TCP ports: 30310 (P2P), 30311 (P2P/WS), 30312 (P2P/WSS)",
+          "A valid SSL certificate and DNS name for the WSS endpoint (e.g., from Let's Encrypt)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Generate the node key",
+          "working_directory": ".",
+          "commands": [
+            "polkadot key generate-node-key"
+          ],
+          "expected_output": "<64-character hex public key printed to stdout>",
+          "description": "Generate a persistent ED25519 node key for the bootnode. The command prints the public key (peer ID) to stdout and stores the secret key at chains/<CHAIN>/network/secret_ed25519 under the --base-path directory. Record the public key — it is used in the bootnode multiaddress (e.g., /dns/your-host/tcp/30310/p2p/<PUBLIC_KEY>). Back up the secret key file immediately; if lost, the peer ID changes and chain specs referencing the old ID must be updated. Save the public key output — it is needed in step 4."
+        },
+        {
+          "order": 2,
+          "action": "Start the bootnode with P2P and WS listeners",
+          "working_directory": ".",
+          "commands": [
+            "polkadot --chain polkadot --name dot-bootnode --listen-addr /ip4/0.0.0.0/tcp/30310 --listen-addr /ip4/0.0.0.0/tcp/30311/ws"
+          ],
+          "description": "Start the Polkadot bootnode. Replace 'polkadot' in --chain with your target chain name if running a different relay chain. --listen-addr /ip4/0.0.0.0/tcp/30310 binds the raw P2P port; --listen-addr /ip4/0.0.0.0/tcp/30311/ws binds the WebSocket P2P port. The WSS port (30312) is handled by the nginx proxy configured in the next step — do not pass a /wss listen-addr here. To run as a background service, wrap this command in a systemd unit file."
+        },
+        {
+          "order": 3,
+          "action": "Configure nginx as a WSS reverse proxy",
+          "working_directory": "/etc/nginx/sites-enabled",
+          "description": "Create the file /etc/nginx/sites-enabled/dot-bootnode with the following nginx configuration. Replace INSERT_DNS_NAME with your server's DNS hostname and verify your Let's Encrypt certificate paths:\n\n  server {\n    listen 30312 ssl;\n    server_name INSERT_DNS_NAME;\n\n    ssl_certificate     /etc/letsencrypt/live/INSERT_DNS_NAME/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/INSERT_DNS_NAME/privkey.pem;\n\n    location / {\n      proxy_pass http://localhost:30311;\n      proxy_http_version 1.1;\n      proxy_set_header Upgrade $http_upgrade;\n      proxy_set_header Connection \"upgrade\";\n      proxy_set_header Host $host;\n    }\n  }\n\nAfter saving, validate and reload nginx:\n  sudo nginx -t && sudo systemctl reload nginx\n\nThis proxies TLS port 30312 to the internal WS port 30311, providing the P2P/WSS endpoint required by light clients."
+        },
+        {
+          "order": 4,
+          "action": "Test the bootnode on all three protocols",
+          "working_directory": ".",
+          "expected_output": "syncing 1 peers",
+          "description": "Verify the bootnode is reachable on each protocol. Replace INSERT_DNS_NAME with your server DNS name and INSERT_NODE_ID with the public key from step 1.\n\nP2P:\n  polkadot --chain polkadot --base-path /tmp/node --name 'Bootnode testnode' --reserved-only --reserved-nodes '/dns/INSERT_DNS_NAME/tcp/30310/p2p/INSERT_NODE_ID' --no-hardware-benchmarks\n\nP2P/WS:\n  polkadot --chain polkadot --base-path /tmp/node --name 'Bootnode testnode' --reserved-only --reserved-nodes '/dns/INSERT_DNS_NAME/tcp/30311/ws/p2p/INSERT_NODE_ID' --no-hardware-benchmarks\n\nP2P/WSS:\n  polkadot --chain polkadot --base-path /tmp/node --name 'Bootnode testnode' --reserved-only --reserved-nodes '/dns/INSERT_DNS_NAME/tcp/30312/wss/p2p/INSERT_NODE_ID' --no-hardware-benchmarks\n\nEach should log 'syncing 1 peers' within a few seconds. Append -lsub-libp2p=trace for detailed libp2p debug output if troubleshooting."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Address already in use / EADDRINUSE on port 30310, 30311, or 30312",
+          "cause": "Another process is bound to the port.",
+          "resolution": "Run 'ss -tlnp | grep 303' to identify the process. Stop it or change the polkadot --listen-addr port and the nginx listen directive to an unused port."
+        },
+        {
+          "pattern": "polkadot: command not found",
+          "cause": "The polkadot binary is not installed or not in $PATH.",
+          "resolution": "Install the binary following node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md. Verify the installation directory is in $PATH: echo $PATH."
+        },
+        {
+          "pattern": "nginx: configuration file test failed",
+          "cause": "Syntax error in the nginx site config or the SSL certificate path does not exist.",
+          "resolution": "Run 'sudo nginx -t' to see the specific error line. Verify that /etc/letsencrypt/live/INSERT_DNS_NAME/fullchain.pem and privkey.pem exist. Renew with certbot if expired: sudo certbot renew."
+        },
+        {
+          "pattern": "syncing 0 peers after several seconds",
+          "cause": "The bootnode is unreachable — port blocked, wrong DNS name, mismatched node ID, or the bootnode process exited.",
+          "resolution": "Confirm the bootnode process is running: ps aux | grep polkadot. Check firewall rules allow inbound on 30310/30311/30312. Verify DNS resolves to the correct server IP: nslookup INSERT_DNS_NAME. Double-check the node ID in the --reserved-nodes multiaddress matches the public key from step 1."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs WSS setup details, relay chain full node instructions, or wants to install the polkadot binary first.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
+            "relevance": "Detailed guide for adding nginx or Apache2 SSL/TLS reverse proxy to any Polkadot node WebSocket endpoint."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "How to run a full Polkadot relay chain node using the same binary with different role flags."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-set-up-validator.md",
+            "relevance": "How to install the polkadot binary on the server if it is not yet available."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: start a bootnode for the Polkadot mainnet",
+          "user_says": "Set up a Polkadot relay chain bootnode with P2P and WSS support",
+          "actions": [
+            "Run 'polkadot key generate-node-key' and record the public key",
+            "Start polkadot with --listen-addr for ports 30310 (P2P) and 30311 (WS)",
+            "Create nginx site config proxying port 30312 (WSS) to 30311 (WS) with Let's Encrypt SSL",
+            "Test by running a temporary polkadot node with --reserved-only --reserved-nodes for each of the three protocols",
+            "Confirm each test logs 'syncing 1 peers'"
+          ],
+          "result": "Bootnode running; accepting P2P on 30310, WS on 30311, and WSS on 30312; test node reports syncing 1 peers on all three protocols"
+        },
+        {
+          "scenario": "Edge case: peer ID changes after server rebuild",
+          "user_says": "My bootnode restarted after a server migration and other nodes can no longer connect",
+          "actions": [
+            "Locate the backed-up secret_ed25519 file and restore it to chains/<chain>/network/ under the --base-path",
+            "If the file was not backed up, generate a new key with 'polkadot key generate-node-key' and update the multiaddress in the chain spec and any hardcoded bootnode lists",
+            "Restart the bootnode and confirm the public key matches the multiaddress in use"
+          ],
+          "result": "Bootnode restored with its original peer ID, or chain spec updated with the new peer ID; other nodes reconnect"
+        }
+      ]
+    },
+    {
+      "id": "set-up-polkadot-validator-node",
+      "title": "Set Up a Polkadot Validator Node",
+      "objective": "Install polkadot, polkadot-prepare-worker, and polkadot-execute-worker binaries on a Linux server, configure NTP and Landlock, and verify all three binaries are at matching versions.",
+      "description": "Installs the three Polkadot validator binaries (polkadot, polkadot-prepare-worker, polkadot-execute-worker) needed to run a validator node, and prepares the server with NTP time synchronization and Landlock security. Covers four installation paths: GPG-verified curl download, APT package manager (Ubuntu/Debian), Docker image, or building from source. Use when provisioning a new validator server or upgrading binaries on an existing one. Trigger phrases: 'install Polkadot validator binaries', 'set up validator node', 'install polkadot-prepare-worker', 'configure validator server'. First step in the full validator onboarding flow before key management and bonding.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md"
+      ],
+      "primary_page": "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md",
+      "prerequisites": {
+        "runtime": [
+          "Linux server with kernel 5.16 or later (Ubuntu 22.04 LTS or newer recommended)",
+          "64-bit x86-64 or ARM64 architecture",
+          "Root or sudo access"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Verify or install NTP time synchronization",
+          "working_directory": ".",
+          "commands": [
+            "timedatectl"
+          ],
+          "expected_output": "System clock synchronized: yes",
+          "description": "Validators need accurate system time to avoid missing block authorship. Check NTP status with 'timedatectl'. If the output does not show 'System clock synchronized: yes', install and start NTP:\n\n  sudo apt-get install ntp\n  sudo ntpq -p\n\nThe 'ntpq -p' output should list one or more active peers with a '+' or '*' status prefix. Skipping NTP can cause the validator to miss blocks due to minor clock drift."
+        },
+        {
+          "order": 2,
+          "action": "Verify Landlock security is activated",
+          "working_directory": ".",
+          "commands": [
+            "dmesg | grep landlock || journalctl -kg landlock"
+          ],
+          "description": "Landlock (Linux kernel 5.13+) is required by the Polkadot validator for sandboxing. Run the command above as root. If Landlock is active, you will see kernel log entries referencing 'landlock'. If there is no output, your kernel does not have Landlock enabled. Most modern Ubuntu/Debian kernels (5.16+) include it by default. If Landlock is absent, upgrade to a supported kernel or rebuild with Landlock enabled (see https://docs.kernel.org/userspace-api/landlock.html#kernel-support). Polkadot validators can run without Landlock but will operate without the sandboxing protection."
+        },
+        {
+          "order": 3,
+          "action": "Install the Polkadot binaries via curl with GPG verification (recommended method)",
+          "working_directory": ".",
+          "commands": [
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot",
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot.asc",
+            "gpg --keyserver hkps://keyserver.ubuntu.com --receive-keys 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE",
+            "gpg --verify polkadot.asc",
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot-prepare-worker",
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot-prepare-worker.asc",
+            "gpg --verify polkadot-prepare-worker.asc",
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot-execute-worker",
+            "curl -LO https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2512-2/polkadot-execute-worker.asc",
+            "gpg --verify polkadot-execute-worker.asc",
+            "chmod +x polkadot polkadot-prepare-worker polkadot-execute-worker",
+            "sudo mv polkadot polkadot-prepare-worker polkadot-execute-worker /usr/local/bin/"
+          ],
+          "description": "Download all three binaries for release polkadot-stable2512-2 and verify each with GPG. The release tag is polkadot-stable2512-2 — check https://github.com/paritytech/polkadot-sdk/releases for a newer stable release and replace all occurrences of 'polkadot-stable2512-2' in the commands if you want a different version. GPG key 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE is the ParityReleases key for current releases. A 'Good signature' message after each --verify confirms the binary is authentic. If GPG verification fails with 'BAD signature', discard the binary and re-download.\n\nALTERNATIVE — APT package manager (Ubuntu/Debian):\n  gpg --keyserver hkps://keyserver.ubuntu.com --receive-keys 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE\n  gpg --export 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE > /usr/share/keyrings/parity.gpg\n  echo 'deb [signed-by=/usr/share/keyrings/parity.gpg] https://releases.parity.io/deb release main' > /etc/apt/sources.list.d/parity.list\n  apt update && apt install parity-keyring polkadot\n\nALTERNATIVE — Docker:\n  docker pull parity/polkadot:stable2512-2"
+        },
+        {
+          "order": 4,
+          "action": "Verify all three binaries are installed and versions match",
+          "working_directory": ".",
+          "commands": [
+            "polkadot --version",
+            "polkadot-execute-worker --version",
+            "polkadot-prepare-worker --version"
+          ],
+          "expected_output": "All three commands print the same version string, e.g. 'polkadot stable2512-2-...'",
+          "description": "Run all three version commands and confirm the version strings are identical. If one binary is missing ('command not found'), ensure it was moved to /usr/local/bin/ in step 3 and that /usr/local/bin is in $PATH (echo $PATH). All three binaries must be in the same directory for the validator to function. If versions differ, re-download the mismatched binary from the same release tag used in step 3."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "gpg: BAD signature",
+          "cause": "The downloaded binary was corrupted or tampered with during download.",
+          "resolution": "Delete all downloaded files and repeat step 3 from a trusted network connection. Do not use any binary that fails GPG verification."
+        },
+        {
+          "pattern": "polkadot: command not found after installation",
+          "cause": "The binary was not moved to a directory in $PATH, or the directory is not in $PATH.",
+          "resolution": "Run 'echo $PATH' and verify /usr/local/bin is listed. If not, run 'export PATH=$PATH:/usr/local/bin'. For persistence, add this export to /etc/environment or ~/.bashrc."
+        },
+        {
+          "pattern": "version mismatch between polkadot and worker binaries",
+          "cause": "The three binaries were downloaded from different releases.",
+          "resolution": "Remove all three binaries and re-download all from the same release tag (e.g., polkadot-stable2512-2) from https://github.com/paritytech/polkadot-sdk/releases. All three must share the same version to interoperate."
+        },
+        {
+          "pattern": "Landlock not in dmesg output",
+          "cause": "The running kernel is older than 5.13 or was compiled without Landlock.",
+          "resolution": "Upgrade the kernel: on Ubuntu, run 'sudo apt-get install linux-generic-hwe-22.04' then reboot. Verify with 'uname -r' that the new kernel is 5.16 or later. Alternatively, consult https://docs.kernel.org/userspace-api/landlock.html#kernel-support."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for key management, starting validation, or understanding validator requirements and operational tasks.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-validator-requirements",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-requirements.md",
+            "relevance": "Minimum hardware and skill requirements before starting a validator — read before this skill."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management.md",
+            "relevance": "Next step after binary installation: generating and registering session keys."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-start-validating",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-onboarding-and-offboarding-start-validating.md",
+            "relevance": "Syncing the node, bonding DOT, and activating the validator after binary setup."
+          },
+          {
+            "slug": "node-infrastructure-run-a-validator-operational-tasks-general-management",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-operational-tasks-general-management.md",
+            "relevance": "Prometheus and Grafana monitoring stack setup and security best practices for running validators."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: install on a fresh Ubuntu 22.04 server",
+          "user_says": "Install the Polkadot validator binaries on a new Ubuntu server",
+          "actions": [
+            "Run 'timedatectl' to check NTP sync; install ntp if not synced",
+            "Run 'dmesg | grep landlock' to verify Landlock is active",
+            "Download polkadot, polkadot-prepare-worker, and polkadot-execute-worker from release polkadot-stable2512-2",
+            "Verify each binary with GPG key 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE",
+            "Move all three to /usr/local/bin and run --version on each to confirm matching versions"
+          ],
+          "result": "All three binaries installed at polkadot-stable2512-2, GPG verified, and accessible system-wide; ready for key management"
+        },
+        {
+          "scenario": "Edge case: APT install on a Debian-based server without curl",
+          "user_says": "Install Polkadot on Ubuntu using apt instead of downloading manually",
+          "actions": [
+            "Import the Parity GPG key into /usr/share/keyrings/parity.gpg",
+            "Add the Parity APT repository to /etc/apt/sources.list.d/parity.list",
+            "Run 'apt update && apt install parity-keyring polkadot'",
+            "Verify with 'polkadot --version', 'polkadot-execute-worker --version', 'polkadot-prepare-worker --version'"
+          ],
+          "result": "Polkadot and both worker binaries installed via APT with automatic future upgrades via apt upgrade"
+        }
+      ]
+    },
+    {
+      "id": "set-up-chopsticks-fork",
+      "title": "Set Up and Use Chopsticks for Chain Forking",
+      "objective": "Install Chopsticks, create a local fork of a Polkadot SDK chain from a live RPC endpoint, and interact with it via block replay and WebSocket manipulation commands.",
+      "description": "Installs Chopsticks and creates a local fork of any Polkadot SDK-based chain for testing, debugging, and XCM simulation without touching live state. Covers global and local npm installation, YAML config file setup, fork creation via CLI flags or config, Polkadot.js interaction, block replay, and multi-chain XCM testing. Use when you need to test extrinsics, replay historical blocks, override chain storage, or simulate XCM messages locally. Trigger phrases: 'fork a chain with Chopsticks', 'local chain fork', 'replay blocks Chopsticks', 'test XCM locally', 'Chopsticks install'. Version: 1.2.7. Note: Chopsticks uses the Smoldot light client and does not support Ethereum JSON-RPC — MetaMask cannot connect to a Chopsticks fork.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/tools/chopsticks.md"
+      ],
+      "primary_page": "reference/tools/chopsticks.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm (included with Node.js) or yarn or pnpm"
+        ],
+        "network": [
+          "Access to a WebSocket RPC endpoint for the chain to fork (e.g., wss://polkadot-rpc.dwellir.com)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Chopsticks globally",
+          "working_directory": ".",
+          "commands": [
+            "npm i -g @acala-network/chopsticks@1.2.7"
+          ],
+          "expected_output": "added N packages",
+          "description": "Install Chopsticks 1.2.7 globally. After installation, 'chopsticks' is available system-wide. For a project-local installation instead: mkdir my-chopsticks-project && cd my-chopsticks-project && npm init -y && npm i @acala-network/chopsticks@1.2.7. With local installation, run via 'npx @acala-network/chopsticks' instead of 'chopsticks' in subsequent steps."
+        },
+        {
+          "order": 2,
+          "action": "Create a fork configuration file",
+          "working_directory": ".",
+          "description": "Create a YAML configuration file (e.g., polkadot.yml) describing the chain to fork. Pre-built configs for common Polkadot SDK chains are available at https://github.com/AcalaNetwork/chopsticks/tree/master/configs — download one with:\n  curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/polkadot.yml -o polkadot.yml\n\nA minimal config for Polkadot looks like:\n  endpoint: wss://polkadot-rpc.dwellir.com\n  mock-signature-host: true\n  block: 1000  # optional: fork from this block number\n\nThe 'import-storage' section (optional) lets you override storage values before the fork starts — useful for funding test accounts:\n  import-storage:\n    System:\n      Account:\n        - - - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY  # Alice\n          - data:\n              free: '100000000000000000'\n\nReplace the endpoint with the WSS RPC URL for your target chain."
+        },
+        {
+          "order": 3,
+          "action": "Start the chain fork",
+          "working_directory": ".",
+          "commands": [
+            "npx @acala-network/chopsticks --config=polkadot.yml"
+          ],
+          "expected_output": "Running on port 8000",
+          "description": "Start the fork using the YAML config from step 2. Alternatively, fork without a config file using CLI flags:\n  npx @acala-network/chopsticks --endpoint wss://polkadot-rpc.dwellir.com --block 100\n\nChoose the block number to fork from with --block (omit to use the chain head). Chopsticks caches state locally in an SQLite DB (set --db ./chopsticks.db to reuse between runs). When the fork is ready, you will see 'Running on port 8000'. The local fork is now accessible at ws://localhost:8000."
+        },
+        {
+          "order": 4,
+          "action": "Interact with the fork",
+          "working_directory": ".",
+          "description": "Connect to the running fork at ws://localhost:8000.\n\nVia Polkadot.js API (TypeScript):\n  import { ApiPromise, WsProvider } from '@polkadot/api';\n  const api = await ApiPromise.create({ provider: new WsProvider('ws://localhost:8000') });\n  const block = await api.rpc.chain.getBlock();\n  console.log('Fork head:', block.block.header.number.toNumber());\n\nVia Polkadot.js Apps UI: navigate to polkadot.js.org/apps, select network > Development > Custom, enter ws://localhost:8000, and click Switch.\n\nTo manipulate storage via the dev_setStorage WebSocket command (using wscat or a JS client):\n  { \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"dev_setStorage\", \"params\": [{ \"System\": { \"Account\": [[\"0xALICE_KEY\", { \"data\": { \"free\": 1000000000000 } }]] } }] }"
+        },
+        {
+          "order": 5,
+          "action": "Replay a historical block (optional)",
+          "working_directory": ".",
+          "commands": [
+            "npx @acala-network/chopsticks run-block --endpoint wss://polkadot-rpc.dwellir.com --output-path ./block-1000-output.json --block 1000"
+          ],
+          "description": "Replay block 1000 from Polkadot and save the state diff to a JSON file. Replace the endpoint and block number as needed. The output includes detailed storage changes and runtime logs. Add --html to generate an HTML visualization of the storage diff. This is useful for debugging why a specific transaction produced unexpected state changes."
+        },
+        {
+          "order": 6,
+          "action": "Test XCM between multiple chains (optional)",
+          "working_directory": ".",
+          "commands": [
+            "npx @acala-network/chopsticks xcm --r polkadot --p moonbeam --p astar"
+          ],
+          "description": "Fork multiple chains simultaneously to test XCM message flow. The --r flag specifies the relay chain config (by name or file path) and --p specifies parachain configs. After startup, each chain runs on a different port (printed in the output). Send XCM messages between the forked chains using the Polkadot.js API or dev_* WebSocket commands. Note: XCM testing requires config files for each chain; use pre-built configs from https://github.com/AcalaNetwork/chopsticks/tree/master/configs."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Cannot connect to endpoint / WebSocket connection failed",
+          "cause": "The RPC endpoint URL is incorrect, the chain is temporarily unavailable, or the WSS endpoint requires authentication.",
+          "resolution": "Verify the endpoint URL by connecting with wscat: wscat -c wss://your-endpoint. Try a public endpoint such as wss://polkadot-rpc.dwellir.com for Polkadot. Check the chain's status page or Discord for outages."
+        },
+        {
+          "pattern": "chopsticks: command not found",
+          "cause": "Global npm installation did not add the binary to PATH, or Chopsticks was installed locally without npx.",
+          "resolution": "For global installs, run 'npm root -g' to find the global bin directory and ensure it is in $PATH. For local installs, use 'npx @acala-network/chopsticks' instead of 'chopsticks'."
+        },
+        {
+          "pattern": "MetaMask / Ethereum tooling cannot connect to the fork",
+          "cause": "Chopsticks uses the Smoldot light client which only supports the native Polkadot SDK API, not Ethereum JSON-RPC.",
+          "resolution": "This is a known limitation. Chopsticks forks cannot be used with MetaMask or ethers.js. For EVM-compatible local testing, use a local Polkadot Hub development node instead."
+        },
+        {
+          "pattern": "Error replaying block: state root mismatch",
+          "cause": "The local fork has diverged from the live chain state, often because storage was manually modified before replay.",
+          "resolution": "Restart Chopsticks without --db to use a fresh state (or delete the SQLite db file). Avoid modifying storage with dev_setStorage before running run-block."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for parachain-specific fork tutorials, XCM debugging, or the fork-a-parachain cookbook tutorial.",
+        "pages": [
+          {
+            "slug": "parachains-testing-fork-a-parachain",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-testing-fork-a-parachain.md",
+            "relevance": "Step-by-step cookbook tutorial for forking a parachain with Chopsticks — same tool, focused on the parachain testing workflow with a CI-backed example."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-debug-and-preview-xcms",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-debug-and-preview-xcms.md",
+            "relevance": "Using Chopsticks to replay and dry-run XCM messages — advanced XCM debugging workflow."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-estimate-xcm-fees.md",
+            "relevance": "Estimating XCM fees for teleports using Chopsticks local forks of Polkadot Hub and People Chain."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: fork Polkadot mainnet and inspect state",
+          "user_says": "Fork the Polkadot mainnet locally with Chopsticks so I can test transactions",
+          "actions": [
+            "Install Chopsticks 1.2.7 globally: npm i -g @acala-network/chopsticks@1.2.7",
+            "Download the Polkadot config from the Chopsticks repo: curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/polkadot.yml -o polkadot.yml",
+            "Start the fork: npx @acala-network/chopsticks --config=polkadot.yml",
+            "Wait for 'Running on port 8000', then connect via Polkadot.js API at ws://localhost:8000"
+          ],
+          "result": "Local Polkadot fork running at ws://localhost:8000; ready for transaction testing without spending real tokens"
+        },
+        {
+          "scenario": "Edge case: fork requires a funded test account",
+          "user_says": "I need Alice to have tokens on my forked chain for testing",
+          "actions": [
+            "Add an import-storage section to the YAML config overriding Alice's System.Account free balance to a large value",
+            "Restart the fork with the updated config",
+            "Alternatively, send a dev_setStorage WebSocket command after the fork is running to set Alice's balance"
+          ],
+          "result": "Alice's account has the specified token balance on the local fork; transactions that require funds now succeed"
+        }
+      ]
+    },
+    {
+      "id": "set-up-e2e-testing-moonwall",
+      "title": "Set Up End-to-End Testing with Moonwall",
+      "objective": "Install Moonwall, initialize a test environment configuration, write a test suite using describeSuite, and run tests against a local or remote Polkadot SDK blockchain node.",
+      "description": "Installs and configures Moonwall, an end-to-end testing framework for Polkadot SDK-based blockchains. Covers global and local npm installation, interactive configuration initialization, moonwall.config.json structure, writing test suites with the describeSuite function, and running tests via the CLI. Use when you need a standardized test environment for a Substrate-based chain — local dev node, remote testnet, or Chopsticks fork. Trigger phrases: 'set up Moonwall', 'e2e tests Polkadot SDK', 'Moonwall testing framework', 'describeSuite Moonwall', 'install moonwall cli'. Version: 5.18.3.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/tools/moonwall.md"
+      ],
+      "primary_page": "reference/tools/moonwall.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v20.10 or higher",
+          "npm, yarn, or pnpm"
+        ],
+        "network": [
+          "A running Polkadot SDK node or Chopsticks fork for the test environment (e.g., ws://localhost:9944 or ws://localhost:8000)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Moonwall globally",
+          "working_directory": ".",
+          "commands": [
+            "npm install -g @moonwall/cli@5.18.3"
+          ],
+          "expected_output": "added N packages",
+          "description": "Install Moonwall 5.18.3 globally so the 'moonwall' command is available system-wide. For a project-local installation: mkdir my-moonwall-project && cd my-moonwall-project && npm init -y && npm install @moonwall/cli@5.18.3. With a local install, run Moonwall via 'npx moonwall' or add it to package.json scripts."
+        },
+        {
+          "order": 2,
+          "action": "Initialize the Moonwall configuration via the interactive wizard",
+          "working_directory": ".",
+          "commands": [
+            "moonwall init"
+          ],
+          "interactive": true,
+          "description": "The 'moonwall init' command launches an interactive wizard to create your moonwall.config file. Delegate this step to the user — do not attempt to automate it. Ask the user to run 'moonwall init' in their terminal and answer the prompts:\n\n  - label: a name for the test configuration (e.g., my-chain-tests)\n  - global timeout: maximum time in ms for test execution (e.g., 30000)\n  - environment name: name for the test environment (e.g., default_env)\n  - network foundation: type of blockchain environment (e.g., 'dev' for a local binary node, 'chopsticks' for a fork)\n  - tests directory: path for test files (e.g., ./tests)\n\nPress Enter to accept defaults or enter custom values. The wizard generates a moonwall.config file in the current directory. Ask the user to confirm when the wizard completes before proceeding."
+        },
+        {
+          "order": 3,
+          "action": "Review and customize moonwall.config.json",
+          "working_directory": ".",
+          "description": "Open the generated moonwall.config file and customize the environment settings. Key sections to update:\n\n  - foundation.type: 'dev' (local binary), 'chopsticks' (fork), or 'read_only' (remote RPC)\n  - For 'dev' foundation, set binPath to the path of your chain binary\n  - connections[0].endpoint: the WebSocket URL of the node (e.g., ws://localhost:9944)\n  - connections[0].type: the provider type (e.g., 'polkadotJs' for Polkadot.js API)\n\nExample configuration for testing a local dev node:\n  {\n    \"label\": \"my-chain-tests\",\n    \"timeout\": 30000,\n    \"environments\": [{\n      \"name\": \"default_env\",\n      \"foundation\": { \"type\": \"dev\", \"launchSpec\": [{ \"name\": \"node\", \"binPath\": \"./your-node-binary\", \"options\": [\"--dev\"] }] },\n      \"testFileDir\": [\"./tests\"],\n      \"connections\": [{ \"name\": \"api\", \"type\": \"polkadotJs\", \"endpoints\": [\"ws://localhost:9944\"] }]\n    }]\n  }"
+        },
+        {
+          "order": 4,
+          "action": "Write a test suite",
+          "working_directory": ".",
+          "description": "Create a test file in the tests directory (e.g., ./tests/balance.test.ts). Moonwall uses the describeSuite function to define test suites:\n\n  import { describeSuite, expect } from '@moonwall/cli';\n\n  describeSuite({\n    id: 'D01',\n    title: 'Balance transfer test',\n    foundationMethods: 'dev',\n    testCases: ({ it, context }) => {\n      it('C100', 'Alice should have a balance', async () => {\n        const api = context.polkadotJs();\n        const accounts = await api.query.system.account('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');\n        expect(accounts.data.free.toBigInt()).toBeGreaterThan(0n);\n      });\n    },\n  });\n\nEach test case requires a unique ID ('C100'), a title, and an async function receiving it (test runner) and context (provides the polkadotJs API). The API is initialized by Moonwall before tests run — do not create API connections manually."
+        },
+        {
+          "order": 5,
+          "action": "Run the tests",
+          "working_directory": ".",
+          "commands": [
+            "moonwall test default_env -c moonwall.config"
+          ],
+          "expected_output": "All test suites passed",
+          "description": "Run the tests against the 'default_env' environment defined in moonwall.config. Replace 'default_env' with the environment name you chose in step 2. The test runner outputs:\n  - Test suite execution status (pass/fail per suite)\n  - Individual test case results\n  - Execution time per test\n  - Detailed error logs for failed tests\n\nIf the foundation type is 'dev', Moonwall launches the node binary automatically and tears it down after tests complete. If using 'read_only' or 'chopsticks', ensure the endpoint is reachable before running tests."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "moonwall: command not found",
+          "cause": "Global npm installation did not add the binary to PATH.",
+          "resolution": "Run 'npm root -g' to find the global bin directory and verify it is in $PATH. Alternatively, use 'npx moonwall' for a local installation."
+        },
+        {
+          "pattern": "Cannot find module '@moonwall/cli'",
+          "cause": "Moonwall was not installed or the local installation is missing.",
+          "resolution": "Run 'npm install @moonwall/cli@5.18.3' in the project directory. For global, run 'npm install -g @moonwall/cli@5.18.3'."
+        },
+        {
+          "pattern": "Error: Cannot connect to endpoint ws://localhost:9944",
+          "cause": "The node specified in the moonwall.config foundation is not running, or the endpoint URL is incorrect.",
+          "resolution": "Start the node manually and verify it is listening on the configured port before running Moonwall. For 'dev' foundation, ensure the binPath points to an executable binary and the --dev flag is appropriate for your chain."
+        },
+        {
+          "pattern": "Timeout exceeded for test suite",
+          "cause": "The test environment took too long to start or a test operation exceeded the global timeout.",
+          "resolution": "Increase the 'timeout' value in moonwall.config (e.g., from 30000 to 60000 ms). For slow chain operations like block finalization, add explicit wait-for-block assertions rather than fixed sleeps."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for Chopsticks fork setup (to use as Moonwall's test environment) or for a local development node to test against.",
+        "pages": [
+          {
+            "slug": "reference-tools-chopsticks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-chopsticks.md",
+            "relevance": "Setting up a Chopsticks fork as the 'chopsticks' foundation type for Moonwall tests."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-local-dev-node",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-local-dev-node.md",
+            "relevance": "How to run a local development node to use as the 'dev' foundation in Moonwall."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: run e2e tests against a local dev node",
+          "user_says": "Set up Moonwall to run e2e tests for my Polkadot SDK chain",
+          "actions": [
+            "Install Moonwall 5.18.3 globally: npm install -g @moonwall/cli@5.18.3",
+            "Ask the user to run 'moonwall init' and complete the interactive wizard, choosing 'dev' foundation",
+            "Update moonwall.config with the correct node binPath and ws://localhost:9944 connection",
+            "Create a test file in ./tests using describeSuite with a foundationMethods of 'dev'",
+            "Run 'moonwall test default_env -c moonwall.config'"
+          ],
+          "result": "Moonwall launches the node binary, runs all test suites, and reports pass/fail results per test case"
+        },
+        {
+          "scenario": "Edge case: test environment fails to start",
+          "user_says": "Moonwall says it cannot connect to the node endpoint",
+          "actions": [
+            "Check the foundation type in moonwall.config — for 'dev', verify binPath is correct and the binary has execute permission",
+            "For 'read_only' or 'chopsticks', start the node or Chopsticks fork manually and confirm it is listening on the configured endpoint",
+            "Increase the connection timeout in moonwall.config if the node starts slowly"
+          ],
+          "result": "Node is reachable; Moonwall connects and runs tests"
+        }
+      ]
+    },
+    {
+      "id": "fork-parachain-chopsticks",
+      "title": "Fork a Parachain Using Chopsticks",
+      "objective": "Install Chopsticks, configure a local fork of a Polkadot SDK parachain from a live endpoint, and manipulate fork state using WebSocket commands.",
+      "description": "Installs Chopsticks and forks a live Polkadot SDK parachain locally for testing and development. Covers global npm installation, YAML configuration, fork startup, and WebSocket dev commands (dev_newBlock, dev_setStorage, dev_setHead, dev_timeTravel, dev_setRuntimeLogLevel). Use when testing parachain-specific logic, extrinsics, or storage mutations without deploying to a live network. Trigger phrases: 'fork a parachain', 'Chopsticks parachain fork', 'dev_setStorage chopsticks', 'local parachain test environment'. Version: 1.2.7. Note: does not support Ethereum JSON-RPC — MetaMask cannot connect.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/testing/fork-a-parachain.md"
+      ],
+      "primary_page": "parachains/testing/fork-a-parachain.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm (included with Node.js) or yarn"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for the parachain to fork (e.g., wss://moonbeam.public.blastapi.io or wss://polkadot-rpc.dwellir.com)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Chopsticks globally",
+          "working_directory": ".",
+          "commands": [
+            "npm i -g @acala-network/chopsticks@1.2.7"
+          ],
+          "expected_output": "added N packages",
+          "description": "Install Chopsticks 1.2.7 globally so the 'chopsticks' command is available system-wide. To install locally in a project instead: mkdir my-chopsticks-project && cd my-chopsticks-project && npm init -y && npm i @acala-network/chopsticks@1.2.7. With a local install, use 'npx @acala-network/chopsticks' in place of 'chopsticks' for all subsequent commands. Verify installation: npx @acala-network/chopsticks --help"
+        },
+        {
+          "order": 2,
+          "action": "Create or download a fork configuration file",
+          "working_directory": ".",
+          "description": "Create a YAML configuration file for the parachain to fork. Pre-built configs for common Polkadot ecosystem chains are available at https://github.com/AcalaNetwork/chopsticks/tree/master/configs. Download one with:\n  curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/moonbeam.yml -o parachain.yml\n\nOr write one manually. Minimal example:\n  endpoint: wss://moonbeam.public.blastapi.io\n  mock-signature-host: true\n\nOptional: override storage in the config to pre-fund test accounts:\n  import-storage:\n    System:\n      Account:\n        - - - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY  # Alice address\n          - data:\n              free: '100000000000000'\n\nReplace the endpoint with the WSS URL for your target parachain. All CLI config options (genesis, timestamp, endpoint, block, db, port, build-block-mode, import-storage, allow-unresolved-imports, html, mock-signature-host) can be set in this file or passed as CLI flags."
+        },
+        {
+          "order": 3,
+          "action": "Start the parachain fork",
+          "working_directory": ".",
+          "commands": [
+            "npx @acala-network/chopsticks --config=parachain.yml"
+          ],
+          "expected_output": "Running on port 8000",
+          "description": "Start the Chopsticks fork using the YAML config file. Alternatively, start directly from the CLI without a config file:\n  npx @acala-network/chopsticks --endpoint wss://moonbeam.public.blastapi.io\n\nChoose a specific block to fork from with --block <number>. Chopsticks will fetch state from the live chain and start an RPC server. When you see 'Running on port 8000', the fork is ready. Connect any Polkadot SDK tooling to ws://localhost:8000."
+        },
+        {
+          "order": 4,
+          "action": "Interact with the fork via WebSocket dev commands",
+          "working_directory": ".",
+          "description": "Chopsticks exposes special WebSocket methods to manipulate the local fork. Send these as JSON-RPC calls to ws://localhost:8000 using wscat, Polkadot.js API, or a custom script.\n\nGenerate one new block:\n  { \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"dev_newBlock\", \"params\": [{ \"count\": 1 }] }\n\nOverride storage (e.g., set Alice's free balance):\n  { \"jsonrpc\": \"2.0\", \"id\": 2, \"method\": \"dev_setStorage\", \"params\": [{ \"System\": { \"Account\": [[\"0x<ALICE_KEY>\", { \"data\": { \"free\": 1000000000000 } }]] } }] }\n\nSet chain head to a specific block:\n  { \"jsonrpc\": \"2.0\", \"id\": 3, \"method\": \"dev_setHead\", \"params\": [1000] }\n\nTime-travel to a specific date:\n  { \"jsonrpc\": \"2.0\", \"id\": 4, \"method\": \"dev_timeTravel\", \"params\": [\"2025-01-01T00:00:00Z\"] }\n\nSet block build mode to manual (only build when triggered):\n  { \"jsonrpc\": \"2.0\", \"id\": 5, \"method\": \"dev_setBlockBuildMode\", \"params\": [\"Manual\"] }\n\nSet runtime log level:\n  { \"jsonrpc\": \"2.0\", \"id\": 6, \"method\": \"dev_setRuntimeLogLevel\", \"params\": [4] }"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/parachains/testing/fork-a-parachain",
+        "files": [
+          {
+            "path": "tests/docs.test.ts",
+            "description": "CI-backed Chopsticks integration test verifying fork startup and WebSocket command behavior"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Cannot connect to endpoint / WebSocket connection failed on startup",
+          "cause": "The parachain RPC endpoint URL is incorrect or the chain is temporarily offline.",
+          "resolution": "Test the endpoint with wscat: wscat -c wss://your-parachain-endpoint. Check the parachain's status page or community Discord for outages. Substitute an alternate public endpoint if available."
+        },
+        {
+          "pattern": "chopsticks: command not found",
+          "cause": "Global npm install did not add to PATH, or Chopsticks was installed locally.",
+          "resolution": "For global installs, run 'npm root -g' to locate the bin directory and add it to $PATH. For local installs, use 'npx @acala-network/chopsticks' instead."
+        },
+        {
+          "pattern": "MetaMask or Ethereum tools cannot connect to the fork",
+          "cause": "Chopsticks uses the Smoldot light client which does not implement Ethereum JSON-RPC.",
+          "resolution": "This is a known limitation of Chopsticks. For EVM testing, use a local Polkadot Hub development node instead of a Chopsticks fork."
+        },
+        {
+          "pattern": "dev_setStorage has no effect / storage value unchanged after call",
+          "cause": "The storage key path or value format is incorrect, or the block build mode is set to Batch and no new block has been produced.",
+          "resolution": "After calling dev_setStorage, trigger a new block with dev_newBlock to commit the storage change. Verify the storage key path by querying the current state first (e.g., api.query.system.account). Use dev_setBlockBuildMode with 'Instant' mode to automatically produce a block per transaction during testing."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for the full Chopsticks feature reference, XCM debugging, or the Zombienet network testing workflow.",
+        "pages": [
+          {
+            "slug": "reference-tools-chopsticks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-chopsticks.md",
+            "relevance": "Full Chopsticks reference page covering all configuration options, block replay, and multi-chain XCM testing."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-debug-and-preview-xcms",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-debug-and-preview-xcms.md",
+            "relevance": "Using Chopsticks to replay and dry-run XCM messages for debugging cross-chain transfers."
+          },
+          {
+            "slug": "parachains-testing-run-a-parachain-network",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-testing-run-a-parachain-network.md",
+            "relevance": "Alternative testing approach: spawn a full local relay chain + parachain test network using Zombienet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: fork Moonbeam and test a storage mutation",
+          "user_says": "Fork Moonbeam locally with Chopsticks so I can test an extrinsic",
+          "actions": [
+            "Install Chopsticks 1.2.7: npm i -g @acala-network/chopsticks@1.2.7",
+            "Download the Moonbeam config: curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/moonbeam.yml -o parachain.yml",
+            "Start the fork: npx @acala-network/chopsticks --config=parachain.yml",
+            "Once 'Running on port 8000' appears, connect via Polkadot.js API at ws://localhost:8000",
+            "Use dev_setStorage to set a test account balance, then submit and verify the extrinsic"
+          ],
+          "result": "Local Moonbeam fork running at ws://localhost:8000; storage mutations applied; extrinsic tested without real tokens"
+        },
+        {
+          "scenario": "Edge case: storage override not visible after dev_setStorage",
+          "user_says": "I called dev_setStorage to fund an account but the balance is still zero",
+          "actions": [
+            "After calling dev_setStorage, send a dev_newBlock request with count: 1 to commit the change",
+            "If using Batch block build mode (default), storage changes are applied at next block production",
+            "Switch to Instant mode with dev_setBlockBuildMode to get automatic per-transaction block production during testing"
+          ],
+          "result": "Storage override committed after block production; account shows updated balance"
         }
       ]
     }
