@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T22:30:00Z",
+  "generated": "2026-04-21T23:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 66,
+    "up_to_date": 71,
     "stale": 0,
-    "uncovered": 70,
+    "uncovered": 65,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -904,9 +904,11 @@
     },
     "smart-contracts/libraries/wagmi.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:00:00Z",
+      "skills": [
+        "use-wagmi-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/libraries/web3-js.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -918,9 +920,11 @@
     },
     "smart-contracts/libraries/web3-py.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:00:00Z",
+      "skills": [
+        "deploy-interact-contracts-web3py"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/overview.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -930,9 +934,11 @@
     },
     "smart-contracts/precompiles/erc20.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:00:00Z",
+      "skills": [
+        "interact-erc20-precompile-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/precompiles/eth-native.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -942,15 +948,19 @@
     },
     "smart-contracts/precompiles/storage.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:00:00Z",
+      "skills": [
+        "interact-storage-precompile-remix"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/precompiles/system.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:00:00Z",
+      "skills": [
+        "interact-system-precompile-remix"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/precompiles/xcm.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
