@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T22:00:00Z",
+  "generated": "2026-04-21T22:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 56,
+    "up_to_date": 61,
     "stale": 0,
-    "uncovered": 80,
+    "uncovered": 75,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -346,15 +346,19 @@
     },
     "parachains/interoperability/channels-between-parachains.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "open-hrmp-channel-between-parachains"
+      ],
+      "status": "up_to_date"
     },
     "parachains/interoperability/channels-with-system-parachains.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "open-hrmp-channel-with-system-parachain"
+      ],
+      "status": "up_to_date"
     },
     "parachains/interoperability/get-started.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -390,9 +394,11 @@
     },
     "parachains/runtime-maintenance/runtime-upgrades.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "perform-runtime-upgrade"
+      ],
+      "status": "up_to_date"
     },
     "parachains/runtime-maintenance/storage-migrations.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -416,9 +422,11 @@
     },
     "parachains/testing/run-a-parachain-network.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "spawn-local-parachain-network-zombienet"
+      ],
+      "status": "up_to_date"
     },
     "policies/ai-chatbot-policy.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -482,9 +490,11 @@
     },
     "reference/parachains/chain-data.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "retrieve-runtime-metadata"
+      ],
+      "status": "up_to_date"
     },
     "reference/parachains/consensus/async-backing.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

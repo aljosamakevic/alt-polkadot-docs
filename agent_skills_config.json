@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "generated": "2026-04-21T22:30:00Z",
-  "content_hash": "sha256:67195c73d7a85e6c1d368a9bd8352c188be89e897e6f94cd902ffb5c2d8dbc72",
+  "content_hash": "sha256:559aaa10ba5004216c6bb56bd2974ee52dddc3660cc1de057d14e5ec617b5b0e",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -8446,6 +8446,733 @@
             "Rebuild and regenerate the chain spec to include the genesis config"
           ],
           "result": "Node starts with CounterValue pre-set to 10; visible in Developer > Chain State > counter.counterValue immediately after genesis"
+        }
+      ]
+    },
+    {
+      "id": "open-hrmp-channel-between-parachains",
+      "title": "Open an HRMP Channel Between Parachains",
+      "objective": "Establish a unidirectional HRMP channel from one user parachain to another by encoding hrmpInitOpenChannel and hrmpAcceptOpenChannel extrinsics and dispatching them via XCM through the relay chain.",
+      "description": "Walks through the two-step HRMP channel setup between two user parachains. Step 1 (sender): fund the parachain sovereign account on the relay chain, construct an hrmpInitOpenChannel extrinsic, copy the encoded call data, and submit it via a polkadotXcm.send XCM message using sudo. Step 2 (receiver): repeat funding, construct hrmpAcceptOpenChannel, and submit via XCM. Use when enabling cross-chain messaging between two custom parachains on Polkadot. Trigger phrases: 'open HRMP channel', 'establish parachain communication', 'hrmpInitOpenChannel', 'XCM channel setup between parachains'. All steps use the Polkadot.js Apps GUI — no CLI. Repeat in reverse order for bidirectional communication.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/interoperability/channels-between-parachains.md"
+      ],
+      "primary_page": "parachains/interoperability/channels-between-parachains.md",
+      "prerequisites": {
+        "runtime": [
+          "Polkadot.js Apps (https://polkadot.js.org/apps) browser access"
+        ],
+        "network": [
+          "A running relay chain (e.g. Rococo Local or Paseo) with at least two connected user parachains",
+          "RPC endpoint access to the relay chain and both parachains via Polkadot.js Apps"
+        ],
+        "tokens": [
+          "Funds in both parachain sovereign accounts on the relay chain to cover XCM transact fees",
+          "A wallet account with sudo or polkadotXcm.send privileges on each parachain"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Fund the sender parachain sovereign account on the relay chain",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Accounts and send funds to the parachain 2500 sovereign account. To compute the sovereign address: prefix 0x70617261 (b\"para\") + u32 SCALE encoding of the para ID (2500 = c4090000) + zero-padded to 32 bytes. For para 2500: 0x70617261c4090000000000000000000000000000000000000000000000000000 (SS58: 5Ec4AhPSY2GEE4VoHUVheqv5wwq2C1HMKa7c9fVJ1WKivX1Y). Use Substrate Utilities at https://www.shawntabrizi.com/substrate-js-utilities/ for other para IDs."
+        },
+        {
+          "order": 2,
+          "action": "Construct the hrmpInitOpenChannel extrinsic and copy encoded call data",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Developer > Extrinsics. Select the hrmp pallet and hrmpInitOpenChannel. Fill in: recipient = target para ID (e.g. 2600), proposedMaxCapacity = max pending messages (e.g. 8), proposedMaxMessageSize = max message size in bytes (e.g. 1024). Copy the encoded call data (example for para 2600: 0x3c00280a00000800000000001000). Save this value — used in step 3."
+        },
+        {
+          "order": 3,
+          "action": "Submit XCM message from sender parachain to initiate the channel request",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to parachain 2500. Navigate to Developer > Extrinsics. Use sudo to dispatch polkadotXcm.send with an XCM message containing: WithdrawAsset, BuyExecution, Transact (with the hrmpInitOpenChannel call data from step 2), RefundSurplus, DepositAsset (beneficiary = para 2500 sovereign account). Replace the call field with the call data from step 2. Click Submit Transaction and sign with the sudo key. The exact XCM parameters depend on your parachain's XCM configuration."
+        },
+        {
+          "order": 4,
+          "action": "Verify the channel request is registered on the relay chain",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Developer > Chain State. Select the hrmp pallet and query hrmpOpenChannelRequests (click +). Confirm an entry appears for parachain 2500 as sender and 2600 as recipient. The entry confirms the request was submitted and is awaiting acceptance."
+        },
+        {
+          "order": 5,
+          "action": "Fund the receiver parachain sovereign account on the relay chain",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Transfer funds to the parachain 2600 sovereign account. Compute the sovereign address using the same method as step 1, substituting para ID 2600 (encoded as 280a0000)."
+        },
+        {
+          "order": 6,
+          "action": "Construct the hrmpAcceptOpenChannel extrinsic and copy encoded call data",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Developer > Extrinsics. Select the hrmp pallet and hrmpAcceptOpenChannel. Fill in: sender = para ID of the requesting chain (2500). Copy the encoded call data (example: 0x3c01c4090000). Save this value — used in step 7."
+        },
+        {
+          "order": 7,
+          "action": "Submit XCM message from receiver parachain to accept the channel",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to parachain 2600. Repeat the XCM submission from step 3, but: replace the Transact call data with the hrmpAcceptOpenChannel call data from step 6, and in DepositAsset set the beneficiary to para 2600's sovereign account. Click Submit Transaction and sign."
+        },
+        {
+          "order": 8,
+          "action": "Verify the unidirectional channel is established",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Developer > Chain State. Select the hrmp pallet and query hrmpChannels (click +). Confirm an entry appears for the channel from para 2500 to para 2600. The channel is now open for one-directional message passing. To enable bidirectional communication, repeat the entire process with para 2600 as initiator and para 2500 as acceptor."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "XCM message execution fails / no hrmpOpenChannelRequests entry after submission",
+          "cause": "Insufficient funds in the parachain sovereign account on the relay chain, or the parachain's XCM configuration does not allow polkadotXcm.send from sudo.",
+          "resolution": "Verify sovereign account balance via Developer > Chain State > system.account for the sovereign address. Top up with relay chain tokens. Confirm sudo can dispatch polkadotXcm.send on the parachain."
+        },
+        {
+          "pattern": "hrmpChannels query shows no channel after both steps",
+          "cause": "The channel only becomes active at the start of the next relay chain session after both init and accept transactions are included.",
+          "resolution": "Wait for a new session (observable via Developer > Chain State > session.currentIndex incrementing). Query hrmpChannels again after the session change."
+        },
+        {
+          "pattern": "Encoded call data is invalid or wrong extrinsic submitted",
+          "cause": "The call data from step 2 or step 6 was entered incorrectly, or the para IDs were swapped.",
+          "resolution": "Re-encode the extrinsic in Polkadot.js Apps with the correct parameters. For hrmpInitOpenChannel (para 2600, capacity 8, size 1024) the example call data is 0x3c00280a00000800000000001000; for hrmpAcceptOpenChannel (sender 2500) it is 0x3c01c4090000. If your para IDs differ, re-encode from scratch."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for XCM conceptual background or the simpler system-parachain channel variant.",
+        "pages": [
+          {
+            "slug": "parachains-interoperability-get-started",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-interoperability-get-started.md",
+            "relevance": "XCM concepts (asynchronous, absolute, asymmetric, agnostic) and the WithdrawAsset/BuyExecution/Transact/DepositAsset instruction pattern used in HRMP channel setup messages."
+          },
+          {
+            "slug": "parachains-interoperability-channels-with-system-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-interoperability-channels-with-system-parachains.md",
+            "relevance": "Simpler single-message alternative when the target is a system parachain like Asset Hub."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: open a unidirectional HRMP channel from parachain 2500 to parachain 2600",
+          "user_says": "Open an HRMP channel between parachain 2500 and parachain 2600",
+          "actions": [
+            "Fund para 2500 sovereign account on relay chain via Polkadot.js Apps",
+            "Encode hrmpInitOpenChannel (recipient=2600, maxCapacity=8, maxMessageSize=1024) and copy call data",
+            "Submit polkadotXcm.send from para 2500 with Transact = hrmpInitOpenChannel call data",
+            "Verify hrmpOpenChannelRequests entry on relay chain",
+            "Fund para 2600 sovereign account on relay chain",
+            "Encode hrmpAcceptOpenChannel (sender=2500) and copy call data",
+            "Submit polkadotXcm.send from para 2600 with Transact = hrmpAcceptOpenChannel call data",
+            "Verify hrmpChannels shows 2500→2600 channel after next session"
+          ],
+          "result": "Unidirectional HRMP channel from para 2500 to para 2600 is active after the next session."
+        },
+        {
+          "scenario": "Edge case: enable bidirectional communication between two parachains",
+          "user_says": "How do I enable two-way messaging between parachain 2500 and 2600?",
+          "actions": [
+            "Complete the full channel setup with 2500 as initiator and 2600 as acceptor (steps 1-8)",
+            "Repeat the process with roles reversed: 2600 initiates hrmpInitOpenChannel (recipient=2500), 2500 accepts hrmpAcceptOpenChannel (sender=2600)",
+            "Verify hrmpChannels shows both 2500→2600 and 2600→2500 entries"
+          ],
+          "result": "Both channels are active; messages flow in both directions between the parachains."
+        }
+      ]
+    },
+    {
+      "id": "open-hrmp-channel-with-system-parachain",
+      "title": "Open an HRMP Channel with a System Parachain",
+      "objective": "Establish a bidirectional HRMP channel between a user parachain and a system parachain (such as Asset Hub) using a single establish_channel_with_system XCM message.",
+      "description": "Guides through the simplified one-step process for opening a bidirectional HRMP channel between a user parachain and a Polkadot system parachain. Unlike regular parachain channels that require a two-step request and acceptance, a single XCM message with the establish_channel_with_system extrinsic opens channels in both directions simultaneously. Use when your parachain needs to communicate with Asset Hub (para 1000), Bridge Hub, or other system chains. Trigger phrases: 'open channel with Asset Hub', 'HRMP channel system parachain', 'establish_channel_with_system', 'parachain to Asset Hub channel'. All steps use Polkadot.js Apps GUI — no CLI. Channels become active at the start of the next session.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/interoperability/channels-with-system-parachains.md"
+      ],
+      "primary_page": "parachains/interoperability/channels-with-system-parachains.md",
+      "prerequisites": {
+        "runtime": [
+          "Polkadot.js Apps (https://polkadot.js.org/apps) browser access"
+        ],
+        "network": [
+          "A running relay chain with both the user parachain and a system parachain (e.g. Asset Hub, para 1000) connected",
+          "RPC endpoint access to the relay chain and user parachain via Polkadot.js Apps"
+        ],
+        "tokens": [
+          "Funds in the user parachain's sovereign account on the relay chain to cover XCM transact fees",
+          "A wallet account with sudo or polkadotXcm.send privileges on the user parachain"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Fund the user parachain sovereign account on the relay chain",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Accounts and send funds to the user parachain's sovereign account. To compute the sovereign address: prefix 0x70617261 (b\"para\") + u32 SCALE encoding of the para ID (e.g. 2500 = c4090000) + zero-padded to 32 bytes. For para 2500: 0x70617261c4090000000000000000000000000000000000000000000000000000 (SS58: 5Ec4AhPSY2GEE4VoHUVheqv5wwq2C1HMKa7c9fVJ1WKivX1Y). Use Substrate Utilities at https://www.shawntabrizi.com/substrate-js-utilities/ for other para IDs."
+        },
+        {
+          "order": 2,
+          "action": "Construct the establish_channel_with_system extrinsic and copy encoded call data",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the relay chain. Navigate to Developer > Extrinsics. Select the hrmp pallet and establish_channel_with_system. Fill in: target_system_chain = para ID of the target system chain (e.g. 1000 for Asset Hub). Copy the encoded call data (example for para 1000: 0x3c0ae8030000). Save this value — used in step 3."
+        },
+        {
+          "order": 3,
+          "action": "Submit XCM message from the user parachain to the relay chain",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps, connect to the user parachain. Navigate to Developer > Extrinsics. Use sudo to dispatch polkadotXcm.send with an XCM message containing: WithdrawAsset, BuyExecution, Transact (with the establish_channel_with_system call data from step 2), RefundSurplus, DepositAsset (beneficiary = parachain sovereign account). Replace the call field with the encoded call data from step 2. Click Submit Transaction and sign with the sudo key."
+        },
+        {
+          "order": 4,
+          "action": "Wait for the next session and verify bidirectional channels",
+          "working_directory": ".",
+          "description": "After submission, two HrmpSystemChannelOpened events are emitted. Channels do not become active until the start of the next session. Monitor session.currentIndex on the relay chain via Developer > Chain State. Once the session increments, query hrmp.hrmpChannels to verify both entries: from system chain (1000) to user parachain (2500) and from 2500 to 1000. Both entries confirm bidirectional communication is established.",
+          "expected_output": "hrmpChannels query shows two entries: 1000→2500 and 2500→1000"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "No HrmpSystemChannelOpened events / XCM execution fails",
+          "cause": "Insufficient funds in the parachain sovereign account, or polkadotXcm.send is not callable with sudo on this parachain.",
+          "resolution": "Verify sovereign account balance via Developer > Chain State > system.account. Top up as needed. Check the parachain's XCM config to confirm sudo can dispatch polkadotXcm.send."
+        },
+        {
+          "pattern": "hrmpChannels query returns no entries after submission",
+          "cause": "Channels are only activated at the start of the next relay chain session after submission.",
+          "resolution": "Wait for the session to change (observable via session.currentIndex incrementing). Query hrmpChannels again after the session increment."
+        },
+        {
+          "pattern": "establish_channel_with_system extrinsic not found in hrmp pallet",
+          "cause": "The relay chain runtime may not include this extrinsic, or the target_system_chain para ID is incorrect.",
+          "resolution": "Verify the relay chain runtime includes establish_channel_with_system in the hrmp pallet. Confirm the correct system chain para ID: Asset Hub on Polkadot mainnet and Paseo/Rococo testnet is 1000."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for XCM background or the two-step alternative for non-system parachains.",
+        "pages": [
+          {
+            "slug": "parachains-interoperability-get-started",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-interoperability-get-started.md",
+            "relevance": "XCM concepts and the instruction set (WithdrawAsset, BuyExecution, Transact, DepositAsset) used in the channel setup message."
+          },
+          {
+            "slug": "parachains-interoperability-channels-between-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-interoperability-channels-between-parachains.md",
+            "relevance": "Two-step alternative for opening channels between two user parachains (not system chains)."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: open bidirectional HRMP channel from parachain 2500 to Asset Hub (para 1000)",
+          "user_says": "Open an HRMP channel between my parachain and Asset Hub",
+          "actions": [
+            "Fund para 2500 sovereign account on relay chain via Polkadot.js Apps",
+            "Encode establish_channel_with_system (target_system_chain=1000) and copy call data 0x3c0ae8030000",
+            "Submit polkadotXcm.send from para 2500 with Transact = encoded call data",
+            "Wait for the next relay chain session",
+            "Query hrmp.hrmpChannels and confirm both 1000→2500 and 2500→1000 entries are present"
+          ],
+          "result": "Bidirectional HRMP channel between para 2500 and Asset Hub (para 1000) is active after the next session."
+        },
+        {
+          "scenario": "Edge case: channel not appearing after session change",
+          "user_says": "The hrmpChannels query is empty even after waiting for the next session",
+          "actions": [
+            "Check that HrmpSystemChannelOpened events were emitted after XCM submission — if absent, the XCM failed",
+            "Verify the sovereign account balance was sufficient to pay XCM transact fees",
+            "Top up the sovereign account and re-submit the XCM message",
+            "Wait for the next session, then query hrmpChannels again"
+          ],
+          "result": "Channels become visible after successful XCM execution and the session increment."
+        }
+      ]
+    },
+    {
+      "id": "perform-runtime-upgrade",
+      "title": "Perform a Forkless Runtime Upgrade",
+      "objective": "Upgrade a running Polkadot SDK parachain by adding a new extrinsic to a custom pallet, incrementing spec_version, building the Wasm binary, and submitting it via sudo.system.setCode.",
+      "description": "Guides through a complete forkless runtime upgrade cycle for a Polkadot SDK chain. You add a Root-only reset_counter dispatchable to a custom pallet, increment spec_version from 1 to 2 in the runtime VERSION constant, rebuild the Wasm binary with cargo build --release, and submit system.setCode via the Sudo pallet in Polkadot.js Apps. Use when adding features, fixing bugs, or upgrading runtime logic without a hard fork on a running local or testnet chain. Trigger phrases: 'runtime upgrade', 'forkless upgrade', 'update runtime', 'bump spec_version', 'submit setCode'. Prerequisite: a running chain with a custom pallet (see create-frame-pallet). Final submission step requires Polkadot.js Apps GUI — no CLI for that step.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/runtime-maintenance/runtime-upgrades.md"
+      ],
+      "primary_page": "parachains/runtime-maintenance/runtime-upgrades.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target (rustup target add wasm32-unknown-unknown)",
+          "Polkadot SDK installed (see parachains/install-polkadot-sdk.md)",
+          "Parachain template built and running locally (see set-up-the-parachain-template.md)",
+          "Custom pallet integrated into the runtime (see create-frame-pallet skill)"
+        ],
+        "network": [
+          "Local dev node running at ws://127.0.0.1:9944",
+          "Polkadot.js Apps access for the final upgrade submission step"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Start the chain and verify it is running at spec_version 1",
+          "working_directory": ".",
+          "commands": [
+            "polkadot-omni-node --chain ./chain_spec.json --dev"
+          ],
+          "description": "Start the Omni Node in development mode. Once producing blocks, open Polkadot.js Apps at https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9944. Confirm the header shows parachain-template-runtime/1 (spec_version 1). Keep the node running in the background."
+        },
+        {
+          "order": 2,
+          "action": "Add the reset_counter dispatchable to the custom pallet",
+          "working_directory": ".",
+          "description": "Open pallets/custom/src/lib.rs (or your pallet's lib.rs path). Inside the #[pallet::call] impl block, after the existing extrinsics, add:\n\n#[pallet::call_index(2)]\n#[pallet::weight(10_000)]\npub fn reset_counter(origin: OriginFor<T>) -> DispatchResult {\n    ensure_root(origin)?;\n    CounterValue::<T>::put(0u32);\n    Self::deposit_event(Event::CounterIncremented { new_value: 0 });\n    Ok(())\n}\n\nThis Root-only extrinsic sets the counter to zero. The call_index must not collide with existing extrinsics (increment=0, decrement=1 per the create-frame-pallet skill). Adjust the event variant to match your pallet's Event enum."
+        },
+        {
+          "order": 3,
+          "action": "Verify compilation",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release 2>&1 | tail -5"
+          ],
+          "description": "Build the project to confirm the new extrinsic compiles without errors. Fix any compiler errors before proceeding.",
+          "expected_output": "Finished release [optimized]"
+        },
+        {
+          "order": 4,
+          "action": "Bump spec_version in runtime/src/lib.rs",
+          "working_directory": ".",
+          "description": "Open runtime/src/lib.rs and locate the VERSION constant. Find the spec_version field and change it from 1 to 2:\n\npub const VERSION: RuntimeVersion = RuntimeVersion {\n    spec_name: create_runtime_str!(\"parachain-template-runtime\"),\n    ...\n    spec_version: 2,  // Changed from 1 to 2\n    ...\n};\n\nCritical: forgetting to bump spec_version means the chain will not recognize the new runtime and the upgrade will silently have no effect. Save the file."
+        },
+        {
+          "order": 5,
+          "action": "Build the final runtime Wasm binary",
+          "working_directory": ".",
+          "commands": [
+            "cargo build --release 2>&1 | tail -5"
+          ],
+          "description": "Build the complete runtime with the updated spec_version. After compilation verify the Wasm file exists: target/release/wbuild/parachain-template-runtime/parachain_template_runtime.compact.compressed.wasm. This is the file to upload in step 6.",
+          "expected_output": "Finished release [optimized]"
+        },
+        {
+          "order": 6,
+          "action": "Submit the runtime upgrade via Polkadot.js Apps",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps connected to ws://127.0.0.1:9944: 1. Navigate to Developer > Extrinsics. 2. Select the sudo pallet, then sudo(call). 3. Select the system pallet, then setCode(code). 4. Click 'file upload' next to the code parameter. 5. Upload target/release/wbuild/parachain-template-runtime/parachain_template_runtime.compact.compressed.wasm. 6. Click Submit Transaction and sign with the sudo key (Alice for local dev chains). The upgrade takes effect immediately once included in a block."
+        },
+        {
+          "order": 7,
+          "action": "Verify the upgrade took effect",
+          "working_directory": ".",
+          "description": "In Polkadot.js Apps: 1. The header should now show parachain-template-runtime/2. 2. Navigate to Developer > Chain State > system > lastRuntimeUpgrade() and click + to confirm specVersion: 2. 3. Navigate to Developer > Extrinsics and select your customPallet — the new resetCounter function should appear. Test it: increment the counter, call resetCounter (requires sudo), verify the counter resets to 0 via Chain State.",
+          "expected_output": "parachain-template-runtime/2 in header; lastRuntimeUpgrade shows specVersion: 2"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Runtime header still shows spec_version 1 after upgrade submission",
+          "cause": "spec_version was not incremented before building — the node does not replace the runtime if spec_version is unchanged.",
+          "resolution": "Edit runtime/src/lib.rs to set spec_version to a value higher than the current on-chain version. Rebuild with cargo build --release and resubmit via Polkadot.js Apps."
+        },
+        {
+          "pattern": "cargo build --release fails with type errors or missing function in the new extrinsic",
+          "cause": "The new dispatchable uses a mismatched event variant or incorrect FRAME macro syntax.",
+          "resolution": "Verify the call_index does not collide with existing extrinsics. Ensure the Event variant used in deposit_event exists in the pallet's Event enum. Confirm ensure_root is imported (frame_system::pallet_prelude::* covers it)."
+        },
+        {
+          "pattern": "sudo pallet not found or Alice does not have sudo access",
+          "cause": "The local dev chain genesis does not include the Sudo pallet with Alice as the sudo key.",
+          "resolution": "Verify the Sudo pallet is in construct_runtime! and Alice (5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY) is the sudo key via Developer > Chain State > sudo.key(). If not, restart with a new genesis that includes Sudo."
+        },
+        {
+          "pattern": "Wrong Wasm file path — upload fails or upgrade has no visible effect",
+          "cause": "Multiple Wasm variants are generated; only the .compact.compressed.wasm is accepted for on-chain upgrades.",
+          "resolution": "Upload exactly target/release/wbuild/parachain-template-runtime/parachain_template_runtime.compact.compressed.wasm. Uncompressed or non-compact variants are rejected."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for prerequisite setup context or for data migration requirements during upgrades.",
+        "pages": [
+          {
+            "slug": "parachains-customize-runtime-pallet-development-create-a-pallet",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-customize-runtime-pallet-development-create-a-pallet.md",
+            "relevance": "Required prerequisite: building the custom pallet whose extrinsic is extended in this skill."
+          },
+          {
+            "slug": "parachains-runtime-maintenance-storage-migrations",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-runtime-maintenance-storage-migrations.md",
+            "relevance": "When the runtime upgrade changes storage layout (type changes, key changes), a storage migration is required alongside the spec_version bump."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Setting up the parachain template that this upgrade workflow runs on."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: add a reset_counter extrinsic and perform a runtime upgrade",
+          "user_says": "Perform a runtime upgrade to add a resetCounter function to my custom pallet",
+          "actions": [
+            "Start chain with polkadot-omni-node --dev and verify spec_version 1 in Polkadot.js Apps header",
+            "Add reset_counter (Root-only, sets CounterValue to 0) to pallet lib.rs inside #[pallet::call]",
+            "Run cargo build --release to verify compilation",
+            "Open runtime/src/lib.rs and change spec_version from 1 to 2 in the VERSION constant",
+            "Run cargo build --release to build the updated Wasm binary",
+            "In Polkadot.js Apps: Developer > Extrinsics > sudo > sudo(call) > system > setCode > upload parachain_template_runtime.compact.compressed.wasm > Submit Transaction",
+            "Verify header shows parachain-template-runtime/2 and lastRuntimeUpgrade confirms specVersion 2",
+            "Test resetCounter in Developer > Extrinsics"
+          ],
+          "result": "Runtime upgraded to spec_version 2; resetCounter extrinsic available on-chain; counter resets to 0 when called with sudo."
+        },
+        {
+          "scenario": "Edge case: submitted upgrade but runtime version did not change",
+          "user_says": "I submitted the upgrade but the spec_version is still 1",
+          "actions": [
+            "Open runtime/src/lib.rs and confirm spec_version is still 1 rather than 2",
+            "Change spec_version to a value higher than the current on-chain version (e.g. 2)",
+            "Run cargo build --release to rebuild the Wasm binary",
+            "Re-upload the .compact.compressed.wasm via Developer > Extrinsics > sudo > system > setCode and resubmit"
+          ],
+          "result": "Runtime version updates to 2 after resubmitting with the incremented spec_version."
+        }
+      ]
+    },
+    {
+      "id": "spawn-local-parachain-network-zombienet",
+      "title": "Spawn a Local Parachain Test Network with Zombienet",
+      "objective": "Deploy a local Paseo-based relay chain with two validators and one parachain collator using Zombienet's native provider and verify block production via JSON-RPC.",
+      "description": "Guides through spawning a local Polkadot parachain test network using Zombienet. You clone and build the Polkadot SDK parachain template, download polkadot/polkadot-prepare-worker/polkadot-execute-worker relay chain binaries and chain-spec-builder, download the Paseo runtime Wasm (requires INSERT_PASEO_RUNTIME_VERSION substitution), generate a local Paseo chain spec, write a network.toml, and run zombienet spawn. Use when you need a reproducible local multi-chain integration test environment. Trigger phrases: 'local parachain network', 'zombienet spawn', 'test parachain locally', 'relay chain and parachain local'. Requires Rust, Cargo, wasm32 target, Zombienet CLI, and Git. INSERT_PASEO_RUNTIME_VERSION in the Paseo runtime download URL must be replaced with an actual release tag before running.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/testing/run-a-parachain-network.md"
+      ],
+      "primary_page": "parachains/testing/run-a-parachain-network.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain (stable) with wasm32-unknown-unknown target (rustup target add wasm32-unknown-unknown)",
+          "Cargo",
+          "Zombienet CLI installed — see reference/tools/zombienet.md for installation instructions",
+          "Git"
+        ],
+        "network": [
+          "GitHub release download access for Polkadot SDK binaries and Paseo runtime Wasm"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone and build the Polkadot SDK parachain template",
+          "working_directory": ".",
+          "commands": [
+            "git clone --branch stable2503 https://github.com/paritytech/polkadot-sdk-parachain-template && cd polkadot-sdk-parachain-template",
+            "cargo build --release"
+          ],
+          "description": "Clone the parachain template at branch stable2503 (substitute the branch matching your intended version). cargo build --release produces parachain-template-node at target/release/. The build takes 10-30 minutes. Note the full path to the clone directory — it is referenced in network.toml.",
+          "expected_output": "Finished release [optimized]"
+        },
+        {
+          "order": 2,
+          "action": "Add the parachain binary to PATH",
+          "working_directory": "polkadot-sdk-parachain-template",
+          "commands": [
+            "export PATH=$PATH:$(pwd)/target/release"
+          ],
+          "description": "Export target/release to PATH so parachain-template-node is accessible. This PATH change is session-scoped — re-run the export if you open a new terminal."
+        },
+        {
+          "order": 3,
+          "action": "Download relay chain binaries",
+          "working_directory": ".",
+          "commands": [
+            "mkdir -p bin",
+            "curl -L -o bin/polkadot https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2503/polkadot",
+            "curl -L -o bin/polkadot-prepare-worker https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2503/polkadot-prepare-worker",
+            "curl -L -o bin/polkadot-execute-worker https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2503/polkadot-execute-worker",
+            "chmod +x bin/polkadot bin/polkadot-prepare-worker bin/polkadot-execute-worker"
+          ],
+          "description": "Download the three relay chain binaries from the Polkadot SDK releases. The release tag shown (polkadot-stable2503) matches the stable2503 parachain template branch — substitute the tag that matches your template branch. Check https://github.com/paritytech/polkadot-sdk/releases for available tags. The polkadot-prepare-worker and polkadot-execute-worker binaries must be in the same directory as polkadot.",
+          "expected_output": "bin/polkadot, bin/polkadot-prepare-worker, and bin/polkadot-execute-worker are present and executable"
+        },
+        {
+          "order": 4,
+          "action": "Download chain-spec-builder",
+          "working_directory": ".",
+          "commands": [
+            "curl -L -o bin/chain-spec-builder https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2503/chain-spec-builder",
+            "chmod +x bin/chain-spec-builder"
+          ],
+          "description": "Download the chain-spec-builder utility from the same Polkadot SDK release as the relay chain binaries."
+        },
+        {
+          "order": 5,
+          "action": "Download Paseo runtime Wasm",
+          "working_directory": ".",
+          "commands": [
+            "curl -L -o bin/paseo_runtime.compressed.wasm https://github.com/paseo-network/runtimes/releases/download/INSERT_PASEO_RUNTIME_VERSION/paseo_runtime.compressed.wasm"
+          ],
+          "description": "STOP: Replace INSERT_PASEO_RUNTIME_VERSION with the actual Paseo runtime release tag before running this command. Find the latest release tag at https://github.com/paseo-network/runtimes/releases (e.g. v1.4.1). The command becomes: curl -L -o bin/paseo_runtime.compressed.wasm https://github.com/paseo-network/runtimes/releases/download/v1.4.1/paseo_runtime.compressed.wasm — substitute your chosen version. Running the literal INSERT_PASEO_RUNTIME_VERSION produces a 404 error."
+        },
+        {
+          "order": 6,
+          "action": "Generate Paseo local chain spec",
+          "working_directory": ".",
+          "commands": [
+            "mkdir -p configs",
+            "bin/chain-spec-builder -c configs/paseo-local.json create -r bin/paseo_runtime.compressed.wasm named-preset local_testnet"
+          ],
+          "description": "Generate a local Paseo chain spec. The named-preset local_testnet includes Alice and Bob as pre-funded validators. Output: configs/paseo-local.json.",
+          "expected_output": "configs/paseo-local.json created"
+        },
+        {
+          "order": 7,
+          "action": "Create network.toml",
+          "working_directory": ".",
+          "description": "Create a file named network.toml in the project root with the following content. Replace ./polkadot-sdk-parachain-template with the actual path to your parachain template clone:\n\n[settings]\ntimeout = 1000\nprovider = \"native\"\n\n[relaychain]\nchain_spec_path = \"./configs/paseo-local.json\"\ndefault_command = \"./bin/polkadot\"\n\n[[relaychain.nodes]]\nname = \"alice\"\nvalidator = true\nrpc_port = 9944\n\n[[relaychain.nodes]]\nname = \"bob\"\nvalidator = true\nrpc_port = 9945\n\n[[parachains]]\nid = 1000\n\n[[parachains.collators]]\nname = \"collator01\"\ncommand = \"./polkadot-sdk-parachain-template/target/release/parachain-template-node\"\nrpc_port = 9988"
+        },
+        {
+          "order": 8,
+          "action": "Spawn the network",
+          "working_directory": ".",
+          "commands": [
+            "zombienet spawn network.toml --provider native"
+          ],
+          "description": "Launch the network. Zombienet generates chain specs, starts Alice and Bob validators, registers and starts the parachain collator, and displays connection endpoints. Wait until RPC endpoints for all nodes are shown and the network is producing blocks. Press Ctrl+C to stop.",
+          "expected_output": "Network launched; RPC endpoints shown for alice (9944), bob (9945), and collator01 (9988)"
+        },
+        {
+          "order": 9,
+          "action": "Verify block production on relay chain and parachain",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"method\":\"chain_getHeader\",\"params\":[],\"id\":1}' http://127.0.0.1:9944",
+            "curl -s -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"method\":\"chain_getHeader\",\"params\":[],\"id\":1}' http://127.0.0.1:9988"
+          ],
+          "description": "Query the block header from the relay chain (port 9944) and the parachain collator (port 9988). Both responses should contain a number field with an incrementing block number, confirming both are producing blocks.",
+          "expected_output": "Both responses contain a non-null number field showing the current block number"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "raw_base_url": "https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "curl download returns 404 for Paseo runtime",
+          "cause": "INSERT_PASEO_RUNTIME_VERSION was not replaced with an actual version tag.",
+          "resolution": "Visit https://github.com/paseo-network/runtimes/releases for the latest release tag. Replace INSERT_PASEO_RUNTIME_VERSION with the correct tag (e.g. v1.4.1) in the step 5 curl command and re-run."
+        },
+        {
+          "pattern": "zombienet spawn fails with 'binary not found' for polkadot or parachain-template-node",
+          "cause": "The polkadot binary path in network.toml is wrong, or target/release is not in PATH for the parachain template.",
+          "resolution": "Verify ./bin/polkadot exists and is executable (ls -la bin/polkadot). For the collator, confirm the command path in network.toml points to the correct parachain-template-node binary. Re-run export PATH=$PATH:<parachain-template>/target/release if needed."
+        },
+        {
+          "pattern": "chain_getHeader returns null or parachain is not producing blocks",
+          "cause": "The parachain collator has not yet registered or is waiting for relay chain finality.",
+          "resolution": "Wait 30-60 seconds for the relay chain to finalize enough blocks for the parachain to start. Monitor the Zombienet terminal for collator registration messages."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for Zombienet installation or the full configuration reference.",
+        "pages": [
+          {
+            "slug": "reference-tools-zombienet",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-zombienet.md",
+            "relevance": "Zombienet installation methods (executable, Nix, Docker), available providers, and full network.toml configuration reference including all relay chain, parachain, and collator options."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Setting up and building the Polkadot SDK parachain template used as the collator in this skill."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: spawn a local two-validator relay chain and one collator parachain",
+          "user_says": "Spawn a local parachain test network using Zombienet",
+          "actions": [
+            "Clone polkadot-sdk-parachain-template at stable2503 and run cargo build --release",
+            "Export target/release to PATH",
+            "Download polkadot, polkadot-prepare-worker, polkadot-execute-worker from the polkadot-stable2503 release",
+            "Download chain-spec-builder from the same release",
+            "Replace INSERT_PASEO_RUNTIME_VERSION with the actual Paseo tag (e.g. v1.4.1) and download paseo_runtime.compressed.wasm",
+            "Generate Paseo local chain spec with chain-spec-builder and the local_testnet preset",
+            "Create network.toml with relay chain (Alice, Bob) and parachain collator config",
+            "Run zombienet spawn network.toml --provider native",
+            "Verify block production via curl JSON-RPC on ports 9944 and 9988"
+          ],
+          "result": "Local network running with two relay chain validators and one parachain collator both producing blocks."
+        },
+        {
+          "scenario": "Edge case: INSERT_PASEO_RUNTIME_VERSION not replaced, curl returns 404",
+          "user_says": "The Paseo runtime download fails with a 404 error",
+          "actions": [
+            "Visit https://github.com/paseo-network/runtimes/releases to find the latest release tag",
+            "Replace INSERT_PASEO_RUNTIME_VERSION in the step 5 curl command with the correct tag",
+            "Re-run the curl command to download paseo_runtime.compressed.wasm"
+          ],
+          "result": "Paseo runtime downloaded successfully; proceed with chain-spec-builder in step 6."
+        }
+      ]
+    },
+    {
+      "id": "retrieve-runtime-metadata",
+      "title": "Retrieve Polkadot Runtime Metadata",
+      "objective": "Fetch SCALE-encoded runtime metadata from a Polkadot SDK node using curl, the subxt CLI, or Polkadot.js Apps to inspect pallets, calls, events, storage, and type definitions.",
+      "description": "Provides three methods for fetching Polkadot SDK runtime metadata: curl JSON-RPC (state_getMetadata, returns raw hex bytes), subxt CLI (human-readable JSON, ideal for inspection), and Polkadot.js Apps RPC UI (interactive). Use when building client libraries, inspecting pallet structure, or verifying runtime composition after an upgrade. Trigger phrases: 'get runtime metadata', 'state_getMetadata', 'inspect pallet calls', 'fetch chain metadata', 'subxt metadata', 'what pallets are on chain'. No private key or wallet required. The metadata output describes all pallets, storage items, calls, events, errors, and constants in the current runtime.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/parachains/chain-data.md"
+      ],
+      "primary_page": "reference/parachains/chain-data.md",
+      "prerequisites": {
+        "runtime": [
+          "curl (Method A — available by default on macOS and most Linux distros)",
+          "subxt CLI (Method B — install with: cargo install subxt-cli)"
+        ],
+        "network": [
+          "An accessible RPC endpoint for the target Polkadot SDK node (e.g. https://rpc.polkadot.io for mainnet, or http://127.0.0.1:9944 for a local dev node)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "(Method A) Fetch metadata via curl JSON-RPC",
+          "working_directory": ".",
+          "commands": [
+            "curl -H \"Content-Type: application/json\" -d '{\"id\":1, \"jsonrpc\":\"2.0\", \"method\": \"state_getMetadata\"}' https://rpc.polkadot.io"
+          ],
+          "description": "Call the state_getMetadata RPC method using curl. Replace https://rpc.polkadot.io with your target node's HTTP RPC endpoint. For a local node use http://127.0.0.1:9944. The response is a hex-encoded SCALE-encoded byte string — not human-readable. Use Method B or C if you need human-readable JSON.",
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":\"0x6d657461...\",\"id\":1}"
+        },
+        {
+          "order": 2,
+          "action": "(Method B) Fetch metadata as human-readable JSON using subxt CLI",
+          "working_directory": ".",
+          "commands": [
+            "subxt metadata --url wss://rpc.polkadot.io --format json > spec.json"
+          ],
+          "description": "Install the subxt CLI if not already installed: cargo install subxt-cli. Run subxt metadata to fetch and decode the metadata to JSON. Replace wss://rpc.polkadot.io with your node's WebSocket endpoint (wss:// for remote, ws:// for local). For a local dev node: subxt metadata --url ws://127.0.0.1:9944 --format json > spec.json. You can also explore metadata interactively at https://paritytech.github.io/subxt-explorer/.",
+          "expected_output": "spec.json created containing the runtime metadata in human-readable JSON format"
+        },
+        {
+          "order": 3,
+          "action": "(Method C) Retrieve metadata via Polkadot.js Apps RPC UI",
+          "working_directory": ".",
+          "description": "Navigate to https://polkadot.js.org/apps/#/rpc and connect to your target node. Click the Developer dropdown and select RPC Calls. 1. Select state as the endpoint. 2. Select getMetadata(at) as the method. 3. Click Submit RPC Call. The metadata is returned in JSON format in the UI. This is the most interactive option but is not scriptable."
+        },
+        {
+          "order": 4,
+          "action": "Interpret the metadata output",
+          "working_directory": ".",
+          "description": "The metadata JSON contains three top-level sections: types (SCALE type registry indexed by u32 identifiers), pallets (array of pallet descriptors with storage, calls, events, errors, and constants for each pallet), and extrinsic (transaction version and signed extensions list). To find calls for a specific pallet: locate the pallet by name in the pallets array, follow the calls type index integer to the types section, then read the variant definitions. Example: find pallets[name='Sudo'].calls.type → find types[id=that u32].def.variant.variants for the available sudo calls. Note: type identifiers change between runtime versions — do not hardcode them."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "curl returns connection refused or timeout",
+          "cause": "The RPC endpoint URL is incorrect, the node is not running, or the endpoint does not accept HTTP connections.",
+          "resolution": "Verify the RPC endpoint URL. For local nodes confirm the node is running and listening on port 9944. Some nodes only accept WebSocket connections — use subxt (Method B) with ws:// or wss:// instead of curl."
+        },
+        {
+          "pattern": "subxt metadata fails with 'failed to fetch metadata'",
+          "cause": "The WebSocket URL is incorrect, the node is not running, or the subxt-cli version is incompatible with the node's metadata version.",
+          "resolution": "Verify the WebSocket URL (wss:// for TLS, ws:// for local). Confirm the node is running. Update subxt-cli: cargo install subxt-cli --force."
+        },
+        {
+          "pattern": "Metadata output shows unexpected pallets or an empty pallets array",
+          "cause": "The node connected to is a different chain than expected, or the genesis has not been customized.",
+          "resolution": "Verify the RPC endpoint points to the intended chain. For local dev nodes ensure the chain spec matches the expected runtime."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for context on how metadata is used in client applications or SDK-level interactions.",
+        "pages": [
+          {
+            "slug": "reference-tools-subxt",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-subxt.md",
+            "relevance": "Subxt library usage for generating typed client code from runtime metadata — the primary consumer of metadata in Rust applications."
+          },
+          {
+            "slug": "reference-parachains-data-encoding",
+            "url": "https://docs.polkadot.com/ai/pages/reference-parachains-data-encoding.md",
+            "relevance": "SCALE encoding details that explain why the raw curl metadata output is hex-encoded bytes rather than readable JSON."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: inspect pallet list and call signatures of Polkadot mainnet",
+          "user_says": "Get the runtime metadata from the Polkadot mainnet node",
+          "actions": [
+            "Run: subxt metadata --url wss://rpc.polkadot.io --format json > spec.json",
+            "Open spec.json and locate the pallets array",
+            "Find a specific pallet by name (e.g. Balances) and follow its calls type index to read available calls"
+          ],
+          "result": "spec.json contains the complete runtime metadata in human-readable JSON; pallets, calls, storage items, events, and types are all inspectable."
+        },
+        {
+          "scenario": "Edge case: inspect metadata from a local dev node",
+          "user_says": "How do I get the metadata from my local dev node at ws://127.0.0.1:9944?",
+          "actions": [
+            "Verify the local node is running (polkadot-omni-node --dev or similar)",
+            "Run: subxt metadata --url ws://127.0.0.1:9944 --format json > local-spec.json",
+            "Or use curl: curl -H \"Content-Type: application/json\" -d '{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"state_getMetadata\"}' http://127.0.0.1:9944"
+          ],
+          "result": "Metadata from the local dev node retrieved; reflects the exact runtime version currently running locally."
         }
       ]
     }

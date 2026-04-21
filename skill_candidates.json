@@ -1151,7 +1151,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Two-step guide for establishing unidirectional (and then bidirectional) HRMP channels between two user parachains: fund sovereign accounts, encode hrmpInitOpenChannel and hrmpAcceptOpenChannel extrinsics, craft XCM messages, and submit via Polkadot.js Apps. No CLI commands; entirely GUI-driven. Cookbook CI badge present (K4). Ambiguous between guide and reference: numbered steps with P4 give procedural=10 (Rule 3 fires), reference=8 (extrinsic parameter tables R1 and R3). Tiebreaker: Rule 3 fires before Rule 4 because procedural=10 meets the guide threshold. GUI-only workflow (S1=0) and placeholder call data that must be recomputed per para ID (K2=0) limit priority to medium.",
       "scoring": {
         "signals": [
@@ -1178,7 +1178,8 @@
           "reference"
         ],
         "priority_score": 17
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "open-hrmp-channel-with-system-parachain",
@@ -1188,7 +1189,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Simplified single-message procedure for bidirectional HRMP channel setup between a user parachain and a system parachain (e.g., Asset Hub): fund sovereign account, encode establish_channel_with_system extrinsic, submit XCM to relay chain via Polkadot.js Apps, verify at next session. More efficient than the two-step regular parachain flow. Entirely GUI-driven; no CLI commands. Cookbook CI badge present (K4). Same scoring pattern as channels-between-parachains: procedural=10 vs reference=8; Rule 3 fires first (guide). GUI-only (S1=0) and placeholder call data (K2=0) limit priority to medium.",
       "scoring": {
         "signals": [
@@ -1215,7 +1216,8 @@
           "reference"
         ],
         "priority_score": 17
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "deploy-parachain-to-polkadot-testnet",
@@ -1326,7 +1328,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Tutorial guiding through a full runtime upgrade cycle: add a new dispatchable function to a custom pallet, bump spec_version, rebuild the Wasm binary, and submit system.setCode via sudo through Polkadot.js Apps. P1+P2+P3+P4 all present (score 20). K1=0 — requires install-polkadot-sdk, set-up-the-parachain-template, and create-a-pallet as prerequisites. K2=4 — code uses --8<-- snippet includes rather than inline blocks, but complete code is referenced. Submission step is GUI-dependent (S1=0). Cookbook CI badge present. See storage-migrations.md as supplementary context for upgrade-related data transformations.",
       "scoring": {
         "signals": [
@@ -1348,7 +1350,8 @@
           "not_applicable": 0
         },
         "priority_score": 16
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "unlock-parachain-via-xcm",
@@ -1434,7 +1437,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "End-to-end tutorial for spawning a local two-validator relay chain + collator test network using Zombienet's native provider: clone and build the parachain template (cargo build), download relay chain binaries (curl), generate a Paseo local chain spec (chain-spec-builder), write network.toml, spawn with zombienet, and verify via curl RPC. P1+P2+P3+P4 all present — score 20, no ambiguity. K1=0 — Zombienet installation itself is delegated to reference/tools/zombienet.md. K2=0 — INSERT_PASEO_RUNTIME_VERSION placeholder present in the Paseo runtime download curl command. K3=3 (Prerequisites section lists Rust/Cargo, wasm32 target, Zombienet, Git). Cookbook CI badge present (K4=3). Fully CLI-based (S1=4). Priority score 16 → medium.",
       "scoring": {
         "signals": [
@@ -1455,7 +1458,8 @@
           "not_applicable": 0
         },
         "priority_score": 16
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "retrieve-runtime-metadata",
@@ -1465,7 +1469,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Ambiguous between guide and reference (procedural=11, reference=12, diff=1); rule 3 fires first (procedural >= 10). Page explains metadata concepts but also provides complete, runnable curl and subxt CLI commands for fetching chain metadata. K1: self-contained via CLI paths. K2: commands are complete. S1: programmatic options exist despite Polkadot.js GUI section. S2: deterministic — same endpoint, same output. K3/K4/S3 absent.",
       "scoring": {
         "signals": [
@@ -1488,7 +1492,8 @@
           "guide",
           "reference"
         ]
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "set-up-chopsticks-fork",
