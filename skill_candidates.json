@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T14:00:00Z",
+    "generated": "2026-04-21T16:00:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -440,6 +440,38 @@
                 "contending_categories": ["guide", "conceptual"],
                 "priority_score": 9
             }
+        },
+        {
+            "skill_id": "add-existing-pallet-to-runtime",
+            "title": "Add an Existing Pallet to a Parachain Runtime",
+            "source_pages": [
+                "parachains/customize-runtime/add-existing-pallets.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Complete guide for integrating a new pallet (pallet-utility as example) into a Polkadot SDK parachain runtime: add Cargo.toml dependency, implement Config trait in mod.rs, register in runtime construct in lib.rs, compile, generate chain spec, and run locally. P1+P2+P3+P4 all present. K1=0 — requires an existing working parachain template dev environment (set-up-the-parachain-template.md as prerequisite). K4 present (cookbook CI badge). Final verification step uses Polkadot.js Apps GUI (S1 absent). Same applies to adding any SDK pallet. Priority score 16 → medium.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K2", "K3", "K4", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 16
+            }
+        },
+        {
+            "skill_id": "configure-multiple-pallet-instances",
+            "title": "Configure Multiple Instances of a Pallet in a Runtime",
+            "source_pages": [
+                "parachains/customize-runtime/add-pallet-instances.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Demonstrates adding two instances of pallet-collective (TechnicalCommittee and Council) to a parachain runtime. Covers identifying instantiable pallets, defining instance parameters, implementing Config<Instance1> and Config<Instance2> traits, registering both in the runtime construct, compiling, generating a chain spec, and launching the node. P1+P2+P3+P4 all present. K1=0 — requires existing parachain template setup; also builds on add-existing-pallets.md concepts. K4 present (cookbook CI badge). Final instance-independence test uses Polkadot.js Apps GUI (S1 absent). Priority score 16 → medium.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K2", "K3", "K4", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 16
+            }
         }
     ],
     "supplementary_only": [
@@ -473,6 +505,38 @@
                 "category_scores": { "procedural": 6, "reference": 12, "conceptual": 10, "not_applicable": 0 },
                 "category_ambiguous": true,
                 "contending_categories": ["reference", "conceptual"]
+            }
+        },
+        {
+            "page": "node-infrastructure/run-a-validator/requirements.md",
+            "category": "reference",
+            "relevant_to": ["set-up-polkadot-validator-node", "onboard-polkadot-validator"],
+            "notes": "Covers hardware specs, VPS provider recommendations, minimum bond, minimum self-stake (10,000 DOT), and minimum commission (10%). No procedural steps or CLI commands. R2 fires for hardware spec listings and staking parameter tables; R3 for standalone parameter descriptions (min bond, self-stake, commission). C1 fires for design rationale explaining why self-stake and commission minimums are enforced. Reference and conceptual tie at 7; Rule 4 fires first and Rule 7 tiebreak favors reference. Essential pre-reading context for any validator setup skill.",
+            "scoring": {
+                "signals": ["R2", "R3", "C1", "C3"],
+                "category_scores": { "procedural": 0, "reference": 7, "conceptual": 7, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["reference", "conceptual"]
+            }
+        },
+        {
+            "page": "node-infrastructure/run-a-validator/staking-mechanics/offenses-and-slashes.md",
+            "category": "conceptual",
+            "relevant_to": ["onboard-polkadot-validator", "start-validating-on-polkadot", "set-up-polkadot-validator-node"],
+            "notes": "Pure conceptual page explaining the slashing system: offense types (invalid votes, equivocations), slash calculation formula, disabling mechanism, and reputation changes. Mermaid flowcharts illustrate formula outcomes for minor/moderate/major offenses. Historical incident table included. No CLI commands, no runnable code. C1+C2+C3 all fire; R3 for formula parameter descriptions. Useful background for any validator operating skill.",
+            "scoring": {
+                "signals": ["R3", "C1", "C2", "C3"],
+                "category_scores": { "procedural": 0, "reference": 3, "conceptual": 10, "not_applicable": 0 }
+            }
+        },
+        {
+            "page": "node-infrastructure/run-a-validator/staking-mechanics/rewards.md",
+            "category": "conceptual",
+            "relevant_to": ["onboard-polkadot-validator", "start-validating-on-polkadot", "set-up-polkadot-validator-node"],
+            "notes": "Explains era points, reward variance between para-validators and non-para-validators, payout scheme (equal base reward regardless of stake), running multiple validators, and commission-based nominator payment distribution. Multiple mermaid flowcharts illustrate reward split scenarios. No CLI commands, no runnable code. C1+C2+C3 all fire; R3 for commission rate and era point parameter descriptions. Useful background for any validator economics question.",
+            "scoring": {
+                "signals": ["R3", "C1", "C2", "C3"],
+                "category_scores": { "procedural": 0, "reference": 3, "conceptual": 10, "not_applicable": 0 }
             }
         }
     ],
