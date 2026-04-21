@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:20:06Z",
+  "generated": "2026-04-21T15:26:47Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1792,6 +1792,166 @@
           "not_applicable": 0
         },
         "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "connect-polkadot-hub-testnet",
+      "title": "Connect to Polkadot Hub and Get Test Tokens",
+      "source_pages": [
+        "smart-contracts/connect.md"
+      ],
+      "category": "guide",
+      "priority": "low",
+      "status": "pending",
+      "notes": "Procedural score (10) triggers rule 3 guide classification, but reference score (12) is numerically higher — flagged ambiguous. The bulk of the page is network configuration reference data (chain IDs, RPC URLs, WSS endpoints for TestNet/MainNet/Kusama). The only procedural workflow is a 3-step GUI-only faucet interaction (navigate → paste address → click button); no CLI commands or file creation. S1 = 0 (GUI-only), K1 = 0 (requires pre-existing wallet), K3 = 0 (no prerequisites section), resulting in priority_score of 3. Page's primary agent-facing value is as supplementary reference context for network connection details used by other skills.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "R1",
+          "R2",
+          "R3",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 12,
+          "conceptual": 2,
+          "not_applicable": 0
+        },
+        "priority_score": 3,
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ]
+      }
+    },
+    {
+      "skill_id": "build-dapp-viem-nextjs",
+      "title": "Build a Zero-to-Hero Smart Contract DApp with Viem and Next.js",
+      "source_pages": [
+        "smart-contracts/cookbook/dapps/zero-to-hero.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "End-to-end tutorial covering Hardhat contract creation and deployment plus a full Next.js/Viem dApp with wallet connect, read, and write components. All steps are on one page (K1 = 5). Reference repo revm-hardhat-examples is listed in context.md (K4 = 3). K2 = 0 due to INSERT_PRIVATE_KEY_HERE placeholder in .env. The CONTRACT_ADDRESS TODO comment in contract.ts is a developer note, not a blocking placeholder. Workflow is predominantly CLI-driven (S1 = 4); MetaMask interactions are the end-product being built, not tutorial build steps.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "C1",
+          "K1",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 21
+      }
+    },
+    {
+      "skill_id": "deploy-uniswap-v2-polkadot-hub",
+      "title": "Deploy Uniswap V2 on Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/cookbook/eth-dapps/uniswap-v2.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Tutorial for cloning, compiling, testing, and deploying Uniswap V2 (Factory + Pair contracts) to Polkadot Hub TestNet using Hardhat. Reference repo polkavm-hardhat-examples is listed in context.md (K4 = 3). K2 = 0 due to INSERT_LOCAL_PRIVATE_KEY and INSERT_AH_PRIVATE_KEY placeholders in .env. Local testing step references the Local Development Node guide, but the core deployment workflow to TestNet is fully self-contained (K1 = 5). Includes an architectural explanation of Factory/Pair contracts (C1) that serves as useful background context but does not detract from the tutorial classification.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "C1",
+          "K1",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 21
+      }
+    },
+    {
+      "skill_id": "deploy-basic-contract-hardhat",
+      "title": "Deploy a Basic Smart Contract with Hardhat",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-hardhat.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Concise end-to-end tutorial: scaffold Hardhat project, configure polkadotTestnet network, create Storage.sol, compile, deploy via Ignition to TestNet. All code uses --8<-- snippet includes from polkadot-cookbook (K4 = 3; CI badge confirms tested). K2 = 4 (includes expand to complete code in the published site). All steps are CLI-driven with no GUI interactions (S1 = 4). Explicit prerequisites section covers Node.js version, test tokens, and wallet (K3 = 3). Verified outcome shown via terminal output snippet.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 25
+      }
+    },
+    {
+      "skill_id": "deploy-basic-contract-remix",
+      "title": "Deploy a Basic Smart Contract with Remix IDE",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-remix.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "GUI-only guide for deploying the default Remix Storage.sol contract via Remix IDE browser interface. No CLI commands (P2 = 0) and no source files to create (P3 = 0) — uses Remix's built-in sample contract. All steps are click-based (S1 = 0). Procedural score (10) qualifies as guide via rule 3. Priority is medium (14) due to K1 = 5 (self-contained given MetaMask prerequisite), K3 = 3 (explicit prerequisites listed), S2 = 3, and S3 = 3 (deploy-contract-remix is a known skill shape in this vertical). K4 = 0 (no reference repo for Remix path); K2 = 0 (no code examples to assess).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P4",
+          "K1",
+          "K3",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 14
       }
     }
   ],
