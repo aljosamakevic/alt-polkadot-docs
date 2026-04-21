@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:08:00Z",
+  "generated": "2026-04-21T15:14:00Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1591,6 +1591,110 @@
         },
         "priority_score": 19
       }
+    },
+    {
+      "skill_id": "interact-with-chain-polkadart",
+      "title": "Interact with a Polkadot Chain Using Polkadart",
+      "source_pages": [
+        "reference/tools/polkadart.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Covers the full Dart/Flutter SDK workflow: install packages, configure pubspec.yaml, generate types, create an API instance, read chain data, subscribe to new blocks, and send a signed transaction. Self-contained with complete code snippets. Ambiguous guide/reference (procedural=10, reference=9, diff=1) — Rule 3 wins because the page walks through a progressive workflow rather than cataloging an API surface.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "R1",
+          "R2",
+          "C1",
+          "K1",
+          "K2",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 9,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ],
+        "priority_score": 19
+      }
+    },
+    {
+      "skill_id": "use-polkadot-js-api",
+      "title": "Query and Transact on Polkadot Chains with the Polkadot.js API",
+      "source_pages": [
+        "reference/tools/polkadot-js-api.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Covers installation, dynamic API generation, creating an API instance, reading chain constants/state, and sending transactions. Rubric yields priority=high (score=18) but overridden to medium: page carries a prominent maintenance-mode warning directing new projects to Dedot or PAPI. Building an agent skill around a deprecated library has limited value. Ambiguous guide/reference (procedural=11, reference=8, diff=3).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "R1",
+          "R3",
+          "C1",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 11,
+          "reference": 8,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ],
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "bootstrap-parachain-pop-cli",
+      "title": "Bootstrap Parachain Development with Pop CLI",
+      "source_pages": [
+        "reference/tools/pop-cli.md"
+      ],
+      "category": "tutorial",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Sequential workflow from install (cargo install pop-cli) through environment setup (pop install), project scaffolding (pop new parachain), building (pop build --release), launching a local network (pop up network), and interacting via pop call chain. Verifiable install step (pop --help). Priority is medium because K2 and K3 don't fire: the network.toml config file is referenced but not shown, and prerequisites (Rust toolchain, Polkadot SDK dependencies) are not explicitly listed on the page.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P4",
+          "C1",
+          "K1",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 0,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 15
+      }
     }
   ],
   "supplementary_only": [
@@ -2410,6 +2514,54 @@
           "procedural": 0,
           "reference": 0,
           "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/tools/papi.md",
+      "category": "reference",
+      "relevant_to": [
+        "interact-with-chain-polkadart",
+        "use-polkadot-js-api"
+      ],
+      "notes": "API reference and quickstart for the Polkadot-API (PAPI) library. Covers API instantiation (Smoldot, WSS), reading chain data via constants/storage/runtime APIs, and sending transactions with tx and txFromCallData. Useful as supplementary context for any skill involving PAPI-based chain interaction. Classified as reference per Rule 4 (reference=8, procedural=5). Ambiguous with conceptual (diff=3) — reference wins because the bulk of the page catalogs API method patterns rather than explaining architectural rationale.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "R1",
+          "R3",
+          "C1"
+        ],
+        "category_scores": {
+          "procedural": 5,
+          "reference": 8,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "reference/tools/paraspell.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "transfer-assets-parachains"
+      ],
+      "notes": "Overview of the ParaSpell tool suite (XCM SDK, XCM API, XCM Router, XCM Analyser, XCM Visualizator, XCM Playground) with a brief npm install snippet and a navigation card linking to the transfer-assets-parachains tutorial. Primarily conceptual — explains the purpose and design of each component without walking through a workflow. Useful as supplementary context for XCM cross-chain transfer skills.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "C1"
+        ],
+        "category_scores": {
+          "procedural": 5,
+          "reference": 0,
+          "conceptual": 5,
           "not_applicable": 0
         }
       }
