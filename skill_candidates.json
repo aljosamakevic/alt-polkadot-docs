@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T20:30:00Z",
+    "generated": "2026-04-21T12:45:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -690,6 +690,40 @@
                 "contending_categories": ["guide", "reference"],
                 "priority_score": 6
             }
+        },
+        {
+            "skill_id": "fork-parachain-chopsticks",
+            "title": "Fork a Parachain Using Chopsticks",
+            "source_pages": [
+                "parachains/testing/fork-a-parachain.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Tutorial covering Chopsticks installation (global and local npm) plus reference documentation for WebSocket manipulation methods (dev_newBlock, dev_setStorage, dev_timeTravel, etc.) and configuration parameters. P1+P2+P4=15 — tutorial threshold met via Rule 2. Reference score also maxes at 12 (R1 method signatures, R2 config flag list, R3 parameter descriptions) → category_ambiguous with 3-point gap. Skill should focus on the installation and basic fork workflow; WebSocket API reference section is supplementary context. K1=5 (Node.js/npm are standard dev prerequisites). K2=0 (YAML config and JS examples use --8<-- snippet includes). Cookbook CI badge present (K4).",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "R1", "R2", "R3", "C1", "K1", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 15, "reference": 12, "conceptual": 5, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["tutorial", "reference"],
+                "priority_score": 21
+            }
+        },
+        {
+            "skill_id": "spawn-local-parachain-network-zombienet",
+            "title": "Spawn a Local Parachain Test Network with Zombienet",
+            "source_pages": [
+                "parachains/testing/run-a-parachain-network.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "End-to-end tutorial for spawning a local two-validator relay chain + collator test network using Zombienet's native provider: clone and build the parachain template (cargo build), download relay chain binaries (curl), generate a Paseo local chain spec (chain-spec-builder), write network.toml, spawn with zombienet, and verify via curl RPC. P1+P2+P3+P4 all present — score 20, no ambiguity. K1=0 — Zombienet installation itself is delegated to reference/tools/zombienet.md. K2=0 — INSERT_PASEO_RUNTIME_VERSION placeholder present in the Paseo runtime download curl command. K3=3 (Prerequisites section lists Rust/Cargo, wasm32 target, Zombienet, Git). Cookbook CI badge present (K4=3). Fully CLI-based (S1=4). Priority score 16 → medium.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 16
+            }
         }
     ],
     "supplementary_only": [
@@ -849,6 +883,33 @@
                 "category_scores": { "procedural": 0, "reference": 0, "conceptual": 7, "not_applicable": 4 },
                 "category_ambiguous": true,
                 "contending_categories": ["not_applicable", "conceptual"]
+            }
+        },
+        {
+            "page": "policies/ai-chatbot-policy.md",
+            "category": "not_applicable",
+            "reason": "Legal policy page outlining AI chatbot usage terms and conditions. Content is legal boilerplate included via external snippet reference. N2 fires.",
+            "scoring": {
+                "signals": ["N2"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 0, "not_applicable": 4 }
+            }
+        },
+        {
+            "page": "policies/cookie-policy.md",
+            "category": "not_applicable",
+            "reason": "Legal policy page explaining cookie usage on the site. Content is legal boilerplate included via external snippet reference. N2 fires.",
+            "scoring": {
+                "signals": ["N2"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 0, "not_applicable": 4 }
+            }
+        },
+        {
+            "page": "policies/privacy-policy.md",
+            "category": "not_applicable",
+            "reason": "Legal policy page describing personal data collection and processing practices. Content is legal boilerplate included via external snippet reference. N2 fires.",
+            "scoring": {
+                "signals": ["N2"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 0, "not_applicable": 4 }
             }
         }
     ]
