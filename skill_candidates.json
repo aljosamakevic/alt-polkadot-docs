@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:26:47Z",
+  "generated": "2026-04-21T15:31:09Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1952,6 +1952,162 @@
           "not_applicable": 0
         },
         "priority_score": 14
+      }
+    },
+    {
+      "skill_id": "deploy-erc20-token-hardhat",
+      "title": "Deploy an ERC-20 Token Using Hardhat",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-hardhat.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete end-to-end tutorial: clone template, compile, test, deploy to Polkadot Hub TestNet. Reference repo revm-hardhat-examples confirmed in context. P3 not fired — tutorial uses a cloned template repo rather than instructing the reader to create files from scratch. CI badge confirms recipe is tested in polkadot-cookbook.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 25
+      }
+    },
+    {
+      "skill_id": "deploy-erc20-token-remix",
+      "title": "Deploy an ERC-20 Token Using Remix IDE",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-remix.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete browser-based tutorial: create contract in Remix, compile, deploy, and mint via MetaMask. No CLI commands (P2 not fired). S1 not fired — workflow is GUI-driven (Remix IDE + MetaMask); a skill agent would require browser automation. Contract code sourced from revm-hardhat-examples (K4 awarded).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P3",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "K4",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 21
+      }
+    },
+    {
+      "skill_id": "deploy-erc721-nft-hardhat",
+      "title": "Deploy an ERC-721 NFT Using Hardhat",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete CLI-based tutorial: initialise Hardhat project from scratch, create NFT contract and deployment module, compile, deploy. K2 not fired — deployment module contains INSERT_OWNER_ADDRESS placeholder that the reader must substitute. K4 not fired — code is served from local code/ snippets with no linked reference repo (unlike ERC-20 Hardhat which clones revm-hardhat-examples).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "deploy-erc721-nft-remix",
+      "title": "Deploy an ERC-721 NFT Using Remix IDE",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-remix.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete browser-based tutorial: create ERC-721 contract in Remix, compile, deploy via MetaMask. No CLI commands (P2 not fired). S1 not fired — entirely GUI-driven (Remix IDE + MetaMask). K4 not fired — contract code served from local code/ snippets, no linked reference repo. Code appears complete with no placeholders (K2 fired).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P3",
+          "P4",
+          "K1",
+          "K2",
+          "K3",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 0,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 18
+      }
+    },
+    {
+      "skill_id": "set-up-foundry-polkadot-hub",
+      "title": "Use Foundry with Polkadot Hub",
+      "source_pages": [
+        "smart-contracts/dev-environments/foundry.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Comprehensive dev-environment setup guide covering Foundry installation, project initialisation, compilation, configuration, deployment (forge create and forge script), verification (Blockscout and Routescan), contract interaction (cast), and testing. Classified as guide rather than tutorial: no numbered ordered lists (P1 not fired); primary structure is section headers with code blocks. R1 and R2 fire for the networks table and extensive CLI flag documentation. K2 not fired — multiple INSERT_* placeholders throughout (PRIVATE_KEY, CONTRACT_ADDRESS, DEPLOYER_ADDRESS, ACCOUNT_ADDRESS). K4 not fired — no linked reference repo. Ambiguity check: procedural=14, reference=9, delta=5 — not ambiguous.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "P4",
+          "R1",
+          "R2",
+          "K1",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 14,
+          "reference": 9,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 18
       }
     }
   ],
