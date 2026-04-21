@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T21:00:00Z",
-  "content_hash": "sha256:cec646b7eb2dd1ce02c7de20c01b2a2ed6e53502206f49339869d80990075517",
+  "generated": "2026-04-21T21:30:00Z",
+  "content_hash": "sha256:32b6e5c1582a6fcf331c6656c737ffe90ffdbd4c3f9c1dd7f5772cc621ce21d6",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -6124,6 +6124,796 @@
             "Update pallet names or storage entry paths in subxt.rs to match the new metadata"
           ],
           "result": "Code updated to match post-upgrade runtime types and successfully compiles and runs."
+        }
+      ]
+    },
+    {
+      "id": "deploy-erc721-nft-hardhat",
+      "title": "Deploy an ERC-721 NFT Using Hardhat",
+      "objective": "Scaffold a Hardhat project from scratch, create an OpenZeppelin ERC-721 NFT contract, compile it, and deploy it to Polkadot Hub TestNet using Hardhat Ignition.",
+      "description": "Scaffolds a Hardhat project manually, installs OpenZeppelin contracts and dotenv, creates a MyNFT.sol ERC-721 contract and Ignition deployment module, compiles with Cancun EVM version, and deploys to Polkadot Hub TestNet via Hardhat Ignition. Use when deploying an ERC-721 NFT to Polkadot Hub. Requires testnet PAS tokens and a funded EVM wallet. Trigger phrases: 'deploy NFT Polkadot', 'ERC-721 Hardhat', 'deploy non-fungible token', 'mint NFT Polkadot Hub'. Uses OpenZeppelin Contracts v5.4.0+ requiring evmVersion cancun. Do NOT use for ERC-20 tokens; use deploy-erc20-token-hardhat instead.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22.13.1 or later",
+          "npm"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for gas fees — get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer account. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create the project directory and initialize npm",
+          "working_directory": ".",
+          "commands": [
+            "mkdir hardhat-nft-deployment",
+            "cd hardhat-nft-deployment",
+            "npm init -y"
+          ],
+          "description": "Create a new directory and initialize a Node.js project. Do not use 'npx hardhat init' — it is interactive and non-deterministic. Manual scaffolding is used instead."
+        },
+        {
+          "order": 2,
+          "action": "Install Hardhat, OpenZeppelin, and dotenv",
+          "working_directory": "hardhat-nft-deployment",
+          "commands": [
+            "npm install --save-dev hardhat@^2.27.0 @nomicfoundation/hardhat-toolbox",
+            "npm install @openzeppelin/contracts dotenv"
+          ],
+          "description": "Install Hardhat v2 toolchain, OpenZeppelin contracts (v5.4.0+), and dotenv for secure private key handling."
+        },
+        {
+          "order": 3,
+          "action": "Create the Hardhat configuration file",
+          "working_directory": "hardhat-nft-deployment",
+          "description": "Create a file named 'hardhat.config.ts' with the following content:\n\n```typescript\nimport { HardhatUserConfig } from 'hardhat/config';\nimport '@nomicfoundation/hardhat-toolbox';\nimport 'dotenv/config';\n\nconst config: HardhatUserConfig = {\n  solidity: {\n    version: '0.8.28',\n    settings: { evmVersion: 'cancun' }\n  },\n  networks: {\n    polkadotTestnet: {\n      url: 'https://services.polkadothub-rpc.com/testnet',\n      chainId: 420420417,\n      accounts: [process.env.PRIVATE_KEY as string],\n      gasPrice: 5000000000000\n    }\n  },\n  ignition: { requiredConfirmations: 1 }\n};\n\nexport default config;\n```\n\nKey points: (1) 'dotenv/config' must be the first functional import. (2) evmVersion: 'cancun' is required for OpenZeppelin v5.4.0+ (mcopy opcode). (3) gasPrice: 5000000000000 (5000 gwei) prevents 'priority is too low' errors on TestNet. (4) requiredConfirmations: 1 prevents Ignition from misreading pending transactions as dropped."
+        },
+        {
+          "order": 4,
+          "action": "Create .env file and .gitignore entry",
+          "working_directory": "hardhat-nft-deployment",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder and add .env to .gitignore. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for an account funded with testnet PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+        },
+        {
+          "order": 5,
+          "action": "Create project directories",
+          "working_directory": "hardhat-nft-deployment",
+          "commands": [
+            "mkdir -p contracts ignition/modules"
+          ],
+          "description": "Create the contracts and ignition/modules directories that Hardhat expects."
+        },
+        {
+          "order": 6,
+          "action": "Create the MyNFT.sol contract",
+          "working_directory": "hardhat-nft-deployment",
+          "description": "Create 'contracts/MyNFT.sol' with the following OpenZeppelin ERC-721 contract. If the raw file is accessible, fetch it with: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat/MyNFT.sol -o contracts/MyNFT.sol\n\nOtherwise create it manually:\n```solidity\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.22;\n\nimport {ERC721} from '@openzeppelin/contracts/token/ERC721/ERC721.sol';\nimport {ERC721URIStorage} from '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';\nimport {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';\n\ncontract MyNFT is ERC721, ERC721URIStorage, Ownable {\n    uint256 private _nextTokenId;\n    constructor(address initialOwner) ERC721('MyNFT', 'MNFT') Ownable(initialOwner) {}\n    function safeMint(address to, string memory uri) public onlyOwner {\n        uint256 tokenId = _nextTokenId++;\n        _safeMint(to, tokenId);\n        _setTokenURI(tokenId, uri);\n    }\n    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) { return super.tokenURI(tokenId); }\n    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) { return super.supportsInterface(interfaceId); }\n}\n```"
+        },
+        {
+          "order": 7,
+          "action": "Create the Ignition deployment module",
+          "working_directory": "hardhat-nft-deployment",
+          "description": "Create 'ignition/modules/MyNFT.ts'. Replace INSERT_OWNER_ADDRESS with the Ethereum address that should own the NFT contract (typically the address derived from your PRIVATE_KEY):\n\n```typescript\nimport { buildModule } from '@nomicfoundation/hardhat-ignition/modules';\n\nconst MyNFTModule = buildModule('MyNFTModule', (m) => {\n  const myNFT = m.contract('MyNFT', ['INSERT_OWNER_ADDRESS']);\n  return { myNFT };\n});\n\nexport default MyNFTModule;\n```\n\nAlternatively fetch: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat/MyNFT.ts -o ignition/modules/MyNFT.ts — then replace INSERT_OWNER_ADDRESS."
+        },
+        {
+          "order": 8,
+          "action": "Compile the contract",
+          "working_directory": "hardhat-nft-deployment",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled 1 Solidity file successfully",
+          "description": "Compile MyNFT.sol. If compilation fails with 'Invalid opcode: MCOPY', ensure evmVersion: 'cancun' is set in hardhat.config.ts and recompile."
+        },
+        {
+          "order": 9,
+          "action": "Deploy the NFT contract to Polkadot Hub TestNet",
+          "working_directory": "hardhat-nft-deployment",
+          "commands": [
+            "npx hardhat ignition deploy ignition/modules/MyNFT.ts --network polkadotTestnet"
+          ],
+          "expected_output": "MyNFTModule#MyNFT - 0x...",
+          "interactive": true,
+          "description": "Deploy the ERC-721 contract via Hardhat Ignition. Ignition will prompt to confirm the target network and chain ID — delegate this prompt to the user. Save the contract address printed on success."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "CompilationError: Invalid opcode: MCOPY",
+          "cause": "OpenZeppelin Contracts v5.4.0+ uses the mcopy opcode requiring Cancun EVM version.",
+          "resolution": "In hardhat.config.ts set evmVersion: 'cancun' inside solidity.settings, then run 'npx hardhat compile' again."
+        },
+        {
+          "pattern": "Error: insufficient funds / Priority is too low",
+          "cause": "Deployer account has insufficient PAS, or gasPrice is below the TestNet 1000 gwei base fee.",
+          "resolution": "Get testnet tokens at https://faucet.polkadot.io/. Verify hardhat.config.ts polkadotTestnet block includes gasPrice: 5000000000000."
+        },
+        {
+          "pattern": "IGN401: Transaction dropped / Transaction Already Imported",
+          "cause": "Ignition lost track of deployment due to missing gasPrice or requiredConfirmations: 0.",
+          "resolution": "Delete ignition/deployments/, ensure gasPrice: 5000000000000 and ignition.requiredConfirmations: 1 in config, then redeploy."
+        },
+        {
+          "pattern": "Error: vars is not defined / Cannot read properties of undefined",
+          "cause": "hardhat.config.ts still uses Hardhat's vars.get() system rather than dotenv.",
+          "resolution": "Add 'import \"dotenv/config\";' as the first line of hardhat.config.ts and replace vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user asks about minting NFTs, building a dApp on the deployed contract, or ERC-721 concepts.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-dapps-zero-to-hero",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-dapps-zero-to-hero.md",
+            "relevance": "Build a full dApp (Next.js + Viem) on top of a deployed smart contract on Polkadot Hub."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Reference for full Hardhat EVM environment setup and network configuration for Polkadot Hub."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy a new ERC-721 NFT contract",
+          "user_says": "Deploy an ERC-721 NFT contract to Polkadot Hub TestNet",
+          "actions": [
+            "Create project directory 'hardhat-nft-deployment' and run npm init -y",
+            "Install hardhat, OpenZeppelin contracts, and dotenv",
+            "Create hardhat.config.ts with dotenv, evmVersion: cancun, gasPrice 5000 gwei, requiredConfirmations: 1",
+            "Create .env with PRIVATE_KEY placeholder; ask user to fill it in",
+            "Create contracts/MyNFT.sol and ignition/modules/MyNFT.ts (replacing INSERT_OWNER_ADDRESS)",
+            "Run npx hardhat compile",
+            "Run npx hardhat ignition deploy ignition/modules/MyNFT.ts --network polkadotTestnet; delegate confirmation to user"
+          ],
+          "result": "ERC-721 NFT contract deployed; contract address printed to console"
+        },
+        {
+          "scenario": "Edge case: compilation fails with MCOPY opcode error",
+          "user_says": "Compilation fails with 'Invalid opcode: MCOPY'",
+          "actions": [
+            "Open hardhat.config.ts",
+            "Set solidity to: { version: '0.8.28', settings: { evmVersion: 'cancun' } }",
+            "Run npx hardhat compile again"
+          ],
+          "result": "Compilation succeeds with Cancun EVM version"
+        }
+      ]
+    },
+    {
+      "id": "deploy-erc721-nft-remix",
+      "title": "Deploy an ERC-721 NFT Using Remix IDE",
+      "objective": "Create, compile, and deploy an OpenZeppelin ERC-721 NFT contract to Polkadot Hub TestNet using the Remix IDE browser-based environment and MetaMask.",
+      "description": "Guides the user through deploying an ERC-721 NFT contract via Remix IDE (browser-based) connected to MetaMask on Polkadot Hub TestNet. Use when preferring no local toolchain or rapid prototyping. Covers contract creation using OpenZeppelin ERC-721, compilation in Remix, and deployment via MetaMask injected provider. Trigger phrases: 'deploy NFT Remix', 'ERC-721 Remix Polkadot', 'mint NFT using browser', 'Remix NFT Polkadot Hub'. All steps are GUI-based — agent delegates browser actions to the user. Do NOT use for automated or CLI-based deployments; use deploy-erc721-nft-hardhat instead.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-remix.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-remix.md",
+      "prerequisites": {
+        "network": [
+          "Polkadot Hub TestNet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for gas — get from https://faucet.polkadot.io/"
+        ],
+        "wallet": [
+          "MetaMask browser extension installed and configured for Polkadot Hub TestNet",
+          "Testnet account funded with PAS tokens"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Open Remix IDE and create the contract file",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "Delegate to the user: (1) Navigate to https://remix.ethereum.org in your web browser. (2) Under the 'contracts' folder, click 'Create new file' and name it 'MyNFT.sol'. (3) Paste the following ERC-721 contract code:\n\n```solidity\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.22;\n\nimport {ERC721} from '@openzeppelin/contracts/token/ERC721/ERC721.sol';\nimport {ERC721URIStorage} from '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';\nimport {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';\n\ncontract MyNFT is ERC721, ERC721URIStorage, Ownable {\n    uint256 private _nextTokenId;\n    constructor(address initialOwner) ERC721('MyNFT', 'MNFT') Ownable(initialOwner) {}\n    function safeMint(address to, string memory uri) public onlyOwner {\n        uint256 tokenId = _nextTokenId++;\n        _safeMint(to, tokenId);\n        _setTokenURI(tokenId, uri);\n    }\n    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) { return super.tokenURI(tokenId); }\n    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) { return super.supportsInterface(interfaceId); }\n}\n```\n\nWait for the user to confirm the file has been created and the code pasted."
+        },
+        {
+          "order": 2,
+          "action": "Compile the contract in Remix",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "Delegate to the user: (1) Click the 'Solidity Compiler' icon in the left panel. (2) Click the 'Compile MyNFT.sol' button. Success: the compiler icon shows a green checkmark. If errors appear, check that the contract code was pasted correctly and the Solidity version is 0.8.22+."
+        },
+        {
+          "order": 3,
+          "action": "Connect MetaMask to Polkadot Hub TestNet",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "Delegate to the user: (1) Click 'Deploy & Run Transactions' in the left panel. (2) In the 'Environment' dropdown, select 'Injected Provider - MetaMask'. (3) Approve the MetaMask connection popup. (4) Confirm MetaMask is on Polkadot Hub TestNet (chain ID 420420417). If not, add it via MetaMask Settings > Networks with RPC https://services.polkadothub-rpc.com/testnet. Confirm the funded account is visible."
+        },
+        {
+          "order": 4,
+          "action": "Deploy the NFT contract",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "Delegate to the user: (1) Ensure 'MyNFT' is selected in the Contract dropdown. (2) Expand the Deploy section and enter the constructor argument: the owner address (typically your MetaMask wallet address). (3) Click 'Deploy'. (4) Confirm the transaction in MetaMask. Once deployed, the contract appears in 'Deployed Contracts'. Record the contract address."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "MetaMask: Wrong network / chain ID mismatch",
+          "cause": "MetaMask is connected to a different network than Polkadot Hub TestNet.",
+          "resolution": "Switch to or add Polkadot Hub TestNet in MetaMask with chain ID 420420417 and RPC https://services.polkadothub-rpc.com/testnet."
+        },
+        {
+          "pattern": "insufficient funds for gas",
+          "cause": "The MetaMask account does not have enough PAS tokens to pay for deployment gas.",
+          "resolution": "Get testnet PAS tokens from https://faucet.polkadot.io/ for the connected account, then retry."
+        },
+        {
+          "pattern": "Compilation errors in Remix",
+          "cause": "Contract code syntax error or Solidity version mismatch.",
+          "resolution": "Verify the contract code was pasted correctly. In the Solidity Compiler tab, ensure the compiler version is 0.8.22 or later."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user asks about connecting Remix to Polkadot Hub or wants CLI-based NFT deployment.",
+        "pages": [
+          {
+            "slug": "smart-contracts-dev-environments-remix",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-remix.md",
+            "relevance": "How to connect Remix IDE to Polkadot Hub and configure MetaMask for the TestNet."
+          },
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-nft-nft-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-nft-nft-hardhat.md",
+            "relevance": "Alternative CLI-based NFT deployment using Hardhat — better for production or CI/CD workflows."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy ERC-721 NFT via Remix IDE",
+          "user_says": "Deploy an ERC-721 NFT using Remix",
+          "actions": [
+            "Open https://remix.ethereum.org and create contracts/MyNFT.sol with the ERC-721 code",
+            "Compile via the Solidity Compiler plugin",
+            "Connect MetaMask with Injected Provider to Polkadot Hub TestNet",
+            "Enter owner address as constructor argument and click Deploy",
+            "Confirm transaction in MetaMask"
+          ],
+          "result": "ERC-721 NFT contract deployed; contract address shown in Remix Deployed Contracts panel"
+        },
+        {
+          "scenario": "Edge case: user wants a custom NFT with additional features",
+          "user_says": "I want to customize my NFT with a supply cap or royalties",
+          "actions": [
+            "Direct user to https://wizard.openzeppelin.com/polkadot to generate a custom ERC-721 contract",
+            "Paste the generated code into Remix as contracts/MyNFT.sol",
+            "Proceed with the standard compile and deploy steps"
+          ],
+          "result": "Custom ERC-721 contract with user-specified extensions compiled and deployed via Remix"
+        }
+      ]
+    },
+    {
+      "id": "set-up-foundry-polkadot-hub",
+      "title": "Use Foundry with Polkadot Hub",
+      "objective": "Install Foundry nightly, initialize a project, compile contracts, deploy to Polkadot Hub TestNet, verify on a block explorer, and interact using Cast.",
+      "description": "Installs the Foundry nightly build (required for native Polkadot chain support), initializes a Forge project, configures foundry.toml for Polkadot Hub TestNet, deploys a contract via forge create, verifies it on Blockscout or Routescan, and interacts with it using cast. Use when building or deploying Solidity contracts on Polkadot Hub with the Foundry toolkit. Trigger phrases: 'Foundry Polkadot', 'forge deploy', 'forge create Polkadot', 'cast call Polkadot Hub'. Requires Foundry nightly — stable release lacks Polkadot chain definitions.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/dev-environments/foundry.md"
+      ],
+      "primary_page": "smart-contracts/dev-environments/foundry.md",
+      "prerequisites": {
+        "runtime": [
+          "Unix-based OS (Linux or macOS) or Windows WSL",
+          "Git installed",
+          "curl installed"
+        ],
+        "network": [
+          "Polkadot Hub TestNet (chain ID 420420417) — supported natively by Foundry nightly as --chain polkadot-testnet"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for deployment — get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer account. Loaded via 'source .env' into the shell session. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Foundry nightly build",
+          "working_directory": ".",
+          "commands": [
+            "curl -L https://foundry.paradigm.xyz | bash",
+            "foundryup --version nightly"
+          ],
+          "expected_output": "forge Version: (nightly build version string)",
+          "description": "Install foundryup then the Foundry nightly build. Nightly is required — stable does not include native Polkadot chain support. If 'foundryup' is not found after the first command, run 'source ~/.bashrc' (or ~/.zshrc) or start a new terminal. Verify with 'forge --version'."
+        },
+        {
+          "order": 2,
+          "action": "Initialize a new Foundry project",
+          "working_directory": ".",
+          "commands": [
+            "forge init my-foundry-project",
+            "cd my-foundry-project"
+          ],
+          "description": "Create a new Foundry project with src/ (contracts), script/ (deployment scripts), test/ (Solidity tests), lib/ (dependencies), and foundry.toml. A sample Counter.sol is placed in src/."
+        },
+        {
+          "order": 3,
+          "action": "Configure foundry.toml for Polkadot Hub TestNet",
+          "working_directory": "my-foundry-project",
+          "description": "Replace the contents of 'foundry.toml' with the following. Choose Blockscout (no API key) or Routescan:\n\nBlockscout:\n```toml\n[profile.default]\nsrc = \"src\"\nout = \"out\"\nlibs = [\"lib\"]\nsolc_version = \"0.8.28\"\n\n[etherscan]\npolkadot-testnet = { key = \"\", url = \"https://blockscout-testnet.polkadot.io/api?\" }\n```\n\nRoutescan:\n```toml\n[profile.default]\nsrc = \"src\"\nout = \"out\"\nlibs = [\"lib\"]\nsolc_version = \"0.8.28\"\n\n[etherscan]\npolkadot-testnet = { key = \"verifyContract\", url = \"https://api.routescan.io/v2/network/testnet/evm/420420417/etherscan\" }\n```\n\nWith this config, use --chain polkadot-testnet in commands without specifying the RPC URL explicitly."
+        },
+        {
+          "order": 4,
+          "action": "Create .env file and load private key",
+          "working_directory": "my-foundry-project",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder and add .env to .gitignore. Stop here and ask the user to edit .env with their 0x-prefixed private key for a testnet-funded account. Do NOT ask for the private key in chat. After confirmation, instruct the user to run 'source .env' in their terminal to load the variable into their shell session."
+        },
+        {
+          "order": 5,
+          "action": "Compile contracts",
+          "working_directory": "my-foundry-project",
+          "commands": [
+            "forge build"
+          ],
+          "expected_output": "Compiler run successful!",
+          "description": "Compile all Solidity contracts in src/. Artifacts output to out/. The sample Counter.sol should compile without errors."
+        },
+        {
+          "order": 6,
+          "action": "Deploy a contract to Polkadot Hub TestNet",
+          "working_directory": "my-foundry-project",
+          "commands": [
+            "forge create src/Counter.sol:Counter --chain polkadot-testnet --rpc-url https://services.polkadothub-rpc.com/testnet --private-key $PRIVATE_KEY --broadcast"
+          ],
+          "expected_output": "Deployed to: 0x...",
+          "description": "Deploy the Counter contract to Polkadot Hub TestNet. Replace 'src/Counter.sol:Counter' with your contract path and name if deploying a custom contract. Save the 'Deployed to: 0x...' address — needed for verification and interaction."
+        },
+        {
+          "order": 7,
+          "action": "Verify the contract on the block explorer",
+          "working_directory": "my-foundry-project",
+          "description": "Replace INSERT_CONTRACT_ADDRESS with the address from step 6.\n\nBlockscout:\n```bash\nforge verify-contract INSERT_CONTRACT_ADDRESS src/Counter.sol:Counter --chain polkadot-testnet\n```\n\nRoutescan:\n```bash\nforge verify-contract INSERT_CONTRACT_ADDRESS src/Counter.sol:Counter --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/420420417/etherscan' --etherscan-api-key 'verifyContract' --chain polkadot-testnet\n```\n\nExpected output: 'Response: OK' and a URL to the verified contract."
+        },
+        {
+          "order": 8,
+          "action": "Interact with the contract using Cast",
+          "working_directory": "my-foundry-project",
+          "description": "Replace INSERT_CONTRACT_ADDRESS and INSERT_ACCOUNT_ADDRESS with actual values.\n\nRead from contract:\n```bash\ncast call INSERT_CONTRACT_ADDRESS 'number()(uint256)' --chain polkadot-testnet\n```\n\nWrite to contract:\n```bash\ncast send INSERT_CONTRACT_ADDRESS 'setNumber(uint256)' 42 --chain polkadot-testnet --private-key $PRIVATE_KEY\n```\n\nCheck balance:\n```bash\ncast balance INSERT_ACCOUNT_ADDRESS --chain polkadot-testnet\n```"
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "foundryup: command not found / forge: command not found",
+          "cause": "Foundry was installed but PATH was not updated for the current shell session.",
+          "resolution": "Run 'source ~/.bashrc' (or '~/.zshrc' on macOS) or start a new terminal."
+        },
+        {
+          "pattern": "Error: Chain 'polkadot-testnet' not found / unknown chain",
+          "cause": "Using the Foundry stable release instead of nightly. Stable does not include Polkadot chain definitions.",
+          "resolution": "Install the nightly build: run 'foundryup --version nightly'."
+        },
+        {
+          "pattern": "Error: Priority is too low / insufficient funds",
+          "cause": "Account has insufficient PAS or gas price is below the TestNet 1000 gwei base fee.",
+          "resolution": "Get testnet PAS from https://faucet.polkadot.io/. The Foundry nightly build handles gas pricing automatically for Polkadot chains."
+        },
+        {
+          "pattern": "forge test: tests pass locally but fail on TestNet",
+          "cause": "forge test runs against Anvil (Ethereum semantics), not Polkadot Hub. Existential deposit and gas model differ.",
+          "resolution": "Use forge test only for unit testing contract logic. For Polkadot-specific behavior, test against a local dev node or TestNet."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants to understand Polkadot Hub EVM differences or compare Foundry with Hardhat.",
+        "pages": [
+          {
+            "slug": "smart-contracts-for-eth-devs-evm-vs-pvm",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-for-eth-devs-evm-vs-pvm.md",
+            "relevance": "Explains differences between Polkadot Hub EVM and standard Ethereum including gas model and existential deposit."
+          },
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network details for Polkadot Hub TestNet and MainNet RPC endpoints and chain IDs."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: install Foundry and deploy a contract",
+          "user_says": "Set up Foundry and deploy a contract to Polkadot Hub TestNet",
+          "actions": [
+            "Install Foundry nightly: curl -L https://foundry.paradigm.xyz | bash && foundryup --version nightly",
+            "Run forge init my-foundry-project",
+            "Configure foundry.toml with Polkadot TestNet verifier settings",
+            "Create .env with PRIVATE_KEY; ask user to fill in and run source .env",
+            "Run forge build to compile",
+            "Run forge create src/Counter.sol:Counter --chain polkadot-testnet --rpc-url ... --private-key $PRIVATE_KEY --broadcast",
+            "Verify: forge verify-contract CONTRACT_ADDRESS src/Counter.sol:Counter --chain polkadot-testnet"
+          ],
+          "result": "Contract compiled, deployed, and verified on Polkadot Hub TestNet"
+        },
+        {
+          "scenario": "Edge case: stable Foundry installed instead of nightly",
+          "user_says": "I get 'unknown chain polkadot-testnet' when running forge create",
+          "actions": [
+            "Run 'forge --version' to check build type",
+            "If not nightly, run 'foundryup --version nightly' to upgrade",
+            "Retry the forge create command"
+          ],
+          "result": "Foundry upgraded to nightly; polkadot-testnet chain recognized and deployment succeeds"
+        }
+      ]
+    },
+    {
+      "id": "spawn-test-network-zombienet",
+      "title": "Spawn and Test a Parachain Network with Zombienet",
+      "objective": "Install Zombienet, download relay chain binaries, write a TOML network configuration, spawn a local test network, write DSL test assertions, and run the test suite.",
+      "description": "Installs Zombienet (executable, Nix, or Docker), downloads polkadot and polkadot-parachain binaries, writes a TOML network config defining relay chain validators and parachain collators, spawns the network via the native provider, writes .zndsl test files using Zombienet's DSL, and runs the test suite. Use when spawning and testing ephemeral Polkadot SDK networks locally. Trigger phrases: 'Zombienet', 'spawn local parachain', 'test parachain network', 'local relay chain Zombienet', 'zndsl test'. Requires polkadot and polkadot-parachain binaries.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/tools/zombienet.md"
+      ],
+      "primary_page": "reference/tools/zombienet.md",
+      "prerequisites": {
+        "runtime": [
+          "Unix-based OS (Linux or macOS) or Windows WSL",
+          "polkadot and polkadot-parachain binaries — downloaded via: zombienet setup polkadot polkadot-parachain"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Zombienet",
+          "working_directory": ".",
+          "commands": [
+            "curl -L https://github.com/paritytech/zombienet/releases/latest/download/zombienet-linux-x64 -o zombienet",
+            "chmod +x zombienet",
+            "mv zombienet /usr/local/bin/zombienet",
+            "zombienet version"
+          ],
+          "description": "Download the Zombienet executable for Linux x64. For macOS replace 'zombienet-linux-x64' with 'zombienet-macos'. For macOS Gatekeeper issues run: xattr -d com.apple.quarantine zombienet. The 'zombienet version' command confirms successful installation. Docker alternative: docker run -it --rm -v $(pwd):/home/nonroot/zombie-net/host-current-files paritytech/zombienet"
+        },
+        {
+          "order": 2,
+          "action": "Download required node binaries",
+          "working_directory": ".",
+          "commands": [
+            "zombienet setup polkadot polkadot-parachain"
+          ],
+          "description": "Download the polkadot and polkadot-parachain binaries for the native provider. Zombienet downloads these to a local path and adds them to PATH for the session. Verify availability: 'polkadot --version' and 'polkadot-parachain --version'."
+        },
+        {
+          "order": 3,
+          "action": "Create a network configuration file",
+          "working_directory": ".",
+          "description": "Create 'network.toml' with a basic network configuration. This defines a relay chain with two validators and a parachain with one collator. If using the Polkadot Hub TestNet chain spec first download it:\n```bash\nwget https://paseo-r2.zondax.ch/chain-specs/paseo-asset-hub.json\n```\n\nThen create network.toml:\n```toml\n[settings]\ntimeout = 1000\n\n[relaychain]\nchain = \"paseo\"\ndefault_command = \"polkadot\"\n\n  [[relaychain.nodes]]\n  name = \"alice\"\n  validator = true\n\n  [[relaychain.nodes]]\n  name = \"bob\"\n  validator = true\n\n[[parachains]]\nid = 1000\nchain_spec_path = \"./paseo-asset-hub.json\"\n\n  [parachains.collator]\n  name = \"collator-01\"\n  command = \"polkadot-parachain\"\n```\n\nAdjust id, chain_spec_path, and command fields to match your target network. For relay-only tests, omit the [[parachains]] section."
+        },
+        {
+          "order": 4,
+          "action": "Spawn the network",
+          "working_directory": ".",
+          "commands": [
+            "zombienet spawn network.toml --provider native"
+          ],
+          "expected_output": "Network launched\nRPC endpoints:",
+          "description": "Spawn the local network using the native provider. Zombienet will: (1) locate or download binaries, (2) generate chain specifications, (3) start relay chain validators, (4) register and start parachain collators, (5) display RPC endpoints. The first relay chain node is typically accessible at ws://127.0.0.1:9944. Run this in a separate terminal — the network persists until you stop it with Ctrl+C."
+        },
+        {
+          "order": 5,
+          "action": "Write a test file",
+          "working_directory": ".",
+          "description": "Create 'network-test.zndsl' to test the spawned network:\n\n```\nDescription: Basic network health test\nNetwork: ./network.toml\nCreds: config\n\nalice: is up\nbob: is up\nalice: parachain 1000 is registered within 200 seconds\nalice: parachain 1000 block height is at least 10 within 300 seconds\n```\n\nCommon assertion types: node health ('alice: is up'), parachain registration, block height, metrics ('alice: reports node_roles is 4'), and log patterns ('alice: log line matches glob \"Imported #1\" within 10 seconds'). Remove parachain assertions if your network has no parachain."
+        },
+        {
+          "order": 6,
+          "action": "Run the test suite",
+          "working_directory": ".",
+          "commands": [
+            "zombienet test network-test.zndsl --provider native"
+          ],
+          "expected_output": "PASS",
+          "description": "Execute the test suite against the running network. Each assertion is evaluated in order; Zombienet reports PASS or FAIL. Exit code 0 = all pass, 1 = any failure. Ensure the network from step 4 is still running before executing tests."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "polkadot: binary not found / command not found",
+          "cause": "polkadot or polkadot-parachain binaries are not in PATH.",
+          "resolution": "Run 'zombienet setup polkadot polkadot-parachain' to download the binaries, then add them to PATH: export PATH=$PATH:<path-printed-by-setup>."
+        },
+        {
+          "pattern": "macOS: cannot be opened because it is from an unidentified developer",
+          "cause": "macOS Gatekeeper is blocking the Zombienet executable.",
+          "resolution": "Run: xattr -d com.apple.quarantine zombienet"
+        },
+        {
+          "pattern": "Timeout: network did not start within timeout seconds",
+          "cause": "Binary download was slow or the chain spec file is missing or invalid.",
+          "resolution": "Increase the timeout value in the [settings] section of network.toml. Verify chain_spec_path exists and is valid."
+        },
+        {
+          "pattern": "Test FAIL: parachain X is not registered within N seconds",
+          "cause": "Parachain onboarding takes time or the collator failed to start.",
+          "resolution": "Increase the 'within N seconds' timeout in the .zndsl assertion. Review Zombienet logs for collator startup errors."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants more Zombienet configuration options or wants to build and deploy the parachain template first.",
+        "pages": [
+          {
+            "slug": "parachains-testing-run-a-parachain-network",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-testing-run-a-parachain-network.md",
+            "relevance": "Full tutorial for spawning a local parachain test network including building the parachain template binary."
+          },
+          {
+            "slug": "parachains-testing-fork-a-parachain",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-testing-fork-a-parachain.md",
+            "relevance": "Alternative testing approach using Chopsticks to fork a live parachain for isolated state testing."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: spawn and test a relay+parachain network",
+          "user_says": "Spawn a local Zombienet network and run tests",
+          "actions": [
+            "Install Zombienet executable and run zombienet setup polkadot polkadot-parachain",
+            "Download paseo-asset-hub.json chain spec if using Polkadot Hub parachain",
+            "Create network.toml with relay chain (alice, bob) and parachain (id=1000)",
+            "Run zombienet spawn network.toml --provider native in a separate terminal",
+            "Create network-test.zndsl with health and parachain assertions",
+            "Run zombienet test network-test.zndsl --provider native"
+          ],
+          "result": "Local network spawns successfully; all test assertions PASS"
+        },
+        {
+          "scenario": "Edge case: test relay chain only without a parachain",
+          "user_says": "Spawn just a relay chain network for testing consensus behavior",
+          "actions": [
+            "Remove the [[parachains]] section from network.toml",
+            "Remove parachain assertions from network-test.zndsl",
+            "Run zombienet spawn network.toml --provider native",
+            "Run zombienet test network-test.zndsl --provider native"
+          ],
+          "result": "Relay chain with alice and bob validators spawns; health assertions pass"
+        }
+      ]
+    },
+    {
+      "id": "deploy-interact-contracts-web3js",
+      "title": "Deploy and Interact with Smart Contracts Using Web3.js",
+      "objective": "Set up a Node.js Web3.js project, compile a Solidity contract with solc, deploy it to Polkadot Hub TestNet, and interact with it via read and write scripts.",
+      "description": "Sets up a Node.js project with Web3.js and solc, creates a Storage Solidity contract, configures a provider for Polkadot Hub TestNet, compiles to EVM bytecode, deploys, and interacts via read/write scripts. Use when integrating Polkadot Hub with Web3.js. Trigger phrases: 'Web3.js Polkadot', 'deploy contract Web3', 'web3js smart contract Polkadot'. NOTE: Web3.js has been sunset — for new projects use deploy-contracts-ethers-js or deploy-contracts-viem instead. All code files require substituting INSERT_* placeholders before execution.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/libraries/web3-js.md"
+      ],
+      "primary_page": "smart-contracts/libraries/web3-js.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22.13.1 or later",
+          "npm v6.13.4 or later"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for deployment gas — get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer account. Used in deploy.js and updateStorage.js. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and initialize npm",
+          "working_directory": ".",
+          "commands": [
+            "mkdir web3js-project",
+            "cd web3js-project",
+            "npm init -y"
+          ],
+          "description": "Create a new directory and initialize a Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install Web3.js and solc",
+          "working_directory": "web3js-project",
+          "commands": [
+            "npm install web3",
+            "npm install --save-dev solc"
+          ],
+          "description": "Install the Web3.js library for blockchain interaction and solc for compiling Solidity contracts to EVM bytecode."
+        },
+        {
+          "order": 3,
+          "action": "Create project directories and the Storage contract",
+          "working_directory": "web3js-project",
+          "commands": [
+            "mkdir -p contracts scripts abis artifacts"
+          ],
+          "description": "Create the expected directory structure, then create 'contracts/Storage.sol':\n\n```solidity\n// SPDX-License-Identifier: GPL-3.0\npragma solidity ^0.8.9;\n\ncontract Storage {\n    uint256 number;\n    function store(uint256 num) public { number = num; }\n    function retrieve() public view returns (uint256) { return number; }\n}\n```\n\nAlternatively fetch: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/libraries/web3-js/Storage.sol -o contracts/Storage.sol"
+        },
+        {
+          "order": 4,
+          "action": "Create the provider connection script and verify connectivity",
+          "working_directory": "web3js-project",
+          "description": "Fetch the provider script: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/libraries/web3-js/connectToProvider.js -o scripts/connectToProvider.js\n\nOpen scripts/connectToProvider.js and make these substitutions:\n(1) Replace INSERT_RPC_URL with 'https://services.polkadothub-rpc.com/testnet'\n(2) Replace INSERT_CHAIN_ID with 420420417\n(3) Replace INSERT_CHAIN_NAME with 'polkadot-hub-testnet'\n\nThen verify: node scripts/connectToProvider.js\nExpected output: 'Connected to chain ID: 420420417'"
+        },
+        {
+          "order": 5,
+          "action": "Create the compile script and compile the contract",
+          "working_directory": "web3js-project",
+          "commands": [
+            "node scripts/compile.js"
+          ],
+          "expected_output": "ABI and bytecode saved",
+          "description": "Fetch the compile script: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/libraries/web3-js/compile.js -o scripts/compile.js\n\nThe script reads contracts/Storage.sol, compiles it with solc, saves ABI to abis/Storage.json and bytecode to artifacts/Storage.bin. Then run it to compile."
+        },
+        {
+          "order": 6,
+          "action": "Create the deployment script and deploy the contract",
+          "working_directory": "web3js-project",
+          "description": "Fetch the deploy script: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/libraries/web3-js/deploy.js -o scripts/deploy.js\n\nOpen deploy.js and substitute:\n(1) Replace INSERT_PRIVATE_KEY with process.env.PRIVATE_KEY (do NOT hardcode the key)\n(2) Ensure the RPC URL points to 'https://services.polkadothub-rpc.com/testnet'\n\nSet PRIVATE_KEY in your environment: export PRIVATE_KEY=0x... (never commit this). Then deploy:\n```bash\nnode scripts/deploy.js\n```\nExpected: contract address saved in contract-address.json. Record this address."
+        },
+        {
+          "order": 7,
+          "action": "Create the interaction script and interact with the contract",
+          "working_directory": "web3js-project",
+          "description": "Fetch the interaction script: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-docs/main/code/smart-contracts/libraries/web3-js/updateStorage.js -o scripts/updateStorage.js\n\nOpen updateStorage.js and substitute:\n(1) Replace INSERT_PRIVATE_KEY with process.env.PRIVATE_KEY\n(2) Replace INSERT_CONTRACT_ADDRESS with the address from step 6, or ensure contract-address.json is read automatically\n(3) Verify the ABI references 'abis/Storage.json'\n\nThen run: node scripts/updateStorage.js\nExpected: current stored value displayed, then updated to 1."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: insufficient funds / Priority is too low",
+          "cause": "Deployer account has insufficient PAS or gas price is below the TestNet 1000 gwei base fee.",
+          "resolution": "Get testnet PAS from https://faucet.polkadot.io/ and verify the funded account is used in deploy.js."
+        },
+        {
+          "pattern": "Error: Cannot find module 'web3'",
+          "cause": "Web3.js dependency was not installed.",
+          "resolution": "Run 'npm install web3' in the web3js-project directory."
+        },
+        {
+          "pattern": "Error reading ABI or bytecode file / file not found",
+          "cause": "Compile step was skipped or output files are not in expected locations.",
+          "resolution": "Run 'node scripts/compile.js' first to generate abis/Storage.json and artifacts/Storage.bin."
+        },
+        {
+          "pattern": "Error: cannot connect to provider / network timeout",
+          "cause": "Wrong RPC URL or TestNet is temporarily unavailable.",
+          "resolution": "Verify the RPC URL is 'https://services.polkadothub-rpc.com/testnet'. Check Polkadot status pages for TestNet outages."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants a modern alternative to Web3.js or asks about contract interaction options.",
+        "pages": [
+          {
+            "slug": "smart-contracts-libraries-ethers-js",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-ethers-js.md",
+            "relevance": "Recommended modern alternative to Web3.js for deploying and interacting with contracts on Polkadot Hub."
+          },
+          {
+            "slug": "smart-contracts-libraries-viem",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-viem.md",
+            "relevance": "TypeScript-native alternative library for Polkadot Hub contract interactions."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy a Storage contract and interact with it",
+          "user_says": "Deploy a smart contract to Polkadot Hub using Web3.js",
+          "actions": [
+            "Create web3js-project, npm init -y, install web3 and solc",
+            "Create contracts/Storage.sol with the storage contract",
+            "Create and run scripts/connectToProvider.js (replace INSERT_RPC_URL, INSERT_CHAIN_ID, INSERT_CHAIN_NAME)",
+            "Create and run scripts/compile.js to generate ABI and bytecode",
+            "Create scripts/deploy.js, replace INSERT_PRIVATE_KEY with process.env.PRIVATE_KEY, run it",
+            "Create scripts/updateStorage.js, replace INSERT_PRIVATE_KEY and INSERT_CONTRACT_ADDRESS, run it"
+          ],
+          "result": "Storage contract deployed; read and write interactions confirmed"
+        },
+        {
+          "scenario": "Edge case: user wants a modern library instead of Web3.js",
+          "user_says": "Web3.js is sunset, what should I use instead?",
+          "actions": [
+            "Note that Web3.js has been sunset",
+            "Recommend Ethers.js (deploy-contracts-ethers-js) or viem (deploy-contracts-viem) as actively maintained alternatives"
+          ],
+          "result": "User directed to deploy-contracts-ethers-js or deploy-contracts-viem for modern contract interaction"
         }
       ]
     }

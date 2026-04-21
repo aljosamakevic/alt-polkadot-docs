@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T21:00:00Z",
+  "generated": "2026-04-21T21:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 40,
+    "up_to_date": 45,
     "stale": 0,
-    "uncovered": 96,
+    "uncovered": 91,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -665,9 +665,11 @@
     },
     "reference/tools/zombienet.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:30:00Z",
+      "skills": [
+        "spawn-test-network-zombienet"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/connect.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -723,21 +725,27 @@
     },
     "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:30:00Z",
+      "skills": [
+        "deploy-erc721-nft-hardhat"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-remix.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:30:00Z",
+      "skills": [
+        "deploy-erc721-nft-remix"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/dev-environments/foundry.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:30:00Z",
+      "skills": [
+        "set-up-foundry-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/dev-environments/hardhat-polkadot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -859,9 +867,11 @@
     },
     "smart-contracts/libraries/web3-js.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:30:00Z",
+      "skills": [
+        "deploy-interact-contracts-web3js"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/libraries/web3-py.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

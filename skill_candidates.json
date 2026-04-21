@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T21:00:00Z",
+  "generated": "2026-04-21T21:30:00Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1797,7 +1797,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Covers the full Zombienet lifecycle: install (executable/Nix/Docker), write TOML or JSON network config files, spawn a relay chain with validators and parachain collators, author .zndsl test files with DSL assertions, and run the test suite. Explicit numbered outcome steps ('Zombienet will: 1. Download binaries ... 5. Display endpoints') and 'test runner will report pass/fail' confirm P4. Extensive Settings/RelayChain/Parachain/Collator config reference tables are present alongside the procedural flow. K2 not awarded due to INSERT_* placeholders and --8<-- snippet includes.",
       "scoring": {
         "signals": [
@@ -1822,7 +1822,8 @@
           "not_applicable": 0
         },
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T21:30:00Z"
     },
     {
       "skill_id": "connect-polkadot-hub-testnet",
@@ -2060,7 +2061,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Complete CLI-based tutorial: initialise Hardhat project from scratch, create NFT contract and deployment module, compile, deploy. K2 not fired — deployment module contains INSERT_OWNER_ADDRESS placeholder that the reader must substitute. K4 not fired — code is served from local code/ snippets with no linked reference repo (unlike ERC-20 Hardhat which clones revm-hardhat-examples).",
       "scoring": {
         "signals": [
@@ -2081,7 +2082,8 @@
           "not_applicable": 0
         },
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T21:30:00Z"
     },
     {
       "skill_id": "deploy-erc721-nft-remix",
@@ -2091,7 +2093,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Complete browser-based tutorial: create ERC-721 contract in Remix, compile, deploy via MetaMask. No CLI commands (P2 not fired). S1 not fired — entirely GUI-driven (Remix IDE + MetaMask). K4 not fired — contract code served from local code/ snippets, no linked reference repo. Code appears complete with no placeholders (K2 fired).",
       "scoring": {
         "signals": [
@@ -2111,7 +2113,8 @@
           "not_applicable": 0
         },
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T21:30:00Z"
     },
     {
       "skill_id": "set-up-foundry-polkadot-hub",
@@ -2121,7 +2124,7 @@
       ],
       "category": "guide",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Comprehensive dev-environment setup guide covering Foundry installation, project initialisation, compilation, configuration, deployment (forge create and forge script), verification (Blockscout and Routescan), contract interaction (cast), and testing. Classified as guide rather than tutorial: no numbered ordered lists (P1 not fired); primary structure is section headers with code blocks. R1 and R2 fire for the networks table and extensive CLI flag documentation. K2 not fired — multiple INSERT_* placeholders throughout (PRIVATE_KEY, CONTRACT_ADDRESS, DEPLOYER_ADDRESS, ACCOUNT_ADDRESS). K4 not fired — no linked reference repo. Ambiguity check: procedural=14, reference=9, delta=5 — not ambiguous.",
       "scoring": {
         "signals": [
@@ -2143,7 +2146,8 @@
           "not_applicable": 0
         },
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T21:30:00Z"
     },
     {
       "skill_id": "set-up-hardhat-pvm",
@@ -2434,7 +2438,7 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
       "notes": "Complete end-to-end tutorial: project init, provider setup, Solidity compilation, contract deployment, and interaction — all via CLI Node.js scripts. Explicit prerequisites section (K3) and fully CLI-driven workflow (S1). Priority score hits the high threshold at 18. Note: the page carries a sunset warning for Web3.js and recommends Ethers.js or Viem instead; a skill built from this page should include that deprecation notice.",
       "scoring": {
         "signals": [
@@ -2455,7 +2459,8 @@
           "not_applicable": 0
         },
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T21:30:00Z"
     },
     {
       "skill_id": "deploy-interact-contracts-web3py",
