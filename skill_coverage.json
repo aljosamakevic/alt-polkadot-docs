@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T23:00:00Z",
+  "generated": "2026-04-21T23:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 71,
+    "up_to_date": 75,
     "stale": 0,
-    "uncovered": 65,
+    "uncovered": 61,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -185,9 +185,10 @@
     },
     "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": "2026-04-21T22:30:00Z",
+      "last_scanned": "2026-04-21T23:30:00Z",
       "skills": [
-        "onboard-polkadot-validator"
+        "onboard-polkadot-validator",
+        "manage-validator-session-keys"
       ],
       "status": "up_to_date"
     },
@@ -236,9 +237,11 @@
     },
     "node-infrastructure/run-a-validator/operational-tasks/upgrade-your-node.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:30:00Z",
+      "skills": [
+        "upgrade-validator-node-backup"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-validator/requirements.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -368,15 +371,19 @@
     },
     "parachains/launch-a-parachain/deploy-to-polkadot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:30:00Z",
+      "skills": [
+        "deploy-parachain-to-polkadot-testnet"
+      ],
+      "status": "up_to_date"
     },
     "parachains/launch-a-parachain/obtain-coretime.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:30:00Z",
+      "skills": [
+        "obtain-coretime-parachain"
+      ],
+      "status": "up_to_date"
     },
     "parachains/launch-a-parachain/set-up-the-parachain-template.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -964,9 +971,11 @@
     },
     "smart-contracts/precompiles/xcm.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T23:30:00Z",
+      "skills": [
+        "interact-xcm-precompile-remix"
+      ],
+      "status": "up_to_date"
     }
   }
 }
