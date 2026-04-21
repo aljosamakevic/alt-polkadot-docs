@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T12:10:00Z",
+    "generated": "2026-04-21T14:00:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -406,9 +406,76 @@
                 "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
                 "priority_score": 15
             }
+        },
+        {
+            "skill_id": "set-up-validator-monitoring-stack",
+            "title": "Set Up Prometheus, Grafana, and Alertmanager for a Validator Node",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/operational-tasks/general-management.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Broad operational guide covering CPU performance tuning (SMT/NUMA deactivation, Spectre mitigations), full Prometheus+Grafana+Alertmanager monitoring stack setup with systemd service files, and security best practices (key management, secure-validator mode, Linux hardening). P1+P2+P3+P4 all present. K1=5 for the monitoring subsections, which can be set up independently on any Linux server running a Polkadot node. K3 absent (no explicit prerequisites section). Code blocks use MkDocs snippet includes for config files (K2=4). Grafana UI steps required for dashboard configuration (C2 fired).",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "R2", "C1", "C2", "K1", "K2", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 4, "conceptual": 8, "not_applicable": 0 },
+                "priority_score": 19
+            }
+        },
+        {
+            "skill_id": "upgrade-validator-node-backup",
+            "title": "Upgrade a Validator Node Using a Backup Server",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/operational-tasks/upgrade-your-node.md"
+            ],
+            "category": "guide",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Guide for safely rotating between Validator A and Validator B across session N and N+3 to allow maintenance without downtime or slashing. Numbered steps present (P1); outcome verification via session change logs (P4). No CLI commands on the page itself — delegates to key-management and set-up-validator guides for execution steps (K1=0). K3 present (prerequisites section). No source files. S1 absent (no runnable commands); S2 present (deterministic timing once session key propagation delay is understood). category_ambiguous: procedural=10 vs conceptual=7 (C1: session timing explanation, C3: no runnable code).",
+            "scoring": {
+                "signals": ["P1", "P4", "R3", "C1", "C3", "K3", "S2", "S3"],
+                "category_scores": { "procedural": 10, "reference": 3, "conceptual": 7, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["guide", "conceptual"],
+                "priority_score": 9
+            }
         }
     ],
-    "supplementary_only": [],
+    "supplementary_only": [
+        {
+            "page": "node-infrastructure/run-a-validator/onboarding-and-offboarding/stop-validating.md",
+            "category": "conceptual",
+            "relevant_to": ["onboard-polkadot-validator", "start-validating-on-polkadot", "manage-validator-session-keys"],
+            "notes": "Explains the three-step off-boarding process (chill, purge session keys, unbond) conceptually. No CLI commands or code blocks; steps are described in prose referencing UI actions on Polkadot.js Apps. Useful as background context for the full validator lifecycle.",
+            "scoring": {
+                "signals": ["C1", "C3"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 7, "not_applicable": 0 }
+            }
+        },
+        {
+            "page": "node-infrastructure/run-a-validator/operational-tasks/pause-validating.md",
+            "category": "conceptual",
+            "relevant_to": ["onboard-polkadot-validator", "start-validating-on-polkadot"],
+            "notes": "Short page explaining the chill/chillOther extrinsics and their timing behavior (era-based eligibility). No CLI, no code blocks; UI step references Polkadot.js Apps. Useful as conceptual context for any validator operational skill.",
+            "scoring": {
+                "signals": ["R3", "C1", "C3"],
+                "category_scores": { "procedural": 0, "reference": 3, "conceptual": 7, "not_applicable": 0 }
+            }
+        },
+        {
+            "page": "node-infrastructure/run-a-validator/operational-tasks/staking-operator-proxy.md",
+            "category": "reference",
+            "relevant_to": ["set-up-polkadot-validator-node", "manage-validator-session-keys", "onboard-polkadot-validator", "set-up-validator-monitoring-stack"],
+            "notes": "Documents the Staking Operator proxy type: permission model, extrinsic comparison table (Staking vs StakingOperator), 4-step setup procedure, and security properties. Ambiguous between reference and conceptual (scores 12 vs 10). Classified as reference because the extrinsic permission table (R1=5) and parameter specs for proxy.addProxy (R2=4) are the primary value; the mermaid diagram and security rationale push conceptual close but reference rule fires first.",
+            "scoring": {
+                "signals": ["P1", "R1", "R2", "R3", "C1", "C2", "C3"],
+                "category_scores": { "procedural": 6, "reference": 12, "conceptual": 10, "not_applicable": 0 },
+                "category_ambiguous": true,
+                "contending_categories": ["reference", "conceptual"]
+            }
+        }
+    ],
     "not_applicable": [
         {
             "page": "get-support.md",
