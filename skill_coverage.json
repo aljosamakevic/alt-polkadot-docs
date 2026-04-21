@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T17:00:00Z",
+  "generated": "2026-04-21T19:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 5,
+    "up_to_date": 10,
     "stale": 0,
-    "uncovered": 131,
+    "uncovered": 126,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -59,15 +59,19 @@
     },
     "chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:00:00Z",
+      "skills": [
+        "replay-dry-run-xcm-chopsticks"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:00:00Z",
+      "skills": [
+        "estimate-xcm-fees-teleport"
+      ],
+      "status": "up_to_date"
     },
     "chain-interactions/send-transactions/interoperability/transfer-assets-into-polkadot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -125,9 +129,11 @@
     },
     "node-infrastructure/run-a-collator.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:00:00Z",
+      "skills": [
+        "run-collator-system-parachain"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-node/parachain-rpc.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -139,9 +145,11 @@
     },
     "node-infrastructure/run-a-node/polkadot-hub-rpc.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:00:00Z",
+      "skills": [
+        "run-polkadot-hub-rpc-node"
+      ],
+      "status": "up_to_date"
     },
     "node-infrastructure/run-a-node/relay-chain/bootnode.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -331,9 +339,11 @@
     },
     "parachains/launch-a-parachain/set-up-the-parachain-template.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T19:00:00Z",
+      "skills": [
+        "set-up-parachain-template"
+      ],
+      "status": "up_to_date"
     },
     "parachains/runtime-maintenance/coretime-renewal.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

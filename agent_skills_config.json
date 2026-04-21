@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T18:30:00Z",
-  "content_hash": "sha256:26851c13bf056e9e048cb53d995b3cc73a64a4adeca6d834d1340df902ae430c",
+  "generated": "2026-04-21T19:00:00Z",
+  "content_hash": "sha256:8485a48f93b2cb44e7133e092f81b6099f0ec82dc9e654569426e64baceb462a",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -2318,6 +2318,753 @@
             "If stalling persists after restart, switch to --sync=warp"
           ],
           "result": "Node resumes syncing after restart or sync mode change"
+        }
+      ]
+    }
+    ,
+    {
+      "id": "replay-dry-run-xcm-chopsticks",
+      "title": "Replay and Dry-Run XCMs Using Chopsticks",
+      "objective": "Fork a Polkadot chain locally with Chopsticks, replay a historical XCM call using its encoded call data from Subscan, and dry-run it to debug or preview the outcome without spending real tokens.",
+      "description": "Forks a Polkadot chain locally with Chopsticks to replay and dry-run historical XCM messages using their on-chain call data. Covers building a Wasm binary, starting a Chopsticks fork, fetching encoded call data from Subscan, and invoking the xcmPallet.execute dry-run RPC method. Use when debugging a failing XCM, previewing execution outcomes, or verifying fee coverage before submitting to a live network. Requires Rust and the Polkadot SDK build environment. Manual step: locating the call data hex on Subscan. Trigger phrases: 'replay XCM', 'dry-run XCM Chopsticks', 'debug XCM Polkadot', 'preview XCM execution', 'XCM dry run local fork'.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md"],
+      "primary_page": "chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target (from install-polkadot-sdk skill or rustup)",
+          "Node.js v18+ and npm",
+          "npx (bundled with npm v5.2+)"
+        ],
+        "network": [
+          "Internet connection to fetch chain state for Chopsticks fork",
+          "Subscan access to locate the historical XCM call data hex"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and install Chopsticks",
+          "working_directory": ".",
+          "commands": [
+            "mkdir xcm-chopsticks-debug && cd xcm-chopsticks-debug",
+            "npm init -y",
+            "npm install @acala-network/chopsticks"
+          ],
+          "description": "Create a working directory 'xcm-chopsticks-debug' and install Chopsticks. Chopsticks will fork the chain state locally to allow replaying the XCM without interacting with the live network."
+        },
+        {
+          "order": 2,
+          "action": "Create Chopsticks configuration for the source chain",
+          "working_directory": "xcm-chopsticks-debug",
+          "description": "Create a file named 'chopsticks.yml' with the following content:\n\nendpoint: INSERT_CHAIN_WS_ENDPOINT\ndb: ./db.sqlite\nport: 8000\nmock-signature-host: true\n\nReplace INSERT_CHAIN_WS_ENDPOINT with the WebSocket endpoint of the chain where the XCM originated (e.g., wss://asset-hub-paseo.dotters.network for Polkadot Hub TestNet or wss://rpc.polkadot.io for Polkadot relay chain). The 'mock-signature-host: true' allows submitting calls without real keys. The 'db' field caches state so subsequent runs start faster."
+        },
+        {
+          "order": 3,
+          "action": "Start the Chopsticks fork",
+          "working_directory": "xcm-chopsticks-debug",
+          "commands": ["npx @acala-network/chopsticks --config=chopsticks.yml"],
+          "expected_output": "Listening on port 8000",
+          "description": "Start Chopsticks in a dedicated terminal. It downloads chain state from the configured endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite cache. Keep this terminal open during all following steps."
+        },
+        {
+          "order": 4,
+          "action": "Locate the XCM call data on Subscan",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "This step is manual. Open Subscan for the source chain (e.g., https://polkadot.subscan.io or https://assethub-polkadot.subscan.io). Navigate to the extrinsic or event containing the XCM you want to replay. Find the encoded call data hex string — it typically appears in the 'Call Data' or 'Params' section of the extrinsic detail page. Copy the full hex string (starts with '0x'). You will use this in step 5. Paste it into a local file named 'call-data.txt' for reference."
+        },
+        {
+          "order": 5,
+          "action": "Replay the XCM call against the local fork",
+          "working_directory": "xcm-chopsticks-debug",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"xcmPallet_dryRunCall\",\"params\":[\"INSERT_SENDER_ADDRESS\", \"INSERT_CALL_DATA_HEX\"]}' http://localhost:8000"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"executionResult\":{\"Ok\":{}},\"emittedEvents\":[],...},\"id\":1}",
+          "description": "Replace INSERT_SENDER_ADDRESS with the SS58 address that submitted the original XCM and INSERT_CALL_DATA_HEX with the hex string from Subscan (step 4). The response's executionResult indicates success or failure along with the failure reason if any. If the RPC method is not available on the forked chain, use 'xcmPallet_dryRunXcm' as an alternative — check the source page for the correct method name and parameter signature for your chain version. Chopsticks must be running (step 3) for this to work."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "ECONNREFUSED ws://localhost:8000",
+          "cause": "Chopsticks is not running or not yet ready.",
+          "resolution": "Start Chopsticks first in a dedicated terminal: npx @acala-network/chopsticks --config=chopsticks.yml. Wait for 'Listening on port 8000' before proceeding."
+        },
+        {
+          "pattern": "xcmPallet_dryRunCall method not found / Method not implemented",
+          "cause": "The forked chain runtime does not expose this specific dry-run RPC method, or uses a different method name.",
+          "resolution": "Check the source page for the correct RPC method name for your chain version. Try 'xcmPallet_dryRunXcm' or 'dryRun' alternatives. The method availability depends on the chain runtime version."
+        },
+        {
+          "pattern": "executionResult: Err with 'BuyExecution failed' or 'TooExpensive'",
+          "cause": "The XCM message includes insufficient fees to cover execution on the destination chain.",
+          "resolution": "Increase the fee amount in the BuyExecution instruction of the XCM message before re-submitting. Check the estimate-xcm-fees-teleport skill for how to calculate required fees."
+        },
+        {
+          "pattern": "Chopsticks fork diverges from expected state / 'Block not found'",
+          "cause": "The forked block is too old and the cached state (db.sqlite) is stale or missing.",
+          "resolution": "Delete db.sqlite and restart Chopsticks to re-fork from the current chain head. For replaying a specific historical block, add 'block: BLOCK_NUMBER_OR_HASH' to chopsticks.yml."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for XCM fee estimation, the ParaSpell transfer skill, or Chopsticks configuration reference.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-estimate-xcm-fees.md",
+            "relevance": "How to estimate XCM fees before submission — helps diagnose BuyExecution failures in a dry-run."
+          },
+          {
+            "slug": "reference-tools-chopsticks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-chopsticks.md",
+            "relevance": "Full Chopsticks reference including all config options, block forking, and RPC override methods."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-transfer-assets-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-transfer-assets-parachains.md",
+            "relevance": "How to submit a real XCM transfer between parachains — use after debugging with Chopsticks."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: debug a failing XCM transfer by replaying it locally",
+          "user_says": "An XCM transfer I submitted failed. How can I debug it without spending more tokens?",
+          "actions": [
+            "Create 'xcm-chopsticks-debug/' and install Chopsticks",
+            "Create chopsticks.yml pointing to the source chain endpoint with mock-signature-host: true",
+            "Start Chopsticks in a dedicated terminal; wait for 'Listening on port 8000'",
+            "Find the failed extrinsic on Subscan and copy the encoded call data hex",
+            "Call xcmPallet_dryRunCall via curl against localhost:8000 with the sender address and call data hex",
+            "Inspect executionResult for the failure reason and adjust the XCM message accordingly"
+          ],
+          "result": "Dry-run reveals the failure reason (e.g., TooExpensive, Barrier blocked) without spending testnet tokens"
+        },
+        {
+          "scenario": "Edge case: the dry-run method is not available on the forked chain",
+          "user_says": "The curl call returns 'method not found' for xcmPallet_dryRunCall",
+          "actions": [
+            "Check the source page for alternative RPC method names for the chain version",
+            "Try 'xcmPallet_dryRunXcm' or consult the chain's RPC documentation",
+            "If no dry-run RPC is available, use Chopsticks dev_newBlock to mine a block with the call and inspect the emitted events"
+          ],
+          "result": "XCM replay succeeds using the correct RPC method for the chain runtime version"
+        }
+      ]
+    },
+    {
+      "id": "estimate-xcm-fees-teleport",
+      "title": "Estimate XCM Fees for Asset Teleport",
+      "objective": "Estimate local execution, delivery, and remote execution fees for an XCM asset teleport between Polkadot Hub TestNet and People Chain using Chopsticks-forked chains and PAPI fee estimation calls.",
+      "description": "Estimates all three fee components for an XCM teleport: local execution fee (source chain), delivery fee (network transport), and remote execution fee (destination chain). Uses Chopsticks to fork both Polkadot Hub TestNet and People Chain locally, then calls PAPI fee estimation methods against the forks. Use when you need to budget XCM fees before submitting a teleport, or when a BuyExecution instruction is failing due to insufficient fees. No real tokens required — Chopsticks mock-signature mode is used. Trigger phrases: 'estimate XCM fees', 'XCM teleport fee', 'BuyExecution fee calculation', 'cross-chain fee estimate Polkadot'.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md"],
+      "primary_page": "chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+ and npm",
+          "npx (bundled with npm v5.2+)"
+        ],
+        "network": [
+          "Internet connection to fork chain state from Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network",
+          "Internet connection to fork People Chain TestNet state"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and install dependencies",
+          "working_directory": ".",
+          "commands": [
+            "mkdir xcm-fee-estimate && cd xcm-fee-estimate",
+            "npm init -y && npm pkg set type=module",
+            "npm install @acala-network/chopsticks polkadot-api",
+            "npm install --save-dev @types/node tsx typescript"
+          ],
+          "description": "Create 'xcm-fee-estimate' as an ESM Node.js project and install Chopsticks (for local chain forks) and polkadot-api (PAPI, for fee estimation calls)."
+        },
+        {
+          "order": 2,
+          "action": "Create Chopsticks configs for source and destination chains",
+          "working_directory": "xcm-fee-estimate",
+          "description": "Create two Chopsticks config files:\n\nFile 1 — 'chopsticks-hub.yml':\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db-hub.sqlite\nport: 8000\nmock-signature-host: true\n\nFile 2 — 'chopsticks-people.yml':\nendpoint: INSERT_PEOPLE_CHAIN_TESTNET_WS\ndb: ./db-people.sqlite\nport: 8001\nmock-signature-host: true\n\nReplace INSERT_PEOPLE_CHAIN_TESTNET_WS with the People Chain TestNet WebSocket endpoint. The two forks run on different ports (8000 and 8001) so they can be active simultaneously."
+        },
+        {
+          "order": 3,
+          "action": "Start both Chopsticks forks",
+          "working_directory": "xcm-fee-estimate",
+          "commands": [
+            "npx @acala-network/chopsticks --config=chopsticks-hub.yml",
+            "npx @acala-network/chopsticks --config=chopsticks-people.yml"
+          ],
+          "expected_output": "Listening on port 8000\nListening on port 8001",
+          "description": "Start each Chopsticks instance in a separate terminal. The first forks Polkadot Hub TestNet on port 8000; the second forks People Chain on port 8001. Both must be running before proceeding to the next step. The first run of each downloads several MB of state and caches it to the db files."
+        },
+        {
+          "order": 4,
+          "action": "Generate PAPI type descriptors for both forks",
+          "working_directory": "xcm-fee-estimate",
+          "commands": [
+            "npx papi add hubFork -w ws://localhost:8000",
+            "npx papi add peopleFork -w ws://localhost:8001"
+          ],
+          "description": "Run these commands in a third terminal while both Chopsticks forks (step 3) are running. Generates compile-time PAPI descriptors named 'hubFork' and 'peopleFork'. Both descriptors must be generated before writing the estimation script."
+        },
+        {
+          "order": 5,
+          "action": "Create the fee estimation script",
+          "working_directory": "xcm-fee-estimate",
+          "description": "Create a file named 'estimate-xcm-fees.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { hubFork } from \"@polkadot-api/descriptors\";\nimport { peopleFork } from \"@polkadot-api/descriptors\";\n\nconst SENDER = \"INSERT_SENDER_SS58_ADDRESS\";\nconst RECIPIENT = \"INSERT_RECIPIENT_SS58_ADDRESS\";\nconst AMOUNT = 1_000_000_000_000_000_000n; // 1 PAS (18 decimals)\n\nasync function main() {\n  const hubClient = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const peopleClient = createClient(getWsProvider(\"ws://localhost:8001\"));\n  const hubApi = hubClient.getTypedApi(hubFork);\n  const peopleApi = peopleClient.getTypedApi(peopleFork);\n\n  // 1. Local execution fee on Polkadot Hub (source)\n  const teleportTx = hubApi.tx.PolkadotXcm.limited_teleport_assets({\n    dest: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    beneficiary: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } },\n    assets: { type: \"V4\", value: [{ id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }] },\n    fee_asset_item: 0,\n    weight_limit: { type: \"Unlimited\" }\n  });\n  const localFeeInfo = await teleportTx.getPaymentInfo(SENDER);\n  console.log(\"Local execution fee (planck):\", localFeeInfo.partial_fee.toString());\n\n  // 2. Delivery fee\n  const deliveryFee = await hubApi.apis.XcmPaymentApi.query_delivery_fees(\n    { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    { type: \"V4\", value: [] }\n  );\n  console.log(\"Delivery fee assets:\", JSON.stringify(deliveryFee.value));\n\n  // 3. Remote execution fee on People Chain (destination)\n  const remoteWeight = await peopleApi.apis.XcmPaymentApi.query_xcm_weight(\n    { type: \"V4\", value: [{ type: \"ReceiveTeleportedAsset\", value: [] }, { type: \"BuyExecution\", value: { fees: { id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }, weight_limit: { type: \"Unlimited\" } } }, { type: \"DepositAsset\", value: { assets: { type: \"Wild\", value: { type: \"AllCounted\", value: 1 } }, beneficiary: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } } }] }\n  );\n  const remoteAsset = { parents: 1, interior: { type: \"Here\" } };\n  const remoteFee = await peopleApi.apis.XcmPaymentApi.query_weight_to_asset_fee(remoteWeight.value, { type: \"V4\", value: { Concrete: remoteAsset } });\n  console.log(\"Remote execution fee (planck):\", remoteFee.value?.toString());\n\n  hubClient.destroy();\n  peopleClient.destroy();\n}\nmain().catch(console.error);\n\nSubstitutions: (1) Replace INSERT_SENDER_SS58_ADDRESS with the sender SS58 address on Polkadot Hub. (2) Replace INSERT_RECIPIENT_SS58_ADDRESS with the recipient SS58 address on People Chain. (3) The XCM V4 MultiLocation structures and parachain ID (1004 for People Chain) are shown as examples — consult the source page for exact structures for other destination chains. (4) PAS has 18 decimals on Polkadot Hub TestNet (TestNet Chain ID: 420420417)."
+        },
+        {
+          "order": 6,
+          "action": "Run the fee estimation script",
+          "working_directory": "xcm-fee-estimate",
+          "commands": ["npx tsx estimate-xcm-fees.ts"],
+          "expected_output": "Local execution fee (planck): 1500000000000000\nDelivery fee assets: [...]\nRemote execution fee (planck): 500000000000000",
+          "description": "Execute the script while both Chopsticks forks are running. The output shows all three fee components in planck. Divide by 10^18 to convert to PAS. The sum of all three components is the total fee budget to include in the XCM BuyExecution instruction. If any XcmPaymentApi method is not available, check the source page for the correct API method names for your chain runtime version."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "ECONNREFUSED ws://localhost:8000 or ws://localhost:8001",
+          "cause": "One or both Chopsticks forks are not running.",
+          "resolution": "Start each Chopsticks instance in a separate terminal. Run 'npx @acala-network/chopsticks --config=chopsticks-hub.yml' and 'npx @acala-network/chopsticks --config=chopsticks-people.yml'. Wait for 'Listening on port 8000/8001' before proceeding."
+        },
+        {
+          "pattern": "XcmPaymentApi method not found / query_delivery_fees undefined",
+          "cause": "The chain runtime version does not implement the XcmPaymentApi runtime API at this method name.",
+          "resolution": "Check the source page for the correct API method names for your runtime version. The API surface changed between XCM V3 and V4. Verify the chain runtime version in the Chopsticks fork logs."
+        },
+        {
+          "pattern": "Error: Cannot find module '@polkadot-api/descriptors' or hubFork/peopleFork undefined",
+          "cause": "PAPI descriptors were not generated for one or both forks.",
+          "resolution": "With both Chopsticks forks running, execute: npx papi add hubFork -w ws://localhost:8000 and npx papi add peopleFork -w ws://localhost:8001. Then re-run the script."
+        },
+        {
+          "pattern": "Fee estimate returns 0 or undefined for remote execution fee",
+          "cause": "The XCM message structure passed to query_xcm_weight does not match the expected format for the chain runtime.",
+          "resolution": "Inspect the source page for the exact XCM instruction sequence expected by the destination chain. Verify that the MultiLocation structures use the correct XCM version (V3 vs V4) matching the chain runtime."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for XCM transfer execution, Chopsticks configuration, or debug techniques.",
+        "pages": [
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-debug-and-preview-xcms",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-debug-and-preview-xcms.md",
+            "relevance": "How to dry-run a full XCM message after fee estimation to verify it executes correctly before submitting."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-interoperability-transfer-assets-parachains",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-transfer-assets-parachains.md",
+            "relevance": "How to submit the actual XCM teleport transfer once fees are estimated and verified."
+          },
+          {
+            "slug": "reference-tools-chopsticks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-chopsticks.md",
+            "relevance": "Full Chopsticks reference including multi-chain fork setup, config options, and mock-signature details."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: calculate the total fee budget needed for a PAS teleport to People Chain",
+          "user_says": "How much PAS do I need to include in the BuyExecution for a teleport from Polkadot Hub to People Chain?",
+          "actions": [
+            "Create 'xcm-fee-estimate/' as ESM Node.js project and install Chopsticks and polkadot-api",
+            "Create chopsticks-hub.yml (port 8000) and chopsticks-people.yml (port 8001) with mock-signature-host: true",
+            "Start both Chopsticks forks in separate terminals",
+            "Generate PAPI descriptors: npx papi add hubFork and npx papi add peopleFork",
+            "Create estimate-xcm-fees.ts with the inline script; substitute sender and recipient addresses",
+            "Run npx tsx estimate-xcm-fees.ts and sum the three fee components"
+          ],
+          "result": "All three fee components printed in planck; sum used as BuyExecution fee budget for the teleport"
+        },
+        {
+          "scenario": "Edge case: remote execution fee query fails with XcmPaymentApi not found",
+          "user_says": "The script errors with 'query_xcm_weight is not a function' on the People Chain fork",
+          "actions": [
+            "Check the People Chain runtime version in Chopsticks logs",
+            "Consult the source page for the XcmPaymentApi method names for that runtime version",
+            "Update the API call in estimate-xcm-fees.ts to match the correct method signature"
+          ],
+          "result": "Remote execution fee estimated using the correct XcmPaymentApi method for the chain runtime"
+        }
+      ]
+    },
+    {
+      "id": "set-up-parachain-template",
+      "title": "Set Up the Polkadot SDK Parachain Template",
+      "objective": "Clone, build, and run the Polkadot SDK Parachain Template locally to verify the development environment is correctly configured before proceeding to register the parachain on a test relay chain.",
+      "description": "Clones the Polkadot SDK Parachain Template, compiles it in release mode, and runs a local development node to verify the build and environment. Use as the first step in the parachain launch workflow before registering on Paseo testnet or a local relay chain. Requires the Polkadot SDK build environment from the install-polkadot-sdk skill. The template provides a minimal parachain runtime with Aura consensus, FRAME pallets, and a pre-configured Cumulus integration. Trigger phrases: 'parachain template', 'set up parachain Polkadot SDK', 'clone parachain template', 'build parachain template', 'Polkadot SDK parachain starter'. First step in the three-page parachain launch series.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["parachains/launch-a-parachain/set-up-the-parachain-template.md"],
+      "primary_page": "parachains/launch-a-parachain/set-up-the-parachain-template.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust toolchain with wasm32-unknown-unknown target — complete the install-polkadot-sdk skill first",
+          "Git",
+          "Disk: at least 5 GB free for the build artifacts",
+          "RAM: 8 GB minimum; 16 GB recommended for parallel compilation"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone the Polkadot SDK Parachain Template",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/paritytech/polkadot-sdk-parachain-template.git",
+            "cd polkadot-sdk-parachain-template"
+          ],
+          "description": "Clone the official Polkadot SDK Parachain Template repository. The template contains a minimal parachain runtime with Aura consensus, standard FRAME pallets, and Cumulus integration for relay chain connectivity. It includes both a node binary and a runtime Wasm blob."
+        },
+        {
+          "order": 2,
+          "action": "Review the template directory structure",
+          "working_directory": "polkadot-sdk-parachain-template",
+          "description": "Familiarize yourself with the key directories before building: 'node/' contains the node binary crate (CLI, RPC, service); 'runtime/' contains the parachain runtime (pallets, weights, Wasm); 'pallets/' contains a sample custom pallet. The 'Cargo.toml' at the root defines the workspace. No files need to be created or modified for the initial setup — the default configuration targets a local development network."
+        },
+        {
+          "order": 3,
+          "action": "Build the parachain node in release mode",
+          "working_directory": "polkadot-sdk-parachain-template",
+          "commands": ["cargo build --release"],
+          "expected_output": "Compiling parachain-template-node v0.1.0\n...\nFinished release [optimized] target(s)",
+          "description": "Compile the parachain node and runtime in release mode. This step is time-consuming (20-60 minutes on first build) because it compiles the entire Polkadot SDK dependency tree. Subsequent builds use the Rust incremental cache and are significantly faster. If compilation fails with 'linker not found', install the build-essential package (Linux) or Xcode command line tools (macOS). On low-memory machines (less than 8 GB RAM), reduce parallel jobs: CARGO_BUILD_JOBS=2 cargo build --release."
+        },
+        {
+          "order": 4,
+          "action": "Verify the binary was produced",
+          "working_directory": "polkadot-sdk-parachain-template",
+          "commands": ["./target/release/parachain-template-node --version"],
+          "expected_output": "parachain-template-node 0.1.0-...",
+          "description": "Confirm the binary exists and reports its version. If the command fails with 'No such file or directory', the build did not complete successfully — review the cargo build output for compilation errors."
+        },
+        {
+          "order": 5,
+          "action": "Run the node in local development mode",
+          "working_directory": "polkadot-sdk-parachain-template",
+          "commands": ["./target/release/parachain-template-node --dev"],
+          "expected_output": "Running in --dev mode\n...\nIdle (0 peers)",
+          "description": "Start the node in development mode. In --dev mode the node runs as a single collator without a relay chain connection, using a local chain spec and instant block production. This verifies the binary works correctly. The node will not produce blocks in this mode without a connected relay chain — the 'Idle' output is expected. Press Ctrl+C to stop. The next step in the parachain launch series covers connecting to a relay chain."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/parachains/parachain-template",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error[E0463]: can't find crate for 'std' / wasm32 target missing",
+          "cause": "The wasm32-unknown-unknown target is not installed in the Rust toolchain.",
+          "resolution": "Run: rustup target add wasm32-unknown-unknown. If using a specific toolchain version, prefix with rustup target add wasm32-unknown-unknown --toolchain stable."
+        },
+        {
+          "pattern": "error: linking with 'cc' failed / linker not found",
+          "cause": "C/C++ build tools are not installed on the system.",
+          "resolution": "On Ubuntu/Debian: sudo apt install build-essential clang. On macOS: xcode-select --install. Then re-run cargo build --release."
+        },
+        {
+          "pattern": "Killed / process killed during compilation / OOM",
+          "cause": "Insufficient RAM for parallel Rust compilation — cargo uses one thread per CPU core by default.",
+          "resolution": "Reduce parallel compilation jobs: CARGO_BUILD_JOBS=2 cargo build --release. Consider adding swap space on Linux: sudo fallocate -l 4G /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile."
+        },
+        {
+          "pattern": "error: package 'polkadot-sdk' not found / version mismatch in Cargo.lock",
+          "cause": "Cargo.lock is out of sync with the current Polkadot SDK release pinned in Cargo.toml.",
+          "resolution": "Run cargo update to refresh the lock file to the latest compatible versions, then retry cargo build --release."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for the prerequisite SDK install, the next steps in the parachain launch series, or runtime concepts.",
+        "pages": [
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Prerequisite: install Rust, system dependencies, and the Polkadot SDK build environment before building the template."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-acquire-a-slot",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-acquire-a-slot.md",
+            "relevance": "Next step in the parachain launch series: acquire a para ID and slot on Paseo testnet after the template is built."
+          },
+          {
+            "slug": "reference-parachains-networks",
+            "url": "https://docs.polkadot.com/ai/pages/reference-parachains-networks.md",
+            "relevance": "Network endpoints and chain IDs for Paseo testnet and Polkadot mainnet parachain environments."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: first-time parachain developer setting up the template",
+          "user_says": "How do I get the Polkadot SDK Parachain Template running on my machine?",
+          "actions": [
+            "Confirm Rust toolchain with wasm32 target is installed (install-polkadot-sdk skill if not)",
+            "Clone polkadot-sdk-parachain-template from GitHub",
+            "Run cargo build --release in the cloned directory (allow 20-60 minutes)",
+            "Verify with ./target/release/parachain-template-node --version",
+            "Start in dev mode with ./target/release/parachain-template-node --dev to confirm it works"
+          ],
+          "result": "Template node built and running in dev mode; environment confirmed ready for the next parachain launch step"
+        },
+        {
+          "scenario": "Edge case: build is killed due to out-of-memory on a low-spec machine",
+          "user_says": "The cargo build process gets killed partway through on my 4 GB RAM machine",
+          "actions": [
+            "Set CARGO_BUILD_JOBS=2 to limit parallel compilation threads",
+            "Add at least 4 GB of swap space: sudo fallocate -l 4G /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile",
+            "Re-run CARGO_BUILD_JOBS=2 cargo build --release"
+          ],
+          "result": "Build completes successfully with reduced memory pressure from limited parallel jobs"
+        }
+      ]
+    },
+    {
+      "id": "run-collator-system-parachain",
+      "title": "Run a Block-Producing Collator for a System Parachain",
+      "objective": "Install and configure a collator node for a Polkadot system parachain, generate a node key, obtain the chain spec, start the collator, generate session keys, and register them on-chain.",
+      "description": "Configures a full collator node for a Polkadot system parachain (e.g., Collectives, BridgeHub) via Docker or a systemd binary. Covers binary installation, node key generation, chain spec retrieval, collator startup, session key generation via RPC, and on-chain session key registration. Governance approval is required for system parachain collator registration. Use when you need to run a block-producing node for a system parachain. No testnet tokens required for setup; on-chain registration requires native token for extrinsic fees. Trigger phrases: 'run collator', 'system parachain collator', 'set up collator Polkadot', 'collator node setup', 'register collator session keys'.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["node-infrastructure/run-a-collator.md"],
+      "primary_page": "node-infrastructure/run-a-collator.md",
+      "prerequisites": {
+        "runtime": [
+          "Docker v24+ (for Docker method) OR a 64-bit Linux server with systemd (for binary method)",
+          "Disk: minimum 500 GB SSD; 2+ TB for archive collator",
+          "RAM: minimum 8 GB; 16 GB recommended",
+          "CPU: 4+ cores recommended"
+        ],
+        "network": [
+          "Open TCP ports: 30333 (parachain P2P), 30334 (relay chain P2P), 9944 (RPC, restrict to localhost for collators)",
+          "Stable broadband connection for initial sync"
+        ],
+        "tokens": [
+          "Small amount of native parachain token for submitting the session key registration extrinsic"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Choose deployment method and prepare the server",
+          "working_directory": ".",
+          "description": "Decide on the deployment method: Docker (step 2) or systemd binary (step 3). A collator must maintain high uptime — choose a dedicated server or cloud VM. The collator's RPC port (9944) should NOT be exposed publicly; restrict it to localhost. The P2P ports (30333 for the parachain, 30334 for the embedded relay chain client) must be open for peer discovery.\n\nParachain substitution table:\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Paseo testnet equivalents: append -paseo to the chain names and use --chain=paseo for relay"
+        },
+        {
+          "order": 2,
+          "action": "Run the collator via Docker",
+          "working_directory": ".",
+          "commands": [
+            "docker pull parity/polkadot-parachain:stable",
+            "mkdir -p /var/lib/collator-data",
+            "docker run -d --name parachain-collator --restart unless-stopped -p 30333:30333 -p 30334:30334 -v /var/lib/collator-data:/data parity/polkadot-parachain:stable --collator --chain=collectives-polkadot --base-path=/data --rpc-port=9944 --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast"
+          ],
+          "description": "Pull the stable polkadot-parachain image and start the collator. Key flags: --collator enables block production mode; the chain flag selects the parachain spec; the -- separator and --chain=polkadot configure the embedded relay chain client. RPC port 9944 is NOT mapped to the host — collators should not expose RPC publicly. Replace /var/lib/collator-data with your data directory and adjust chain names per the substitution table."
+        },
+        {
+          "order": 3,
+          "action": "Install and run the collator via systemd (binary method alternative)",
+          "working_directory": ".",
+          "description": "For the systemd binary method (skip if using Docker in step 2): (1) Create system user: sudo useradd --system --no-create-home --shell /usr/sbin/nologin polkadot. (2) Create data dir: sudo mkdir -p /var/lib/collator-data && sudo chown polkadot:polkadot /var/lib/collator-data. (3) Download polkadot-parachain binary from https://github.com/paritytech/polkadot-sdk/releases (stable, amd64 or arm64) and install: sudo install -m 755 polkadot-parachain /usr/local/bin/. (4) Create /etc/systemd/system/parachain-collator.service:\n\n[Unit]\nDescription=Parachain Collator\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot-parachain --collator --chain=collectives-polkadot --base-path=/var/lib/collator-data --rpc-port=9944 --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast\nRestart=always\nRestartSec=10\n\n[Install]\nWantedBy=multi-user.target\n\n(5) Enable and start: sudo systemctl daemon-reload && sudo systemctl enable parachain-collator && sudo systemctl start parachain-collator."
+        },
+        {
+          "order": 4,
+          "action": "Generate a node key for the collator",
+          "working_directory": ".",
+          "commands": [
+            "docker exec parachain-collator polkadot-parachain key generate-node-key --file /data/node-key"
+          ],
+          "description": "Generate a persistent libp2p node key for the collator. For systemd, run: polkadot-parachain key generate-node-key --file /var/lib/collator-data/node-key. The node key is the collator's peer identity on the P2P network. Keep this key backed up — losing it changes the node's peer ID. Add --node-key-file=/data/node-key to the container startup command and restart the collator."
+        },
+        {
+          "order": 5,
+          "action": "Monitor sync and wait for the node to be fully synced",
+          "working_directory": ".",
+          "commands": [
+            "docker logs -f parachain-collator 2>&1 | grep -E 'Syncing|Idle|Best|Peers'",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":{\"currentBlock\":12000,\"highestBlock\":12000},\"id\":1}",
+          "description": "Monitor sync progress via Docker logs or the system_syncState RPC call. For systemd, use: sudo journalctl -fu parachain-collator. The node must be fully synced (currentBlock equals highestBlock) before generating session keys. Initial sync can take hours to days depending on hardware and network speed."
+        },
+        {
+          "order": 6,
+          "action": "Generate session keys via RPC",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"author_rotateKeys\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":\"0x1234abcd...\",\"id\":1}",
+          "description": "Call author_rotateKeys to generate and store new session keys in the collator keystore. The result is a hex-encoded concatenation of all session keys (Aura key for parachain collators). Copy the full hex string from 'result' — you will use it in step 7 to register on-chain. This RPC call must be made against the local node (localhost:9944), not a public endpoint."
+        },
+        {
+          "order": 7,
+          "action": "Register session keys on-chain",
+          "working_directory": ".",
+          "interactive": true,
+          "description": "This step requires a governance action for system parachains. Using Polkadot.js Apps (https://polkadot.js.org/apps): (1) Connect to the parachain's RPC endpoint. (2) Navigate to Developer > Extrinsics. (3) Select 'session' pallet and 'setKeys' extrinsic. (4) Paste the hex session key from step 6 into the 'keys' field. (5) Set 'proof' to '0x'. (6) Sign and submit using your collator account. For system parachains, collator set changes require an on-chain governance proposal — a simple setKeys call is not sufficient to immediately start collating. Follow the parachain's governance process to have your collator added to the invulnerable set or active collator list. Confirm the key is registered by querying the 'session.nextKeys' storage on-chain."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "No space left on device / database write error",
+          "cause": "The data volume has run out of disk space during sync.",
+          "resolution": "Increase the volume size, or switch from archive to pruned mode by adding --state-pruning=1000 --blocks-pruning=1000. Check disk usage: du -sh /var/lib/collator-data."
+        },
+        {
+          "pattern": "Peers count stays at 0 after several minutes",
+          "cause": "P2P ports 30333 or 30334 are blocked by a firewall or security group.",
+          "resolution": "Open TCP ports 30333 and 30334: sudo ufw allow 30333/tcp && sudo ufw allow 30334/tcp. For cloud VMs, update security group rules. Check peer count via system_health RPC."
+        },
+        {
+          "pattern": "author_rotateKeys returns empty result or connection refused",
+          "cause": "The collator RPC port 9944 is not accessible from the host, or the node is not yet fully synced.",
+          "resolution": "Verify the collator is synced (step 5). For Docker, confirm port 9944 is mapped: docker inspect parachain-collator. If not mapped, add -p 127.0.0.1:9944:9944 to the docker run command and restart."
+        },
+        {
+          "pattern": "Collator node syncs but does not produce blocks after session key registration",
+          "cause": "System parachain collator registration requires governance approval — simple setKeys does not add a collator to the active set.",
+          "resolution": "Submit a governance proposal to add the collator to the invulnerables list via the parachainSystem or collatorSelection pallet. Follow the target parachain's governance process on Polkassembly or Subsquare."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for RPC node setup, parachain launch steps, or relay chain node configuration.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-parachain-rpc",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-parachain-rpc.md",
+            "relevance": "How to run a parachain RPC node (non-collator) — useful as reference for the underlying node setup without the collator flags."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-polkadot-hub-rpc",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-polkadot-hub-rpc.md",
+            "relevance": "How to run an RPC node specifically for Polkadot Hub — includes Ethereum RPC adapter setup."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "How to run a standalone Polkadot relay chain full node, which the embedded relay chain client in the collator replaces."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: set up a Collectives parachain collator using Docker",
+          "user_says": "How do I run a collator node for the Collectives parachain on Polkadot?",
+          "actions": [
+            "Pull parity/polkadot-parachain:stable",
+            "Create data directory /var/lib/collator-data",
+            "Start collator with --collator --chain=collectives-polkadot and embedded --chain=polkadot relay",
+            "Generate node key with polkadot-parachain key generate-node-key and restart with --node-key-file",
+            "Wait for full sync; monitor with docker logs and system_syncState RPC",
+            "Generate session keys with author_rotateKeys and submit governance proposal to register"
+          ],
+          "result": "Collator node synced and running; session keys registered pending governance approval for block production"
+        },
+        {
+          "scenario": "Edge case: collator produces no blocks after governance approval of session keys",
+          "user_says": "My collator session keys were approved by governance but the node still is not producing blocks",
+          "actions": [
+            "Verify the session keys registered on-chain match the output of author_rotateKeys: query session.nextKeys storage",
+            "Check that the node has peers and is fully synced via system_health and system_syncState",
+            "Confirm the collator is in the active invulnerables list by querying collatorSelection.invulnerables storage",
+            "Wait for the next session rotation — key changes take effect at the start of the next session"
+          ],
+          "result": "Collator begins producing blocks at the next session rotation once all keys and peer connections are confirmed"
+        }
+      ]
+    },
+    {
+      "id": "run-polkadot-hub-rpc-node",
+      "title": "Run an RPC Node for Polkadot Hub",
+      "objective": "Set up and run a Polkadot Hub RPC node in archive or pruned mode using Docker or a systemd service, optionally with the Ethereum RPC adapter (eth-rpc), and verify it syncs and serves requests.",
+      "description": "Sets up a Polkadot Hub (Asset Hub) RPC node in archive or pruned mode via Docker or systemd, with an optional Ethereum-compatible JSON-RPC adapter (eth-rpc) for EVM tooling. Covers Docker image selection, binary installation, snapshot download for faster sync, systemd service configuration, and sync verification. Use when you need a self-hosted Polkadot Hub RPC endpoint for Substrate or Ethereum-compatible tools. Trigger phrases: 'run Polkadot Hub node', 'Asset Hub RPC node', 'Polkadot Hub Docker node', 'eth-rpc Polkadot Hub', 'Polkadot Hub archive node'. No tokens required.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": ["node-infrastructure/run-a-node/polkadot-hub-rpc.md"],
+      "primary_page": "node-infrastructure/run-a-node/polkadot-hub-rpc.md",
+      "prerequisites": {
+        "runtime": [
+          "Docker v24+ (for Docker method) OR a 64-bit Linux server with systemd (for binary method)",
+          "Disk: minimum 500 GB SSD for pruned node; 2+ TB SSD for archive node",
+          "RAM: minimum 8 GB; 16 GB recommended for archive nodes",
+          "CPU: 4+ cores recommended"
+        ],
+        "network": [
+          "Open TCP ports: 30333 (P2P), 9944 (WebSocket RPC), 9615 (Prometheus metrics, optional), 8545 (Ethereum RPC if using eth-rpc adapter)",
+          "Stable broadband connection for initial sync (several hundred GB download)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Choose deployment method and sync type",
+          "working_directory": ".",
+          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (step 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nPolkadot Hub uses the parity/polkadot-parachain Docker image with --chain=asset-hub-polkadot. For the Paseo TestNet (chain ID: 420420417), use --chain=asset-hub-paseo and relay --chain=paseo. Optionally download a database snapshot from the Polkadot ecosystem snapshot providers to accelerate initial sync — check https://snapshots.polkadot.io or community providers for current snapshots."
+        },
+        {
+          "order": 2,
+          "action": "Run the Polkadot Hub node via Docker",
+          "working_directory": ".",
+          "commands": [
+            "docker pull parity/polkadot-parachain:stable",
+            "mkdir -p /var/lib/polkadot-hub",
+            "docker run -d --name polkadot-hub-rpc --restart unless-stopped -p 30333:30333 -p 9944:9944 -p 9615:9615 -v /var/lib/polkadot-hub:/data parity/polkadot-parachain:stable --chain=asset-hub-polkadot --base-path=/data --rpc-external --rpc-port=9944 --rpc-cors=all --prometheus-external --prometheus-port=9615 --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast"
+          ],
+          "description": "Pull the stable polkadot-parachain image and start the Polkadot Hub RPC node. Key arguments: --chain=asset-hub-polkadot selects the Polkadot Hub spec; --base-path=/data stores chain data in the mounted volume; --state-pruning=1000 --blocks-pruning=1000 keeps the last 1000 blocks (change both to 'archive' for a full archive node); --rpc-external exposes the WebSocket RPC on 9944; the -- separator and --chain=polkadot configure the embedded relay chain client. Replace /var/lib/polkadot-hub with your data directory. For Paseo TestNet, use --chain=asset-hub-paseo and --chain=paseo after the -- separator."
+        },
+        {
+          "order": 3,
+          "action": "Run the Polkadot Hub node via systemd (binary method alternative)",
+          "working_directory": ".",
+          "description": "For the systemd binary method (skip if using Docker in step 2): (1) Create system user: sudo useradd --system --no-create-home --shell /usr/sbin/nologin polkadot. (2) Create data dir: sudo mkdir -p /var/lib/polkadot-hub && sudo chown polkadot:polkadot /var/lib/polkadot-hub. (3) Download polkadot-parachain binary from https://github.com/paritytech/polkadot-sdk/releases (stable, amd64 or arm64) and install: sudo install -m 755 polkadot-parachain /usr/local/bin/. (4) Create /etc/systemd/system/polkadot-hub-rpc.service:\n\n[Unit]\nDescription=Polkadot Hub RPC Node\nAfter=network.target\n\n[Service]\nUser=polkadot\nExecStart=/usr/local/bin/polkadot-parachain --chain=asset-hub-polkadot --base-path=/var/lib/polkadot-hub --rpc-external --rpc-port=9944 --rpc-cors=all --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast\nRestart=always\nRestartSec=10\n\n[Install]\nWantedBy=multi-user.target\n\n(5) Enable and start: sudo systemctl daemon-reload && sudo systemctl enable polkadot-hub-rpc && sudo systemctl start polkadot-hub-rpc. For archive mode, omit --state-pruning and --blocks-pruning flags."
+        },
+        {
+          "order": 4,
+          "action": "Optionally install the Ethereum RPC adapter (eth-rpc)",
+          "working_directory": ".",
+          "commands": [
+            "docker pull paritytech/frontier-node:latest",
+            "docker run -d --name polkadot-hub-eth-rpc --restart unless-stopped -p 8545:8545 --network host paritytech/frontier-node:latest --chain=asset-hub-polkadot --endpoint=ws://localhost:9944 --listen-addr=0.0.0.0:8545"
+          ],
+          "description": "This step is optional. The Ethereum RPC adapter (eth-rpc / Frontier) exposes an Ethereum-compatible JSON-RPC endpoint on port 8545, allowing Ethereum tooling (MetaMask, ethers.js, Hardhat) to connect to Polkadot Hub. The adapter proxies Ethereum RPC calls to the Substrate node. Run it after the main node (step 2 or 3) is fully synced and serving on ws://localhost:9944. For Paseo TestNet (chain ID: 420420417), use --chain=asset-hub-paseo. Skip this step if you only need the native Substrate WebSocket RPC endpoint."
+        },
+        {
+          "order": 5,
+          "action": "Monitor sync progress",
+          "working_directory": ".",
+          "commands": [
+            "docker logs -f polkadot-hub-rpc 2>&1 | grep -E 'Syncing|Idle|Best|Peers'",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"startingBlock\":0,\"currentBlock\":12000,\"highestBlock\":15000},\"id\":1}",
+          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f polkadot-hub-rpc' with 'sudo journalctl -fu polkadot-hub-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync — initial sync can take hours to days depending on hardware."
+        },
+        {
+          "order": 6,
+          "action": "Verify the RPC endpoint is operational",
+          "working_directory": ".",
+          "commands": [
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_chain\",\"params\":[]}' http://localhost:9944",
+            "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
+          ],
+          "expected_output": "{\"result\":\"Polkadot Asset Hub\",...}\n{\"result\":{\"peers\":5,\"isSyncing\":false,\"shouldHavePeers\":true},...}",
+          "description": "Confirm the node serves RPC requests. system_chain should return 'Polkadot Asset Hub'. system_health should show isSyncing: false and peers greater than 0. If peers is 0, verify port 30333 is open in your firewall. If isSyncing is true, wait for sync to complete. If the eth-rpc adapter is running, also verify it: curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_chainId\",\"params\":[]}' http://localhost:8545 — should return '0x18FF5B01' (420420417 in hex for Paseo TestNet)."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: No space left on device / database write error",
+          "cause": "The data volume has run out of disk space.",
+          "resolution": "Increase the volume size, or switch from archive to pruned mode (--state-pruning=1000 --blocks-pruning=1000). Check usage with: du -sh /var/lib/polkadot-hub."
+        },
+        {
+          "pattern": "EADDRINUSE port 9944 or 30333",
+          "cause": "Another process is already using the required ports.",
+          "resolution": "Change the port with --rpc-port=NEW_PORT for RPC and --port=NEW_P2P_PORT for P2P. Update firewall rules accordingly."
+        },
+        {
+          "pattern": "Peers count stays at 0 after several minutes",
+          "cause": "P2P port 30333 is blocked by firewall or the bootnodes are temporarily unavailable.",
+          "resolution": "Open TCP port 30333: sudo ufw allow 30333/tcp. For cloud VMs, update the security group. If peers still do not connect after 10 minutes, check the Polkadot network status."
+        },
+        {
+          "pattern": "eth_chainId returns unexpected value or eth-rpc adapter cannot connect to node",
+          "cause": "The eth-rpc adapter endpoint does not match the running node's WebSocket address, or the node is not yet fully synced.",
+          "resolution": "Verify the node is fully synced (step 5). Ensure the --endpoint flag for the eth-rpc adapter points to ws://localhost:9944 and the node's --rpc-external flag is active. Restart the eth-rpc adapter after the node is synced."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs to add TLS/WSS, run a parachain RPC node, or understand the chain configuration.",
+        "pages": [
+          {
+            "slug": "node-infrastructure-run-a-node-parachain-rpc",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-parachain-rpc.md",
+            "relevance": "How to run RPC nodes for other system parachains (People Chain, Collectives, BridgeHub) using the same polkadot-parachain binary."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
+            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx — required for production endpoints."
+          },
+          {
+            "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
+            "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-full-node.md",
+            "relevance": "How to run a standalone Polkadot relay chain full node, separate from the embedded relay client."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: run a pruned Polkadot Hub RPC node via Docker",
+          "user_says": "Run a Polkadot Hub RPC node using Docker",
+          "actions": [
+            "Pull parity/polkadot-parachain:stable",
+            "Create data directory /var/lib/polkadot-hub",
+            "Run docker with --chain=asset-hub-polkadot, --state-pruning=1000, --blocks-pruning=1000, ports 30333 and 9944 exposed",
+            "Monitor sync with docker logs and system_syncState RPC",
+            "Verify with system_chain and system_health once currentBlock equals highestBlock"
+          ],
+          "result": "Polkadot Hub RPC node running, synced, serving requests on ws://localhost:9944"
+        },
+        {
+          "scenario": "Edge case: Ethereum tooling cannot connect — eth_chainId returns wrong value",
+          "user_says": "MetaMask connects to port 8545 but shows the wrong chain ID",
+          "actions": [
+            "Verify the eth-rpc adapter is configured with the correct --chain flag matching the running node",
+            "For Paseo TestNet, chain ID is 420420417 (0x18FF5B01 in hex) — confirm eth_chainId returns this value",
+            "If chain ID is wrong, restart the eth-rpc adapter with --chain=asset-hub-paseo for TestNet or --chain=asset-hub-polkadot for mainnet",
+            "Update MetaMask network settings with the correct chain ID and RPC URL http://localhost:8545"
+          ],
+          "result": "MetaMask connects successfully with the correct Polkadot Hub chain ID and eth-rpc adapter"
         }
       ]
     }

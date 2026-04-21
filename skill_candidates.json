@@ -216,7 +216,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T19:00:00Z",
       "notes": "Advanced tutorial covering XCM replay and dry-run via Chopsticks local fork. Requires building a Wasm binary and using Subscan to locate call data (partial manual step reduces S2). No cookbook badge. Specialized debugging skill for XCM developers.",
       "scoring": {
         "signals": [
@@ -247,7 +248,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T19:00:00Z",
       "notes": "Tutorial for estimating local execution, delivery, and remote execution fees for XCM teleports between Polkadot Hub TestNet and People Chain. Uses Chopsticks for forked chains. Code is presented in segments then assembled; full code collapsible available. No cookbook badge.",
       "scoring": {
         "signals": [
@@ -527,7 +529,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T19:00:00Z",
       "notes": "Full workflow for cloning, building, running, and verifying the Polkadot SDK Parachain Template locally. P1+P2+P4 present (15 = tutorial threshold). P3 absent \u2014 directory structure is shown illustratively, not as files to create. GUI verification step (Polkadot.js Apps) does not block S1 since the primary workflow is CLI-only. K1=0 \u2014 requires install-polkadot-sdk as prerequisite. Cookbook CI badge present (K4). First step in the three-page parachain launch series (set-up-the-parachain-template \u2192 deploy-to-polkadot \u2192 obtain-coretime).",
       "scoring": {
         "signals": [
@@ -559,7 +562,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T19:00:00Z",
       "notes": "Covers full collator setup: install binary (Docker or systemd), generate node key, obtain chain spec, run collator, generate session keys, and register on-chain. Registration requires governance approval for system parachains (S2 absent for that step). Core node setup is deterministic. Matches node/validator setup skill shape.",
       "scoring": {
         "signals": [
@@ -623,7 +627,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T19:00:00Z",
       "notes": "Setup guide for Polkadot Hub RPC node (archive or pruned) via Docker or systemd, plus optional Ethereum RPC adapter (eth-rpc) for EVM compatibility. Includes snapshot download, service config, and sync verification. CLI flags reference table (R2) is supplementary. Node/validator setup shape.",
       "scoring": {
         "signals": [
