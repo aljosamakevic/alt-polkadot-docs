@@ -1,6 +1,6 @@
 {
     "schema_version": "2",
-    "generated": "2026-04-21T00:00:00Z",
+    "generated": "2026-04-21T12:10:00Z",
     "project_id": "polkadot-docs",
     "scoring_rubric_version": "1.0",
     "candidates": [
@@ -306,6 +306,105 @@
                 "signals": ["P2", "P3", "P4", "R2", "K1", "K2", "K3", "S1", "S2", "S3"],
                 "category_scores": { "procedural": 14, "reference": 4, "conceptual": 0, "not_applicable": 0 },
                 "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "set-up-relay-chain-full-node",
+            "title": "Set Up a Polkadot Relay Chain Full Node",
+            "source_pages": [
+                "node-infrastructure/run-a-node/relay-chain/full-node.md"
+            ],
+            "category": "guide",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Guide covering binary installation (pre-built, compiled, snap, Docker) and startup commands for pruned, custom-pruned, and archive nodes. P1 absent (section headings, not numbered lists); no source files to create (P3 absent). Procedural score 9 → Rule 6 guide. K1=0 — prerequisites reference parachains/install-polkadot-sdk for system dependencies not covered on this page. Companion pages: secure-wss.md (WSS layer), polkadot-hub-rpc.md (hub-specific config).",
+            "scoring": {
+                "signals": ["P2", "P4", "R2", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 9, "reference": 4, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 17
+            }
+        },
+        {
+            "skill_id": "set-up-secure-wss-relay-node",
+            "title": "Set Up Secure WebSocket (WSS) for a Relay Chain Node",
+            "source_pages": [
+                "node-infrastructure/run-a-node/relay-chain/secure-wss.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Tutorial for enabling WSS on a running Polkadot node via nginx or Apache2 reverse proxy with SSL (Let's Encrypt or self-signed). P1+P2+P3+P4 all present — numbered steps, apt commands, nginx/apache2 config files, and connection verification. K1=0 (requires an existing running node; companion to set-up-relay-chain-full-node). K3=0 (no explicit prerequisites section). No cookbook badge.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K2", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 14
+            }
+        },
+        {
+            "skill_id": "manage-validator-session-keys",
+            "title": "Manage Validator Session Keys and Node Key",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md"
+            ],
+            "category": "tutorial",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Covers generating session keys via author_rotateKeysWithOwner RPC, submitting set_keys on-chain (Polkadot Hub path and legacy relay chain path), and generating a static node key. P1+P2+P4 present; P3 absent (no source files). K1=0 — intro explicitly states prerequisite of set-up-validator page. GUI-dependent key submission steps (S1=0). Key output is non-deterministic (S2=0). Part of composite skill onboard-polkadot-validator.",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "K2", "S3"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 7
+            }
+        },
+        {
+            "skill_id": "set-up-polkadot-validator-node",
+            "title": "Set Up a Polkadot Validator Node",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Complete binary installation guide covering NTP setup, Landlock verification, and installing polkadot/polkadot-prepare-worker/polkadot-execute-worker via four methods (curl+GPG, APT, Docker, build from source). P1+P2+P4 present; P3 absent (no source files). K1=5 — the installation workflow itself is self-contained; listed prerequisites are knowledge reading, not procedural dependencies. No cookbook badge (K4 absent). First step in the broader validator onboarding flow; see composite onboard-polkadot-validator.",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "start-validating-on-polkadot",
+            "title": "Start Validating on Polkadot",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md"
+            ],
+            "category": "tutorial",
+            "priority": "low",
+            "status": "pending",
+            "notes": "Covers syncing a validator node (full or warp sync), bonding DOT via Polkadot.js Apps staking UI, activating the validator, and running as a systemd service. P1+P2+P3+P4 all present; systemd unit file is a source file to create. K1=0 — intro states key-management must be completed first. GUI-heavy bonding and activation steps (S1=0). Bonding requires real DOT on mainnet (S2=0). C2 fired (multiple screenshots). Part of composite skill onboard-polkadot-validator.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "C2", "K2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 7
+            }
+        },
+        {
+            "skill_id": "onboard-polkadot-validator",
+            "title": "Onboard as a Polkadot Validator (Full Flow)",
+            "source_pages": [
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/set-up-validator.md",
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/key-management.md",
+                "node-infrastructure/run-a-validator/onboarding-and-offboarding/start-validating.md"
+            ],
+            "category": "tutorial",
+            "composite": true,
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Composite skill spanning the three validator onboarding pages. Together they cover the complete workflow: install binaries (set-up-validator), generate and register session keys and node key (key-management), sync chain, bond DOT, activate validator, and configure systemd (start-validating). K1 re-evaluated to 5 for the combined set. GUI-dependent bonding and on-chain key submission remain (S1=0, S2=0), limiting priority to medium. Priority score 15 → medium.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 15
             }
         }
     ],
