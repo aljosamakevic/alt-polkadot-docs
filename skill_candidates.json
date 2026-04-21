@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T14:50:43Z",
+  "generated": "2026-04-21T14:55:24Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1896,6 +1896,125 @@
         ],
         "category_scores": {
           "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/consensus/inclusion-pipeline.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-parachain-template",
+        "launch-parachain-testnet"
+      ],
+      "notes": "Explains the multi-stage validation pipeline (Context, Generation, Backing, Inclusion) through which every parachain block is validated before relay-chain finalization. Includes a mermaid flowchart. Foundational background for any skill covering parachain development or deployment.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/cryptography.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "generate-account-keys",
+        "sign-transactions-polkadot-js"
+      ],
+      "notes": "Conceptual overview of cryptographic primitives used in Polkadot: hash functions (Blake2), symmetric vs asymmetric encryption trade-offs, digital signatures, and elliptic curve schemes (ECDSA/secp256k1, Ed25519, SR25519). No diagrams or runnable code. Background reading for skills involving key management or transaction signing.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/data-encoding.md",
+      "category": "reference",
+      "relevant_to": [
+        "build-parachain-runtime",
+        "set-up-parachain-template"
+      ],
+      "notes": "SCALE codec reference: function signatures for Encode, Decode, CompactAs, HasCompact, and EncodeLike traits; a data-types encoding table mapping Rust types to their SCALE byte representations; and a multi-language library listing. Scores are close between reference (12) and conceptual (10) — rule 4 assigns reference; ambiguity flag set. Useful supplementary context for any skill involving Polkadot SDK runtime or parachain development.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 10,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "reference/parachains/interoperability.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "send-xcm-message",
+        "transfer-assets-xcm",
+        "get-started-xcm"
+      ],
+      "notes": "High-level conceptual overview of interoperability in Polkadot: why it matters, XCM as the cross-consensus messaging standard, and bridges to external networks (Ethereum, Bitcoin). No code or diagrams. Background reading for XCM-related skills.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/networks.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "deploy-parachain-paseo",
+        "set-up-parachain-template",
+        "test-parachain-locally"
+      ],
+      "notes": "Describes the Polkadot network landscape (MainNet, Paseo TestNet, Kusama, Westend, local) and the recommended three-stage development progression (local → Paseo → production). Includes a mermaid development-flow diagram and descriptions of Zombienet and Chopsticks. The numbered development path fires P1 (procedural=6) but conceptual=10 wins by rule 5. No ambiguity (difference of 4 points). Relevant supplementary context for any skill covering parachain or dApp deployment and testing.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 6,
           "reference": 0,
           "conceptual": 10,
           "not_applicable": 0
