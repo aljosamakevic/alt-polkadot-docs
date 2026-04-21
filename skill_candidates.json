@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T14:55:24Z",
+  "generated": "2026-04-21T14:59:13Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2017,6 +2017,128 @@
           "procedural": 6,
           "reference": 0,
           "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/node-and-runtime.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-parachain-template",
+        "configure-parachain-node",
+        "build-custom-runtime"
+      ],
+      "notes": "Explains the client/runtime architectural split (meta-protocol vs protocol), forkless upgrade model, SCALE encoding, runtime APIs, and host functions. Pure conceptual background with no commands or code blocks.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/randomness.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-validator-node",
+        "configure-babe-consensus",
+        "understand-pos-consensus"
+      ],
+      "notes": "Conceptual explanation of VRF-based randomness in Polkadot PoS, including how BABE slots work, the RANDAO alternative, and VDF security model. Includes a diagram. No procedural steps or runnable code.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/assets.md",
+      "category": "reference",
+      "relevant_to": [
+        "register-foreign-asset",
+        "register-local-asset",
+        "convert-assets",
+        "transfer-assets-xcm"
+      ],
+      "notes": "Reference overview of the Assets pallet on Polkadot Hub: asset structure fields, common asset IDs table (USDt/USDC), roles and permissions, freeze/thaw and delegated transfer mechanics, and foreign asset handling. Ends with navigation cards pointing to procedural guides. No runnable steps on this page.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/bridging.md",
+      "category": "reference",
+      "relevant_to": [
+        "bridge-polkadot-ethereum-snowbridge",
+        "send-xcm-cross-chain-message",
+        "set-up-bridge-hub"
+      ],
+      "notes": "Reference overview of the Bridge Hub system parachain covering trustless bridging via on-chain light clients (BEEFY/GRANDPA), key pallets (Bridge GRANDPA, Bridge Parachains, Bridge Messages, XCM Bridge), and deployed bridges (Snowbridge, Hyperbridge, Polkadot<>Kusama). Ambiguous between reference and conceptual (8 vs 7): R1 fires on structured pallet listing; C1 fires on trustless bridging architecture prose. Rule 4 wins (reference_score >= 7, procedural < 10).",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 8,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/collectives-and-daos.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "join-technical-fellowship",
+        "participate-polkadot-governance",
+        "create-on-chain-collective"
+      ],
+      "notes": "Short conceptual overview of the Collectives chain and its key governance bodies (Technical Fellowship and Polkadot Alliance). Explains purpose, establishment via Referendum 81, and cross-network governance via Bridge Hub. No reference tables, no procedural steps, no code.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
           "not_applicable": 0
         }
       }
