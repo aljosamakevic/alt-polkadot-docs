@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T14:45:18Z",
+  "generated": "2026-04-21T14:50:43Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1423,6 +1423,39 @@
         },
         "priority_score": 16
       }
+    },
+    {
+      "skill_id": "retrieve-runtime-metadata",
+      "title": "Retrieve Runtime Metadata",
+      "source_pages": [
+        "reference/parachains/chain-data.md"
+      ],
+      "category": "guide",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Ambiguous between guide and reference (procedural=11, reference=12, diff=1); rule 3 fires first (procedural >= 10). Page explains metadata concepts but also provides complete, runnable curl and subxt CLI commands for fetching chain metadata. K1: self-contained via CLI paths. K2: commands are complete. S1: programmatic options exist despite Polkadot.js GUI section. S2: deterministic — same endpoint, same output. K3/K4/S3 absent.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "R1",
+          "R2",
+          "R3",
+          "C1"
+        ],
+        "category_scores": {
+          "procedural": 11,
+          "reference": 12,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 16,
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ]
+      }
     }
   ],
   "supplementary_only": [
@@ -1758,6 +1791,113 @@
           "procedural": 0,
           "reference": 12,
           "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/blocks-transactions-fees/fees.md",
+      "category": "reference",
+      "relevant_to": [
+        "benchmark-pallet",
+        "customize-runtime-fees"
+      ],
+      "notes": "Reference material covering the transaction weight system, fee calculation formula (base + weight + length fees), dispatch classes (Normal/Operational/Mandatory), weight annotations, and custom fee/weight implementations. Useful supplementary context for any skill involving pallet weight benchmarking or runtime fee customization.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/parachains/blocks-transactions-fees/transactions.md",
+      "category": "reference",
+      "relevant_to": [
+        "submit-signed-transaction",
+        "construct-custom-extrinsic"
+      ],
+      "notes": "Ambiguous between reference and conceptual (reference=12, conceptual=10, diff=2); rule 4 fires (reference >= 7, procedural < 10). Covers transaction types (signed/unsigned/inherent), data structure fields, signed extensions, a numbered 5-step construction walkthrough, encoding format, lifecycle, and mortality. Strong supplementary reference for any skill involving transaction submission or custom extrinsic development.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 6,
+          "reference": 12,
+          "conceptual": 10,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "reference/parachains/consensus/async-backing.md",
+      "category": "reference",
+      "relevant_to": [
+        "enable-async-backing",
+        "configure-parachain-consensus"
+      ],
+      "notes": "Ambiguous between reference and conceptual (reference=12, conceptual=10, diff=2); rule 4 fires (reference >= 7, procedural < 10). Documents the two AsyncBackingParams configuration fields (max_candidate_depth, allowed_ancestry_len) with docs.rs links, alongside a thorough conceptual comparison of synchronous vs asynchronous backing using Gantt diagrams. Relevant supplementary context for any skill involving parachain consensus configuration.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 10,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "reference/parachains/consensus/elastic-scaling.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "acquire-coretime",
+        "enable-elastic-scaling"
+      ],
+      "notes": "Pure conceptual page explaining how elastic scaling works, its performance characteristics, benefits, and use cases. No API references, no configuration option specs, no procedural steps for the reader. Sequence diagrams illustrate single-core vs multi-core validation timing. Useful background context for coretime acquisition or elastic scaling enablement skills.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
           "not_applicable": 0
         }
       }
