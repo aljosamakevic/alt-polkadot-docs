@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T14:59:13Z",
+  "generated": "2026-04-21T15:03:47Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2130,6 +2130,120 @@
         "create-on-chain-collective"
       ],
       "notes": "Short conceptual overview of the Collectives chain and its key governance bodies (Technical Fellowship and Polkadot Alliance). Explains purpose, establishment via Referendum 81, and cross-network governance via Bridge Hub. No reference tables, no procedural steps, no code.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/consensus-and-security/agile-coretime.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "purchase-bulk-coretime",
+        "set-up-parachain-template"
+      ],
+      "notes": "Explains coretime scheduling concepts — bulk vs on-demand, interlacing, splitting. Pure conceptual overview with mermaid diagram but no executable steps or CLI commands.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/consensus-and-security/pos-consensus.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-validator-node",
+        "stake-dot-tokens"
+      ],
+      "notes": "Deep architectural explanation of NPoS, BABE, GRANDPA, and BEEFY. No runnable steps — entirely conceptual with fork-choice diagram and external Web3 Foundation paper references.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/consensus-and-security/relay-chain.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-parachain-template",
+        "purchase-bulk-coretime"
+      ],
+      "notes": "High-level overview of Polkadot relay chain architecture, DOT token, blockspace, and JAM. Background material with architectural diagram — no procedural content.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/people-and-identity.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "establish-on-chain-identity"
+      ],
+      "notes": "Contains numbered steps for contacting registrars, but the workflow is an offline human process (research, contact, submit docs, pay fee) — not programmatically executable via CLI or SDK. R3 fires for judgment classification descriptions. Scores: conceptual=7, procedural=6 (gap=1, within 3 pts). Category_ambiguous resolved by Rule 5 (conceptual>=5, procedural<10, reference<7) firing before Rule 6.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "R3",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 6,
+          "reference": 3,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "conceptual",
+          "guide"
+        ]
+      }
+    },
+    {
+      "page": "reference/polkadot-hub/smart-contracts.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "deploy-basic-contract-remix",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Overview of REVM and PVM smart contract engines on Polkadot Hub. No commands, no source files to create, no numbered steps — serves as conceptual background for smart contract deployment skills. Card-grid 'Where to Go Next' links out to actual tutorials.",
       "scoring": {
         "signals": [
           "C1",
