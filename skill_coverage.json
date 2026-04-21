@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T20:30:00Z",
+  "generated": "2026-04-21T21:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 35,
+    "up_to_date": 40,
     "stale": 0,
-    "uncovered": 101,
+    "uncovered": 96,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -575,9 +575,11 @@
     },
     "reference/tools/dedot.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:00:00Z",
+      "skills": [
+        "interact-with-chain-dedot"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/light-clients.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -595,9 +597,11 @@
     },
     "reference/tools/omninode.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:00:00Z",
+      "skills": [
+        "run-parachain-node-omni-node"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/papi.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -613,9 +617,11 @@
     },
     "reference/tools/polkadart.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:00:00Z",
+      "skills": [
+        "interact-with-chain-polkadart"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/polkadot-js-api.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -631,9 +637,11 @@
     },
     "reference/tools/py-substrate-interface.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:00:00Z",
+      "skills": [
+        "interact-polkadot-node-py-substrate"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/sidecar.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -643,9 +651,11 @@
     },
     "reference/tools/subxt.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T21:00:00Z",
+      "skills": [
+        "interact-polkadot-node-subxt"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/xcm-tools.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
