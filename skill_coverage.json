@@ -1,11 +1,11 @@
 {
   "schema_version": "1",
-  "generated": "2026-04-21T19:30:00Z",
+  "generated": "2026-04-21T20:00:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 25,
+    "up_to_date": 30,
     "stale": 0,
-    "uncovered": 111,
+    "uncovered": 106,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -659,15 +659,19 @@
     },
     "smart-contracts/cookbook/dapps/zero-to-hero.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:00:00Z",
+      "skills": [
+        "build-dapp-viem-nextjs"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/eth-dapps/uniswap-v2.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:00:00Z",
+      "skills": [
+        "deploy-uniswap-v2-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -693,9 +697,11 @@
     },
     "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-remix.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:00:00Z",
+      "skills": [
+        "deploy-erc20-token-remix"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-nft/nft-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -811,15 +817,19 @@
     },
     "smart-contracts/libraries/ethers-js.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:00:00Z",
+      "skills": [
+        "deploy-contracts-ethers-js"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/libraries/viem.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T20:00:00Z",
+      "skills": [
+        "deploy-contracts-viem"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/libraries/wagmi.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",

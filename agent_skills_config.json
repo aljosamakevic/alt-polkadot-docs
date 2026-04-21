@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T19:30:00Z",
-  "content_hash": "sha256:8ed8b7a64289ec4c369ca55066779f7794ed229e6be2b6485dfe07be7b7a8951",
+  "generated": "2026-04-21T20:00:00Z",
+  "content_hash": "sha256:0089cd6172934ad82caf1488ac24a0f3c03bffc3960d455f32d8a83ab04e9ac4",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -38,7 +38,7 @@
             "mkdir account-creator && cd account-creator",
             "npm init -y && npm pkg set type=module"
           ],
-          "description": "Create a new directory named 'account-creator' and initialize it as an ESM Node.js project. The 'type=module' flag is required — the @polkadot packages use ESM imports."
+          "description": "Create a new directory named 'account-creator' and initialize it as an ESM Node.js project. The 'type=module' flag is required \u2014 the @polkadot packages use ESM imports."
         },
         {
           "order": 2,
@@ -55,7 +55,7 @@
           "action": "Fetch the account creation script",
           "working_directory": "account-creator",
           "reference_file": "create-account.ts",
-          "description": "Fetch the reference file and save it as 'create-account.ts'. No substitutions needed — the script generates a fresh random account on each execution. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/create-account/create-account.ts -o create-account.ts"
+          "description": "Fetch the reference file and save it as 'create-account.ts'. No substitutions needed \u2014 the script generates a fresh random account on each execution. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/create-account/create-account.ts -o create-account.ts"
         },
         {
           "order": 4,
@@ -65,7 +65,7 @@
             "npx tsx create-account.ts"
           ],
           "expected_output": "Address: <SS58-encoded Polkadot address>\nMnemonic: <12-word BIP39 phrase>",
-          "description": "Execute the script. It prints a new SS58 address and 12-word mnemonic to the console. Record both — the mnemonic is required to sign transactions with this account and cannot be recovered if lost. Never share the mnemonic."
+          "description": "Execute the script. It prints a new SS58 address and 12-word mnemonic to the console. Record both \u2014 the mnemonic is required to sign transactions with this account and cannot be recovered if lost. Never share the mnemonic."
         }
       ],
       "reference_code": {
@@ -139,7 +139,7 @@
       "id": "query-account-info-sdks",
       "title": "Query Account Information with SDKs",
       "objective": "Retrieve account balance, nonce, and account data from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Queries Polkadot Hub for account balance, nonce, and account state using the Polkadot API (PAPI) TypeScript library. Use when you need to inspect an account's free/reserved/frozen balance or transaction count programmatically. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query account balance', 'check account info', 'get account nonce', 'read wallet balance'. No tokens required — read-only operation against any funded or unfunded address.",
+      "description": "Queries Polkadot Hub for account balance, nonce, and account state using the Polkadot API (PAPI) TypeScript library. Use when you need to inspect an account's free/reserved/frozen balance or transaction count programmatically. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query account balance', 'check account info', 'get account nonce', 'read wallet balance'. No tokens required \u2014 read-only operation against any funded or unfunded address.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -187,7 +187,7 @@
           "commands": [
             "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
           ],
-          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. This connects to the chain and downloads its metadata. Produces @polkadot-api/descriptors with the 'polkadotTestNet' export. If targeting a different network, replace the WebSocket URL and the descriptor name accordingly — note the name you choose, as it must match the import in query-account.ts."
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. This connects to the chain and downloads its metadata. Produces @polkadot-api/descriptors with the 'polkadotTestNet' export. If targeting a different network, replace the WebSocket URL and the descriptor name accordingly \u2014 note the name you choose, as it must match the import in query-account.ts."
         },
         {
           "order": 4,
@@ -278,7 +278,7 @@
       "id": "query-chain-state-sdks",
       "title": "Query On-Chain State with SDKs",
       "objective": "Read System.Account balance and Assets pallet metadata from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Queries on-chain storage on Polkadot Hub using PAPI TypeScript library: System.Account for account balance and Assets pallet for USDT (asset ID 1984) metadata and balance. Use when you need to read chain state programmatically beyond account info — including asset balances and pallet storage. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query chain state', 'read on-chain storage', 'get asset balance', 'check USDT balance on Asset Hub'. No tokens required — read-only.",
+      "description": "Queries on-chain storage on Polkadot Hub using PAPI TypeScript library: System.Account for account balance and Assets pallet for USDT (asset ID 1984) metadata and balance. Use when you need to read chain state programmatically beyond account info \u2014 including asset balances and pallet storage. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query chain state', 'read on-chain storage', 'get asset balance', 'check USDT balance on Asset Hub'. No tokens required \u2014 read-only.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -429,7 +429,7 @@
       "id": "call-runtime-apis-sdks",
       "title": "Call Runtime APIs with SDKs",
       "objective": "Call AccountNonceApi and Metadata runtime APIs on Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Executes Polkadot SDK runtime APIs — AccountNonceApi.account_nonce and Metadata.metadata_versions — using the PAPI TypeScript library. Use when you need computed results from runtime logic rather than raw storage reads, such as the current transaction nonce or supported metadata versions. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'call runtime API', 'get account nonce via runtime', 'query metadata versions', 'AccountNonceApi'. No tokens required — read-only operation.",
+      "description": "Executes Polkadot SDK runtime APIs \u2014 AccountNonceApi.account_nonce and Metadata.metadata_versions \u2014 using the PAPI TypeScript library. Use when you need computed results from runtime logic rather than raw storage reads, such as the current transaction nonce or supported metadata versions. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'call runtime API', 'get account nonce via runtime', 'query metadata versions', 'AccountNonceApi'. No tokens required \u2014 read-only operation.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -530,7 +530,7 @@
           {
             "slug": "chain-interactions-query-data-query-sdks",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-query-sdks.md",
-            "relevance": "Storage-based queries using the same PAPI setup — compare with runtime API calls."
+            "relevance": "Storage-based queries using the same PAPI setup \u2014 compare with runtime API calls."
           },
           {
             "slug": "reference-tools-papi",
@@ -554,11 +554,11 @@
         },
         {
           "scenario": "Edge case: nonce shows 0 for a new address",
-          "user_says": "The nonce is 0 — is that correct?",
+          "user_says": "The nonce is 0 \u2014 is that correct?",
           "actions": [
             "Explain that nonce 0 means the account has not yet sent any transactions",
             "Note that AccountNonceApi returns 0 for any address that has never submitted a transaction, including unfunded accounts",
-            "No action required — the nonce increments with each submitted transaction"
+            "No action required \u2014 the nonce increments with each submitted transaction"
           ],
           "result": "User understands nonce 0 is correct for a new or never-transacted account"
         }
@@ -587,7 +587,7 @@
           "WebSocket RPC endpoint for Polkadot Hub (e.g., wss://asset-hub-paseo.dotters.network for testnet)"
         ],
         "tokens": [
-          "Testnet PAS tokens in the sender account — get from https://faucet.polkadot.io/?parachain=1111 (Polkadot Hub faucet)"
+          "Testnet PAS tokens in the sender account \u2014 get from https://faucet.polkadot.io/?parachain=1111 (Polkadot Hub faucet)"
         ],
         "wallet": [
           "An SR25519 account mnemonic phrase for the sender account, funded with testnet PAS"
@@ -648,7 +648,7 @@
             "echo 'SENDER_MNEMONIC=\\nWS_ENDPOINT=wss://asset-hub-paseo.dotters.network\\nDEST_ADDRESS=' > .env",
             "echo '.env' > .gitignore"
           ],
-          "description": "Create a .env file with three empty placeholders and a .gitignore that excludes it. Stop here and ask the user to edit the .env file directly — fill in SENDER_MNEMONIC with their 12-word mnemonic, confirm WS_ENDPOINT is correct, and set DEST_ADDRESS to the recipient address. Do NOT ask for the mnemonic in chat. Wait for the user to confirm the .env is filled before proceeding."
+          "description": "Create a .env file with three empty placeholders and a .gitignore that excludes it. Stop here and ask the user to edit the .env file directly \u2014 fill in SENDER_MNEMONIC with their 12-word mnemonic, confirm WS_ENDPOINT is correct, and set DEST_ADDRESS to the recipient address. Do NOT ask for the mnemonic in chat. Wait for the user to confirm the .env is filled before proceeding."
         },
         {
           "order": 5,
@@ -671,7 +671,7 @@
             "npx tsx send-transfer.ts"
           ],
           "expected_output": "Connected to Polkadot Testnet\nSigning and submitting transaction...\nTransaction submitted with hash: 0x<tx-hash>",
-          "description": "Execute the script. It connects to the chain, signs the Balances.transfer_keep_alive extrinsic with the sender mnemonic, submits it, and prints the transaction hash. Save the transaction hash — needed in step 8 to verify."
+          "description": "Execute the script. It connects to the chain, signs the Balances.transfer_keep_alive extrinsic with the sender mnemonic, submits it, and prints the transaction hash. Save the transaction hash \u2014 needed in step 8 to verify."
         }
       ],
       "reference_code": {
@@ -703,7 +703,7 @@
         {
           "pattern": "Transaction submitted but not confirmed / stuck pending",
           "cause": "Polkadot Hub TestNet can be unstable and drop transactions under load.",
-          "resolution": "Wait 1-2 minutes and check the block explorer for the tx hash. If not confirmed, re-run the script. The nonce increments per submitted transaction — if you see 'nonce too low', the previous transaction was included despite appearing to fail."
+          "resolution": "Wait 1-2 minutes and check the block explorer for the tx hash. If not confirmed, re-run the script. The nonce increments per submitted transaction \u2014 if you see 'nonce too low', the previous transaction was included despite appearing to fail."
         }
       ],
       "supplementary_context": {
@@ -832,7 +832,7 @@
             "./target/release/polkadot --version"
           ],
           "expected_output": "polkadot 1.x.x-xxxxxxx",
-          "description": "Confirm the polkadot binary runs and prints its version. If you see version output without errors, the development environment is correctly configured and ready for Polkadot SDK work. Save this version string — needed when matching binary versions in parachain template setup."
+          "description": "Confirm the polkadot binary runs and prints its version. If you see version output without errors, the development environment is correctly configured and ready for Polkadot SDK work. Save this version string \u2014 needed when matching binary versions in parachain template setup."
         }
       ],
       "error_patterns": [
@@ -889,7 +889,7 @@
             "Run cargo build --release --locked",
             "Verify with ./target/release/polkadot --version"
           ],
-          "result": "Polkadot binary prints version string — SDK toolchain ready for parachain development"
+          "result": "Polkadot binary prints version string \u2014 SDK toolchain ready for parachain development"
         },
         {
           "scenario": "Edge case: build runs out of memory on a machine with limited RAM",
@@ -925,7 +925,7 @@
           "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
         ],
         "tokens": [
-          "Testnet PAS tokens for gas fees — get from https://faucet.polkadot.io/ (Polkadot Hub TestNet base fee is 1000 gwei)"
+          "Testnet PAS tokens for gas fees \u2014 get from https://faucet.polkadot.io/ (Polkadot Hub TestNet base fee is 1000 gwei)"
         ],
         "wallet": [
           "An EVM private key (0x-prefixed) for a funded testnet account"
@@ -947,7 +947,7 @@
             "mkdir hardhat-deployment && cd hardhat-deployment",
             "npm init -y"
           ],
-          "description": "Create a new directory named 'hardhat-deployment' and initialize a Node.js project. Do NOT run npx hardhat init at this stage — interactive init is non-deterministic across Hardhat versions. All project files will be fetched from the reference repository in subsequent steps."
+          "description": "Create a new directory named 'hardhat-deployment' and initialize a Node.js project. Do NOT run npx hardhat init at this stage \u2014 interactive init is non-deterministic across Hardhat versions. All project files will be fetched from the reference repository in subsequent steps."
         },
         {
           "order": 2,
@@ -957,7 +957,7 @@
             "npm install --save-dev hardhat@^2.27.0 @nomicfoundation/hardhat-toolbox typescript ts-node @types/node",
             "npm install dotenv"
           ],
-          "description": "Install Hardhat v2 with the Toolbox plugin, TypeScript support, and dotenv for secure private key loading. The dotenv package is required — the skill uses process.env.PRIVATE_KEY instead of Hardhat's interactive vars system, which does not work in agent shells."
+          "description": "Install Hardhat v2 with the Toolbox plugin, TypeScript support, and dotenv for secure private key loading. The dotenv package is required \u2014 the skill uses process.env.PRIVATE_KEY instead of Hardhat's interactive vars system, which does not work in agent shells."
         },
         {
           "order": 3,
@@ -976,21 +976,21 @@
             "printf 'PRIVATE_KEY=\\n' > .env",
             "echo '.env' >> .gitignore"
           ],
-          "description": "Create a .env file with an empty PRIVATE_KEY placeholder and a .gitignore entry to prevent accidental commits. Stop here and ask the user to edit the .env file directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm the .env file is filled before proceeding to step 5."
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder and a .gitignore entry to prevent accidental commits. Stop here and ask the user to edit the .env file directly \u2014 fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm the .env file is filled before proceeding to step 5."
         },
         {
           "order": 5,
           "action": "Fetch and configure hardhat.config.ts",
           "working_directory": "hardhat-deployment",
           "reference_file": "hardhat.config.ts",
-          "description": "Fetch the reference file and save it as 'hardhat.config.ts'. Then apply all of the following modifications before saving:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any 'vars.get(\"PRIVATE_KEY\")' or \"vars.get('PRIVATE_KEY')\" with 'process.env.PRIVATE_KEY as string'.\n(3) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei — 5x the TestNet base fee of 1000 gwei; prevents stuck transactions).\n(4) Add an 'ignition: { requiredConfirmations: 1 }' top-level key to the config object (zero confirmations only works on local nodes — on TestNet it causes IGN401 dropped-transaction errors).\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/hardhat.config.ts -o hardhat.config.ts"
+          "description": "Fetch the reference file and save it as 'hardhat.config.ts'. Then apply all of the following modifications before saving:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any 'vars.get(\"PRIVATE_KEY\")' or \"vars.get('PRIVATE_KEY')\" with 'process.env.PRIVATE_KEY as string'.\n(3) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei \u2014 5x the TestNet base fee of 1000 gwei; prevents stuck transactions).\n(4) Add an 'ignition: { requiredConfirmations: 1 }' top-level key to the config object (zero confirmations only works on local nodes \u2014 on TestNet it causes IGN401 dropped-transaction errors).\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/hardhat.config.ts -o hardhat.config.ts"
         },
         {
           "order": 6,
           "action": "Fetch Storage.sol contract",
           "working_directory": "hardhat-deployment",
           "reference_file": "contracts/Storage.sol",
-          "description": "Fetch the reference file and save it as 'contracts/Storage.sol'. No substitutions needed — this is a generic Storage contract with get/set functions. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/contracts/Storage.sol -o contracts/Storage.sol"
+          "description": "Fetch the reference file and save it as 'contracts/Storage.sol'. No substitutions needed \u2014 this is a generic Storage contract with get/set functions. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/contracts/Storage.sol -o contracts/Storage.sol"
         },
         {
           "order": 7,
@@ -1007,7 +1007,7 @@
           "action": "Fetch the Ignition deployment module",
           "working_directory": "hardhat-deployment",
           "reference_file": "ignition/modules/Storage.ts",
-          "description": "Fetch the reference file and save it as 'ignition/modules/Storage.ts'. No substitutions needed — the module deploys the Storage contract by name. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/ignition/modules/Storage.ts -o ignition/modules/Storage.ts"
+          "description": "Fetch the reference file and save it as 'ignition/modules/Storage.ts'. No substitutions needed \u2014 the module deploys the Storage contract by name. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/ignition/modules/Storage.ts -o ignition/modules/Storage.ts"
         },
         {
           "order": 9,
@@ -1016,9 +1016,9 @@
           "commands": [
             "npx hardhat ignition deploy ignition/modules/Storage.ts --network polkadotTestnet"
           ],
-          "expected_output": "Hardhat Ignition 🚀 ... Storage deployed to: 0x...",
+          "expected_output": "Hardhat Ignition \ud83d\ude80 ... Storage deployed to: 0x...",
           "interactive": true,
-          "description": "Deploy the contract. Hardhat Ignition will prompt to confirm the target network and chain ID — delegate this confirmation to the user (they must type the network name or press Enter). After confirmation, Ignition broadcasts the deployment transaction. Save the deployed contract address printed at the end — needed for contract interaction. If the transaction becomes stuck, see error_patterns for the IGN401 recovery procedure."
+          "description": "Deploy the contract. Hardhat Ignition will prompt to confirm the target network and chain ID \u2014 delegate this confirmation to the user (they must type the network name or press Enter). After confirmation, Ignition broadcasts the deployment transaction. Save the deployed contract address printed at the end \u2014 needed for contract interaction. If the transaction becomes stuck, see error_patterns for the IGN401 recovery procedure."
         }
       ],
       "reference_code": {
@@ -1107,7 +1107,7 @@
       "id": "deploy-erc20-token-hardhat",
       "title": "Deploy an ERC-20 Token Using Hardhat",
       "objective": "Clone the revm-hardhat-examples ERC-20 template, compile and test it, then deploy an OpenZeppelin ERC-20 contract to Polkadot Hub TestNet.",
-      "description": "Clones the polkadot-developers/revm-hardhat-examples ERC-20 template, installs dependencies, configures dotenv for private key security, compiles the OpenZeppelin ERC-20 contract, runs the test suite against TestNet, and deploys via Hardhat Ignition. Use when deploying a standards-compliant ERC-20 fungible token on Polkadot Hub. Requires testnet PAS tokens. Trigger phrases: 'deploy ERC-20 token', 'deploy fungible token Polkadot', 'ERC-20 Hardhat Polkadot', 'deploy MyToken'. Uses OpenZeppelin Contracts v5.4.0+ — requires evmVersion cancun.",
+      "description": "Clones the polkadot-developers/revm-hardhat-examples ERC-20 template, installs dependencies, configures dotenv for private key security, compiles the OpenZeppelin ERC-20 contract, runs the test suite against TestNet, and deploys via Hardhat Ignition. Use when deploying a standards-compliant ERC-20 fungible token on Polkadot Hub. Requires testnet PAS tokens. Trigger phrases: 'deploy ERC-20 token', 'deploy fungible token Polkadot', 'ERC-20 Hardhat Polkadot', 'deploy MyToken'. Uses OpenZeppelin Contracts v5.4.0+ \u2014 requires evmVersion cancun.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -1127,7 +1127,7 @@
           "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
         ],
         "tokens": [
-          "Testnet PAS tokens for gas fees and test transactions — get from https://faucet.polkadot.io/ (base fee: 1000 gwei)"
+          "Testnet PAS tokens for gas fees and test transactions \u2014 get from https://faucet.polkadot.io/ (base fee: 1000 gwei)"
         ],
         "wallet": [
           "An EVM private key (0x-prefixed) for a funded testnet account"
@@ -1169,13 +1169,13 @@
             "printf 'PRIVATE_KEY=\\n' > .env",
             "echo '.env' >> .gitignore"
           ],
-          "description": "Create a .env file with an empty PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for an account funded with testnet PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly \u2014 fill in PRIVATE_KEY with their 0x-prefixed EVM private key for an account funded with testnet PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
         },
         {
           "order": 4,
           "action": "Convert hardhat.config.ts to use dotenv and add gas configuration",
           "working_directory": "revm-hardhat-examples/erc20-hardhat",
-          "description": "Open hardhat.config.ts and apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any vars.get('PRIVATE_KEY') or vars.get(\"PRIVATE_KEY\") with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei — 5x the TestNet 1000 gwei base fee).\n(5) Confirm or add 'evmVersion: \"cancun\"' in the solidity compiler settings block — required because the template uses OpenZeppelin Contracts v5.4.0+ which uses the mcopy opcode from the Cancun EVM upgrade.\n(6) Confirm ignition.requiredConfirmations is 1 (not 0).\nSave the file."
+          "description": "Open hardhat.config.ts and apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any vars.get('PRIVATE_KEY') or vars.get(\"PRIVATE_KEY\") with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei \u2014 5x the TestNet 1000 gwei base fee).\n(5) Confirm or add 'evmVersion: \"cancun\"' in the solidity compiler settings block \u2014 required because the template uses OpenZeppelin Contracts v5.4.0+ which uses the mcopy opcode from the Cancun EVM upgrade.\n(6) Confirm ignition.requiredConfirmations is 1 (not 0).\nSave the file."
         },
         {
           "order": 5,
@@ -1195,7 +1195,7 @@
             "npx hardhat test --network polkadotTestnet"
           ],
           "expected_output": "7 passing",
-          "description": "Run the predefined test suite against Polkadot Hub TestNet. Tests verify token name/symbol, owner, initial supply, minting, and balance tracking. This consumes testnet PAS for gas. If the account is low on PAS, visit https://faucet.polkadot.io/ first. Save the test output — it confirms the contract logic is correct before deployment."
+          "description": "Run the predefined test suite against Polkadot Hub TestNet. Tests verify token name/symbol, owner, initial supply, minting, and balance tracking. This consumes testnet PAS for gas. If the account is low on PAS, visit https://faucet.polkadot.io/ first. Save the test output \u2014 it confirms the contract logic is correct before deployment."
         },
         {
           "order": 7,
@@ -1206,7 +1206,7 @@
           ],
           "expected_output": "MyToken deployed to: 0x...",
           "interactive": true,
-          "description": "Deploy the ERC-20 contract via Hardhat Ignition. Ignition will prompt to confirm the target network and chain ID — delegate this confirmation to the user. After confirmation, the deployment transaction is broadcast. Save the contract address printed on success — needed for token interaction and verification."
+          "description": "Deploy the ERC-20 contract via Hardhat Ignition. Ignition will prompt to confirm the target network and chain ID \u2014 delegate this confirmation to the user. After confirmation, the deployment transaction is broadcast. Save the contract address printed on success \u2014 needed for token interaction and verification."
         }
       ],
       "error_patterns": [
@@ -1296,7 +1296,7 @@
           "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
         ],
         "tokens": [
-          "Testnet PAS tokens — get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
+          "Testnet PAS tokens \u2014 get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
         ],
         "wallet": [
           "An EVM private key (0x-prefixed) for a funded testnet account"
@@ -1329,7 +1329,7 @@
             "npm install --save-dev @parity/resolc",
             "npm install dotenv"
           ],
-          "description": "Install the @parity/hardhat-polkadot plugin (provides the Hardhat task runner for PVM), the @parity/resolc compiler (compiles Solidity to PVM bytecode), and dotenv (for secure private key loading). Do not pin specific versions unless the docs page specifies them — use latest."
+          "description": "Install the @parity/hardhat-polkadot plugin (provides the Hardhat task runner for PVM), the @parity/resolc compiler (compiles Solidity to PVM bytecode), and dotenv (for secure private key loading). Do not pin specific versions unless the docs page specifies them \u2014 use latest."
         },
         {
           "order": 3,
@@ -1339,7 +1339,7 @@
             "npx hardhat-polkadot init"
           ],
           "interactive": true,
-          "description": "Run the project creation wizard. This is an interactive command — delegate it to the user. The wizard creates the contracts/, ignition/, and test/ directories and places a sample contract and deployment module. After the wizard completes, instruct the user to confirm which sample files were created before proceeding."
+          "description": "Run the project creation wizard. This is an interactive command \u2014 delegate it to the user. The wizard creates the contracts/, ignition/, and test/ directories and places a sample contract and deployment module. After the wizard completes, instruct the user to confirm which sample files were created before proceeding."
         },
         {
           "order": 4,
@@ -1359,14 +1359,14 @@
             "printf 'PRIVATE_KEY=\\n' > .env",
             "echo '.env' >> .gitignore"
           ],
-          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly \u2014 fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
         },
         {
           "order": 6,
           "action": "Fetch and configure hardhat.config.ts for TestNet",
           "working_directory": "hardhat-pvm-example",
           "reference_file": "hardhat.config.ts",
-          "description": "Fetch the reference hardhat.config.ts and replace the existing one in the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Confirm the polkadotTestnet network block contains: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, and accounts: [process.env.PRIVATE_KEY as string].\n(4) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei — 5x the 1000 gwei TestNet base fee).\n(5) Set or confirm 'ignition: { requiredConfirmations: 1 }' in the top-level config object.\nSave the file.\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-pvm/hardhat.config.ts -o hardhat.config.ts"
+          "description": "Fetch the reference hardhat.config.ts and replace the existing one in the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Confirm the polkadotTestnet network block contains: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, and accounts: [process.env.PRIVATE_KEY as string].\n(4) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei \u2014 5x the 1000 gwei TestNet base fee).\n(5) Set or confirm 'ignition: { requiredConfirmations: 1 }' in the top-level config object.\nSave the file.\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-pvm/hardhat.config.ts -o hardhat.config.ts"
         },
         {
           "order": 7,
@@ -1474,11 +1474,11 @@
       "primary_page": "smart-contracts/dev-environments/hardhat.md",
       "prerequisites": {
         "runtime": [
-          "Node.js LTS (18.x, 20.x, or 22.x — even major version numbers only)",
+          "Node.js LTS (18.x, 20.x, or 22.x \u2014 even major version numbers only)",
           "npm, pnpm, or yarn"
         ],
         "wallet": [
-          "An EVM private key (0x-prefixed) for a funded testnet account — needed before deploying contracts"
+          "An EVM private key (0x-prefixed) for a funded testnet account \u2014 needed before deploying contracts"
         ]
       },
       "env_vars": [
@@ -1497,7 +1497,7 @@
             "mkdir hardhat-example && cd hardhat-example",
             "npm init -y"
           ],
-          "description": "Create a new directory and initialize a Node.js project. Do NOT run npx hardhat init at this stage — the interactive init wizard is non-deterministic across Hardhat v2/v3 transitions. All configuration will be set up manually in the following steps."
+          "description": "Create a new directory and initialize a Node.js project. Do NOT run npx hardhat init at this stage \u2014 the interactive init wizard is non-deterministic across Hardhat v2/v3 transitions. All configuration will be set up manually in the following steps."
         },
         {
           "order": 2,
@@ -1529,14 +1529,14 @@
             "printf 'PRIVATE_KEY=\\n' > .env",
             "echo '.env' >> .gitignore"
           ],
-          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key. For initial setup without a deployment, leaving PRIVATE_KEY empty is acceptable — the project will compile but deployment commands will fail until it is set. Do NOT ask for the key in chat."
+          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly \u2014 fill in PRIVATE_KEY with their 0x-prefixed EVM private key. For initial setup without a deployment, leaving PRIVATE_KEY empty is acceptable \u2014 the project will compile but deployment commands will fail until it is set. Do NOT ask for the key in chat."
         },
         {
           "order": 5,
           "action": "Fetch and configure hardhat.config.ts",
           "working_directory": "hardhat-example",
           "reference_file": "hardhat.config.ts",
-          "description": "Fetch the reference hardhat.config.ts and save it to the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, confirm or add: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, accounts: [process.env.PRIVATE_KEY as string].\n(5) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei — 5x the TestNet 1000 gwei base fee; prevents stuck deployment transactions).\n(6) Add top-level 'ignition: { requiredConfirmations: 1 }' to the config object.\nSave the file.\nIf the AI fetch is blocked: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-evm/hardhat.config.ts -o hardhat.config.ts"
+          "description": "Fetch the reference hardhat.config.ts and save it to the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, confirm or add: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, accounts: [process.env.PRIVATE_KEY as string].\n(5) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei \u2014 5x the TestNet 1000 gwei base fee; prevents stuck deployment transactions).\n(6) Add top-level 'ignition: { requiredConfirmations: 1 }' to the config object.\nSave the file.\nIf the AI fetch is blocked: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-evm/hardhat.config.ts -o hardhat.config.ts"
         }
       ],
       "reference_code": {
@@ -1617,7 +1617,7 @@
       "id": "query-chain-data-sidecar-rest",
       "title": "Query On-Chain Data with Sidecar REST API",
       "objective": "Run Substrate API Sidecar locally connected to Polkadot Hub TestNet and query account balances, asset metadata, and block data via curl commands.",
-      "description": "Runs the Substrate API Sidecar REST service connected to Polkadot Hub TestNet and queries on-chain data via curl. Use when you need account balances, asset info, or block data without writing SDK code. Covers Sidecar installation, startup with a TestNet endpoint, and the primary query endpoints: /accounts/{addr}/balance-info, /assets/{id}/asset-info, and /blocks/{id}. Trigger phrases: 'query with Sidecar', 'Sidecar REST API', 'curl Polkadot balance', 'query chain data REST', 'Substrate API Sidecar'. No private key required — read-only operations only.",
+      "description": "Runs the Substrate API Sidecar REST service connected to Polkadot Hub TestNet and queries on-chain data via curl. Use when you need account balances, asset info, or block data without writing SDK code. Covers Sidecar installation, startup with a TestNet endpoint, and the primary query endpoints: /accounts/{addr}/balance-info, /assets/{id}/asset-info, and /blocks/{id}. Trigger phrases: 'query with Sidecar', 'Sidecar REST API', 'curl Polkadot balance', 'query chain data REST', 'Substrate API Sidecar'. No private key required \u2014 read-only operations only.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -1631,7 +1631,7 @@
         "runtime": [
           "Node.js v18+ and npm (to install and run @substrate/api-sidecar)",
           "curl (pre-installed on macOS and Linux; use WSL on Windows)",
-          "jq (optional, for formatted JSON output — install with: apt install jq  or  brew install jq)"
+          "jq (optional, for formatted JSON output \u2014 install with: apt install jq  or  brew install jq)"
         ],
         "network": [
           "WebSocket RPC endpoint for Polkadot Hub TestNet: wss://asset-hub-paseo.dotters.network"
@@ -1656,7 +1656,7 @@
             "SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network substrate-api-sidecar"
           ],
           "expected_output": "SAS listening on http://127.0.0.1:8080/",
-          "description": "Start Sidecar with SAS_SUBSTRATE_URL pointing to the Polkadot Hub TestNet WebSocket endpoint. The service listens on http://127.0.0.1:8080/ by default. Run this in a dedicated terminal and keep it running while executing the following steps. If using npx: SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network npx @substrate/api-sidecar. Polkadot Hub TestNet can be unstable — if the WebSocket connection drops, restart Sidecar."
+          "description": "Start Sidecar with SAS_SUBSTRATE_URL pointing to the Polkadot Hub TestNet WebSocket endpoint. The service listens on http://127.0.0.1:8080/ by default. Run this in a dedicated terminal and keep it running while executing the following steps. If using npx: SAS_SUBSTRATE_URL=wss://asset-hub-paseo.dotters.network npx @substrate/api-sidecar. Polkadot Hub TestNet can be unstable \u2014 if the WebSocket connection drops, restart Sidecar."
         },
         {
           "order": 3,
@@ -1666,7 +1666,7 @@
             "curl -s \"http://127.0.0.1:8080/accounts/INSERT_SS58_ADDRESS/balance-info\" | jq ."
           ],
           "expected_output": "{\"at\":{\"hash\":\"0x...\",\"height\":\"12345\"},\"nonce\":\"0\",\"tokenSymbol\":\"PAS\",\"free\":\"...\",\"reserved\":\"...\"}",
-          "description": "Query the balance-info endpoint. Replace 'INSERT_SS58_ADDRESS' with the target SS58 address. Response fields: free — spendable planck; reserved — locked/staked; miscFrozen / feeFrozen — frozen amounts; nonce — transaction count. Divide raw planck values by 10^10 to convert to PAS. Omit '| jq .' if jq is not installed."
+          "description": "Query the balance-info endpoint. Replace 'INSERT_SS58_ADDRESS' with the target SS58 address. Response fields: free \u2014 spendable planck; reserved \u2014 locked/staked; miscFrozen / feeFrozen \u2014 frozen amounts; nonce \u2014 transaction count. Divide raw planck values by 10^10 to convert to PAS. Omit '| jq .' if jq is not installed."
         },
         {
           "order": 4,
@@ -1687,7 +1687,7 @@
             "curl -s \"http://127.0.0.1:8080/assets/1984/asset-info\" | jq ."
           ],
           "expected_output": "{\"at\":{...},\"items\":[{\"id\":\"1984\",\"name\":\"USDT\",\"symbol\":\"USDT\",\"decimals\":\"6\"}]}",
-          "description": "Query metadata for asset ID 1984 (USDT on Polkadot Hub). Replace '1984' with any registered asset ID. If the asset does not exist on TestNet, items will be empty — this is expected since not all mainnet assets are bridged to TestNet."
+          "description": "Query metadata for asset ID 1984 (USDT on Polkadot Hub). Replace '1984' with any registered asset ID. If the asset does not exist on TestNet, items will be empty \u2014 this is expected since not all mainnet assets are bridged to TestNet."
         }
       ],
       "reference_code": {
@@ -1708,7 +1708,7 @@
         },
         {
           "pattern": "balance-info returns all-zero values for free/reserved/nonce",
-          "cause": "The queried account has no on-chain entry — it has never received any tokens.",
+          "cause": "The queried account has no on-chain entry \u2014 it has never received any tokens.",
           "resolution": "Fund the account at https://faucet.polkadot.io/ and wait 1-2 minutes for confirmation. Re-query the endpoint."
         },
         {
@@ -1723,7 +1723,7 @@
           {
             "slug": "chain-interactions-query-data-query-sdks",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-query-sdks.md",
-            "relevance": "SDK-based alternative to Sidecar — query the same on-chain data using PAPI or Polkadot.js TypeScript code."
+            "relevance": "SDK-based alternative to Sidecar \u2014 query the same on-chain data using PAPI or Polkadot.js TypeScript code."
           },
           {
             "slug": "reference-tools-sidecar",
@@ -1765,7 +1765,7 @@
       "id": "calculate-transaction-fees-papi",
       "title": "Estimate Transaction Fees with PAPI",
       "objective": "Calculate the estimated fee for a Balances.transfer_keep_alive transaction on Polkadot Hub TestNet using PAPI getPaymentInfo before submitting.",
-      "description": "Estimates the fee for a Polkadot Hub balance transfer using the PAPI TypeScript library's getPaymentInfo method. Use when you need to preview gas costs before submitting — for fee UIs, budget checks, or preflight validation. Returns partial_fee in planck, human-readable PAS, and weight breakdown. Also covers the Polkadot.js paymentInfo alternative described in the source page. Trigger phrases: 'estimate transaction fee', 'calculate fee Polkadot', 'getPaymentInfo PAPI', 'how much does a transaction cost', 'fee estimation Polkadot Hub'. No private key or testnet tokens required — fee estimation is read-only.",
+      "description": "Estimates the fee for a Polkadot Hub balance transfer using the PAPI TypeScript library's getPaymentInfo method. Use when you need to preview gas costs before submitting \u2014 for fee UIs, budget checks, or preflight validation. Returns partial_fee in planck, human-readable PAS, and weight breakdown. Also covers the Polkadot.js paymentInfo alternative described in the source page. Trigger phrases: 'estimate transaction fee', 'calculate fee Polkadot', 'getPaymentInfo PAPI', 'how much does a transaction cost', 'fee estimation Polkadot Hub'. No private key or testnet tokens required \u2014 fee estimation is read-only.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -1793,7 +1793,7 @@
             "mkdir papi-fee-estimate && cd papi-fee-estimate",
             "npm init -y && npm pkg set type=module"
           ],
-          "description": "Create a new directory 'papi-fee-estimate' and initialize it as an ESM Node.js project. The type=module flag is required — polkadot-api uses ESM imports."
+          "description": "Create a new directory 'papi-fee-estimate' and initialize it as an ESM Node.js project. The type=module flag is required \u2014 polkadot-api uses ESM imports."
         },
         {
           "order": 2,
@@ -1812,13 +1812,13 @@
           "commands": [
             "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
           ],
-          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Downloads chain metadata and produces the 'polkadotTestNet' export in @polkadot-api/descriptors. Polkadot Hub TestNet can be unstable — retry after a few minutes if the connection fails."
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. Downloads chain metadata and produces the 'polkadotTestNet' export in @polkadot-api/descriptors. Polkadot Hub TestNet can be unstable \u2014 retry after a few minutes if the connection fails."
         },
         {
           "order": 4,
           "action": "Create the fee estimation script",
           "working_directory": "papi-fee-estimate",
-          "description": "Create a file named 'estimate-fees.ts' in papi-fee-estimate with this content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { polkadotTestNet } from \"@polkadot-api/descriptors\";\n\nconst WS_ENDPOINT = \"INSERT_WS_ENDPOINT\";\nconst SENDER_ADDRESS = \"INSERT_SENDER_ADDRESS\";\nconst DEST_ADDRESS = \"INSERT_DEST_ADDRESS\";\n\nasync function main() {\n  const client = createClient(getWsProvider(WS_ENDPOINT));\n  const api = client.getTypedApi(polkadotTestNet);\n  const tx = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: DEST_ADDRESS },\n    value: 10_000_000_000n,\n  });\n  const info = await tx.getPaymentInfo(SENDER_ADDRESS);\n  console.log(\"Fee (planck):\", info.partial_fee.toString());\n  console.log(\"Fee (PAS):\", (Number(info.partial_fee) / 1e10).toFixed(6));\n  console.log(\"Weight ref_time:\", info.weight.ref_time.toString());\n  client.destroy();\n}\nmain().catch(console.error);\n\nAfter creating the file, apply these substitutions: (1) Replace INSERT_WS_ENDPOINT with your WS endpoint (e.g. 'wss://asset-hub-paseo.dotters.network'). (2) Replace INSERT_SENDER_ADDRESS with any valid funded SS58 address — sender address affects fee because weight depends on account state. (3) Replace INSERT_DEST_ADDRESS with any valid SS58 recipient address. Save the file."
+          "description": "Create a file named 'estimate-fees.ts' in papi-fee-estimate with this content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { polkadotTestNet } from \"@polkadot-api/descriptors\";\n\nconst WS_ENDPOINT = \"INSERT_WS_ENDPOINT\";\nconst SENDER_ADDRESS = \"INSERT_SENDER_ADDRESS\";\nconst DEST_ADDRESS = \"INSERT_DEST_ADDRESS\";\n\nasync function main() {\n  const client = createClient(getWsProvider(WS_ENDPOINT));\n  const api = client.getTypedApi(polkadotTestNet);\n  const tx = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: DEST_ADDRESS },\n    value: 10_000_000_000n,\n  });\n  const info = await tx.getPaymentInfo(SENDER_ADDRESS);\n  console.log(\"Fee (planck):\", info.partial_fee.toString());\n  console.log(\"Fee (PAS):\", (Number(info.partial_fee) / 1e10).toFixed(6));\n  console.log(\"Weight ref_time:\", info.weight.ref_time.toString());\n  client.destroy();\n}\nmain().catch(console.error);\n\nAfter creating the file, apply these substitutions: (1) Replace INSERT_WS_ENDPOINT with your WS endpoint (e.g. 'wss://asset-hub-paseo.dotters.network'). (2) Replace INSERT_SENDER_ADDRESS with any valid funded SS58 address \u2014 sender address affects fee because weight depends on account state. (3) Replace INSERT_DEST_ADDRESS with any valid SS58 recipient address. Save the file."
         },
         {
           "order": 5,
@@ -1850,7 +1850,7 @@
         {
           "pattern": "TypeError: tx.getPaymentInfo is not a function",
           "cause": "Descriptor export name does not match the import, or polkadot-api version is below 1.0.0.",
-          "resolution": "Verify the import name matches the name used in 'npx papi add' (polkadotTestNet). Check version: npm list polkadot-api — version 1.0.0+ required."
+          "resolution": "Verify the import name matches the name used in 'npx papi add' (polkadotTestNet). Check version: npm list polkadot-api \u2014 version 1.0.0+ required."
         },
         {
           "pattern": "SyntaxError: Cannot use import statement in a module",
@@ -1864,7 +1864,7 @@
           {
             "slug": "chain-interactions-send-transactions-with-sdks",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-with-sdks.md",
-            "relevance": "How to sign and submit the same transaction whose fee was estimated — the natural next step."
+            "relevance": "How to sign and submit the same transaction whose fee was estimated \u2014 the natural next step."
           },
           {
             "slug": "reference-tools-papi",
@@ -1888,9 +1888,9 @@
         },
         {
           "scenario": "Edge case: fee appears unusually high compared to Ethereum",
-          "user_says": "The fee estimate shows 0.001 PAS — that seems expensive",
+          "user_says": "The fee estimate shows 0.001 PAS \u2014 that seems expensive",
           "actions": [
-            "Explain that Polkadot Hub TestNet has a base fee of 1000 gwei — significantly higher than Ethereum mainnet",
+            "Explain that Polkadot Hub TestNet has a base fee of 1000 gwei \u2014 significantly higher than Ethereum mainnet",
             "Note that PAS testnet fees do not reflect real economic cost",
             "Get testnet tokens from https://faucet.polkadot.io/ if the sender balance is insufficient"
           ],
@@ -1921,7 +1921,7 @@
           "Destination parachain WebSocket RPC (e.g., wss://sys.ibp.network/people-paseo for People Chain Paseo)"
         ],
         "tokens": [
-          "Paseo testnet PAS in the sender account — get from https://faucet.polkadot.io/ (select Paseo, then Asset Hub Paseo). Minimum 2 PAS recommended."
+          "Paseo testnet PAS in the sender account \u2014 get from https://faucet.polkadot.io/ (select Paseo, then Asset Hub Paseo). Minimum 2 PAS recommended."
         ],
         "wallet": [
           "SR25519 account mnemonic phrase for the sender account, funded with Paseo testnet PAS"
@@ -1979,7 +1979,7 @@
           "order": 4,
           "action": "Create the XCM transfer script",
           "working_directory": "paraspell-xcm-transfer",
-          "description": "Create a file named 'xcm-transfer.ts' with the following content:\n\nimport \"dotenv/config\";\nimport { ApiPromise, WsProvider } from \"@polkadot/api\";\nimport { Keyring } from \"@polkadot/keyring\";\nimport { Builder } from \"@paraspell/sdk-pjs\";\n\nconst SOURCE_RPC = process.env.SOURCE_RPC!;\nconst MNEMONIC = process.env.MNEMONIC!;\nconst DEST_ADDRESS = process.env.DEST_ADDRESS!;\nconst SOURCE_CHAIN = \"AssetHubPaseo\";\nconst DEST_CHAIN = \"PeopleChainPaseo\";\nconst AMOUNT = \"10000000000\"; // 1 PAS (10 decimals)\n\nasync function main() {\n  const api = await ApiPromise.create({ provider: new WsProvider(SOURCE_RPC) });\n  const keyring = new Keyring({ type: \"sr25519\" });\n  const sender = keyring.addFromMnemonic(MNEMONIC);\n  console.log(\"Sender:\", sender.address);\n\n  const dryResult = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).dryRun(sender);\n  console.log(\"Dry-run:\", dryResult.success ? \"OK\" : \"FAILED\");\n  if (!dryResult.success) { console.error(dryResult); process.exit(1); }\n\n  const fee = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).getOriginXcmFee();\n  console.log(\"Estimated fee:\", fee.toString());\n\n  const tx = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).build();\n  await tx.signAndSend(sender, { nonce: -1 }, ({ status, txHash }) => {\n    console.log(\"Status:\", status.type);\n    if (status.isFinalized) {\n      console.log(\"Finalized:\", status.asFinalized.toString(), \"tx:\", txHash.toString());\n      process.exit(0);\n    }\n  });\n}\nmain().catch((err) => { console.error(err); process.exit(1); });\n\nSubstitutions: (1) Replace SOURCE_CHAIN ('AssetHubPaseo') and DEST_CHAIN ('PeopleChainPaseo') with the actual chain names from the ParaSpell supported chains list if your transfer uses different parachains — chain names are case-sensitive. (2) PAS has 10 decimals on Paseo; '10000000000' equals 1 PAS. Verify the decimal count for the asset being transferred."
+          "description": "Create a file named 'xcm-transfer.ts' with the following content:\n\nimport \"dotenv/config\";\nimport { ApiPromise, WsProvider } from \"@polkadot/api\";\nimport { Keyring } from \"@polkadot/keyring\";\nimport { Builder } from \"@paraspell/sdk-pjs\";\n\nconst SOURCE_RPC = process.env.SOURCE_RPC!;\nconst MNEMONIC = process.env.MNEMONIC!;\nconst DEST_ADDRESS = process.env.DEST_ADDRESS!;\nconst SOURCE_CHAIN = \"AssetHubPaseo\";\nconst DEST_CHAIN = \"PeopleChainPaseo\";\nconst AMOUNT = \"10000000000\"; // 1 PAS (10 decimals)\n\nasync function main() {\n  const api = await ApiPromise.create({ provider: new WsProvider(SOURCE_RPC) });\n  const keyring = new Keyring({ type: \"sr25519\" });\n  const sender = keyring.addFromMnemonic(MNEMONIC);\n  console.log(\"Sender:\", sender.address);\n\n  const dryResult = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).dryRun(sender);\n  console.log(\"Dry-run:\", dryResult.success ? \"OK\" : \"FAILED\");\n  if (!dryResult.success) { console.error(dryResult); process.exit(1); }\n\n  const fee = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).getOriginXcmFee();\n  console.log(\"Estimated fee:\", fee.toString());\n\n  const tx = await Builder(api)\n    .from(SOURCE_CHAIN).to(DEST_CHAIN)\n    .currency({ symbol: \"PAS\" }).amount(AMOUNT)\n    .address(DEST_ADDRESS).build();\n  await tx.signAndSend(sender, { nonce: -1 }, ({ status, txHash }) => {\n    console.log(\"Status:\", status.type);\n    if (status.isFinalized) {\n      console.log(\"Finalized:\", status.asFinalized.toString(), \"tx:\", txHash.toString());\n      process.exit(0);\n    }\n  });\n}\nmain().catch((err) => { console.error(err); process.exit(1); });\n\nSubstitutions: (1) Replace SOURCE_CHAIN ('AssetHubPaseo') and DEST_CHAIN ('PeopleChainPaseo') with the actual chain names from the ParaSpell supported chains list if your transfer uses different parachains \u2014 chain names are case-sensitive. (2) PAS has 10 decimals on Paseo; '10000000000' equals 1 PAS. Verify the decimal count for the asset being transferred."
         },
         {
           "order": 5,
@@ -1989,7 +1989,7 @@
             "npx tsx xcm-transfer.ts"
           ],
           "expected_output": "Sender: ...\nDry-run: OK\nEstimated fee: ...\nStatus: InBlock\nFinalized: 0x...",
-          "description": "Before running, confirm the sender has at least 2 PAS on Paseo Asset Hub. If not, visit https://faucet.polkadot.io/ (select Paseo > Asset Hub Paseo). Execute the script. It dry-runs first — if dry-run fails, check the error before re-attempting. If the TestNet is unstable and the transaction does not finalize within 2 minutes, re-run the script."
+          "description": "Before running, confirm the sender has at least 2 PAS on Paseo Asset Hub. If not, visit https://faucet.polkadot.io/ (select Paseo > Asset Hub Paseo). Execute the script. It dry-runs first \u2014 if dry-run fails, check the error before re-attempting. If the TestNet is unstable and the transaction does not finalize within 2 minutes, re-run the script."
         }
       ],
       "reference_code": {
@@ -2015,8 +2015,8 @@
         },
         {
           "pattern": "Transaction submitted but never finalizes",
-          "cause": "Paseo TestNet instability — the TestNet can drop transactions under load.",
-          "resolution": "Check if the transaction was included using subscan.io (paseo.subscan.io). If not included, re-run the script — nonce: -1 fetches the current nonce automatically."
+          "cause": "Paseo TestNet instability \u2014 the TestNet can drop transactions under load.",
+          "resolution": "Check if the transaction was included using subscan.io (paseo.subscan.io). If not included, re-run the script \u2014 nonce: -1 fetches the current nonce automatically."
         }
       ],
       "supplementary_context": {
@@ -2069,7 +2069,7 @@
       "id": "pay-fees-alternative-token",
       "title": "Pay Transaction Fees with an Alternative Token",
       "objective": "Fork Polkadot Hub state locally with Chopsticks and submit a transaction with fees paid in USDT (asset ID 1984) instead of native PAS using PAPI, demonstrating the asset-conversion fee proxy mechanism.",
-      "description": "Forks Polkadot Hub state locally with Chopsticks and submits a transaction where fees are paid in USDT (asset ID 1984) rather than native PAS, using PAPI's ChargeAssetTxPayment signed extension. Use when demonstrating or testing the asset-conversion fee proxy mechanism without spending real testnet tokens. Uses Alice's dev account via Chopsticks mock-signature mode — no faucet required. Trigger phrases: 'pay fees in USDT', 'alternative fee token Polkadot', 'ChargeAssetTxPayment', 'fee proxy Polkadot Hub', 'Chopsticks fee demo'. Covers PAPI, Polkadot.js, and Subxt alternatives from the source page.",
+      "description": "Forks Polkadot Hub state locally with Chopsticks and submits a transaction where fees are paid in USDT (asset ID 1984) rather than native PAS, using PAPI's ChargeAssetTxPayment signed extension. Use when demonstrating or testing the asset-conversion fee proxy mechanism without spending real testnet tokens. Uses Alice's dev account via Chopsticks mock-signature mode \u2014 no faucet required. Trigger phrases: 'pay fees in USDT', 'alternative fee token Polkadot', 'ChargeAssetTxPayment', 'fee proxy Polkadot Hub', 'Chopsticks fee demo'. Covers PAPI, Polkadot.js, and Subxt alternatives from the source page.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -2082,10 +2082,10 @@
       "prerequisites": {
         "runtime": [
           "Node.js v18+ and npm",
-          "npx (bundled with npm v5.2+ — no separate install needed)"
+          "npx (bundled with npm v5.2+ \u2014 no separate install needed)"
         ],
         "network": [
-          "Internet connection to fork chain state from wss://asset-hub-paseo.dotters.network — Chopsticks downloads state on first run"
+          "Internet connection to fork chain state from wss://asset-hub-paseo.dotters.network \u2014 Chopsticks downloads state on first run"
         ]
       },
       "env_vars": [],
@@ -2106,7 +2106,7 @@
           "order": 2,
           "action": "Create Chopsticks configuration",
           "working_directory": "fee-proxy-demo",
-          "description": "Create a file named 'chopsticks.yml' with the following content:\n\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db.sqlite\nport: 8000\nmock-signature-host: true\n\nThe 'mock-signature-host: true' setting allows transactions to be submitted with Alice's well-known dev key without a real private key — this is what makes the demo work without real credentials. The 'db' field caches forked state locally so subsequent runs start faster."
+          "description": "Create a file named 'chopsticks.yml' with the following content:\n\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db.sqlite\nport: 8000\nmock-signature-host: true\n\nThe 'mock-signature-host: true' setting allows transactions to be submitted with Alice's well-known dev key without a real private key \u2014 this is what makes the demo work without real credentials. The 'db' field caches forked state locally so subsequent runs start faster."
         },
         {
           "order": 3,
@@ -2116,7 +2116,7 @@
             "npx @acala-network/chopsticks --config=chopsticks.yml"
           ],
           "expected_output": "Listening on port 8000",
-          "description": "Start the Chopsticks fork in a dedicated terminal. Chopsticks downloads Polkadot Hub state from the TestNet endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite. Once 'Listening on port 8000' appears, keep this running and open a second terminal for step 4."
+          "description": "Start the Chopsticks fork in a dedicated terminal. Chopsticks downloads Polkadot Hub state from the TestNet endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state \u2014 subsequent runs use db.sqlite. Once 'Listening on port 8000' appears, keep this running and open a second terminal for step 4."
         },
         {
           "order": 4,
@@ -2131,7 +2131,7 @@
           "order": 5,
           "action": "Create the fee-proxy script",
           "working_directory": "fee-proxy-demo",
-          "description": "Create a file named 'fee-proxy.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { localFork } from \"@polkadot-api/descriptors\";\nimport { getPolkadotSigner } from \"polkadot-api/signer\";\n\nconst ALICE = \"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\";\nconst BOB = \"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\";\nconst USDT_ID = 1984;\n\nasync function main() {\n  const client = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const api = client.getTypedApi(localFork);\n\n  const transfer = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: BOB },\n    value: 1_000_000_000n,\n  });\n\n  // Wrap in asset-conversion fee proxy — pay fees in USDT\n  const feeProxyTx = api.tx.AssetConversionTxPayment.asset_conversion_fee_proxy(\n    USDT_ID,\n    transfer\n  );\n\n  // Mock signer works because Chopsticks has mock-signature-host: true\n  const mockSigner = getPolkadotSigner(\n    ALICE,\n    \"Sr25519\",\n    async () => new Uint8Array(64)\n  );\n\n  const result = await feeProxyTx.signAndSubmit(mockSigner);\n  console.log(\"Included in block:\", result.block.hash);\n  console.log(\"Fees paid in USDT asset ID:\", USDT_ID);\n  client.destroy();\n}\nmain().catch(console.error);\n\nNote: The exact pallet name for fee proxy varies by runtime version. If 'AssetConversionTxPayment' is not in the typed API, check the source page for the correct pallet and extrinsic name for the chain version in your fork. The mock signer returns an empty signature accepted by Chopsticks."
+          "description": "Create a file named 'fee-proxy.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { localFork } from \"@polkadot-api/descriptors\";\nimport { getPolkadotSigner } from \"polkadot-api/signer\";\n\nconst ALICE = \"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\";\nconst BOB = \"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\";\nconst USDT_ID = 1984;\n\nasync function main() {\n  const client = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const api = client.getTypedApi(localFork);\n\n  const transfer = api.tx.Balances.transfer_keep_alive({\n    dest: { type: \"Id\", value: BOB },\n    value: 1_000_000_000n,\n  });\n\n  // Wrap in asset-conversion fee proxy \u2014 pay fees in USDT\n  const feeProxyTx = api.tx.AssetConversionTxPayment.asset_conversion_fee_proxy(\n    USDT_ID,\n    transfer\n  );\n\n  // Mock signer works because Chopsticks has mock-signature-host: true\n  const mockSigner = getPolkadotSigner(\n    ALICE,\n    \"Sr25519\",\n    async () => new Uint8Array(64)\n  );\n\n  const result = await feeProxyTx.signAndSubmit(mockSigner);\n  console.log(\"Included in block:\", result.block.hash);\n  console.log(\"Fees paid in USDT asset ID:\", USDT_ID);\n  client.destroy();\n}\nmain().catch(console.error);\n\nNote: The exact pallet name for fee proxy varies by runtime version. If 'AssetConversionTxPayment' is not in the typed API, check the source page for the correct pallet and extrinsic name for the chain version in your fork. The mock signer returns an empty signature accepted by Chopsticks."
         },
         {
           "order": 6,
@@ -2182,7 +2182,7 @@
           {
             "slug": "chain-interactions-send-transactions-calculate-transaction-fees",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-calculate-transaction-fees.md",
-            "relevance": "How to estimate fees for a standard transaction — compare with the fee proxy approach to understand the difference."
+            "relevance": "How to estimate fees for a standard transaction \u2014 compare with the fee proxy approach to understand the difference."
           }
         ]
       },
@@ -2244,7 +2244,7 @@
           "order": 1,
           "action": "Choose deployment method and sync type",
           "working_directory": ".",
-          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (steps 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (requires 2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nParachain substitution table — replace chain names and image tags accordingly:\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Paseo: --chain=people-paseo, relay --chain=paseo\nAll use the parity/polkadot-parachain Docker image."
+          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (steps 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (requires 2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nParachain substitution table \u2014 replace chain names and image tags accordingly:\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Paseo: --chain=people-paseo, relay --chain=paseo\nAll use the parity/polkadot-parachain Docker image."
         },
         {
           "order": 2,
@@ -2272,7 +2272,7 @@
             "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
           ],
           "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"startingBlock\":0,\"currentBlock\":12000,\"highestBlock\":15000},\"id\":1}",
-          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f people-chain-rpc' with 'sudo journalctl -fu people-chain-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync — initial sync can take hours to days depending on hardware."
+          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f people-chain-rpc' with 'sudo journalctl -fu people-chain-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync \u2014 initial sync can take hours to days depending on hardware."
         },
         {
           "order": 5,
@@ -2319,12 +2319,12 @@
           {
             "slug": "node-infrastructure-run-a-node-polkadot-hub-rpc",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-polkadot-hub-rpc.md",
-            "relevance": "How to run an RPC node for Polkadot Hub specifically — different chain spec and optional Ethereum RPC adapter."
+            "relevance": "How to run an RPC node for Polkadot Hub specifically \u2014 different chain spec and optional Ethereum RPC adapter."
           },
           {
             "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
-            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx — required for production endpoints."
+            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx \u2014 required for production endpoints."
           },
           {
             "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
@@ -2411,14 +2411,14 @@
             "npx @acala-network/chopsticks --config=chopsticks.yml"
           ],
           "expected_output": "Listening on port 8000",
-          "description": "Start Chopsticks in a dedicated terminal. It downloads chain state from the configured endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state — subsequent runs use db.sqlite cache. Keep this terminal open during all following steps."
+          "description": "Start Chopsticks in a dedicated terminal. It downloads chain state from the configured endpoint and starts a local fork at ws://localhost:8000. The first run downloads several MB of state \u2014 subsequent runs use db.sqlite cache. Keep this terminal open during all following steps."
         },
         {
           "order": 4,
           "action": "Locate the XCM call data on Subscan",
           "working_directory": ".",
           "interactive": true,
-          "description": "This step is manual. Open Subscan for the source chain (e.g., https://polkadot.subscan.io or https://assethub-polkadot.subscan.io). Navigate to the extrinsic or event containing the XCM you want to replay. Find the encoded call data hex string — it typically appears in the 'Call Data' or 'Params' section of the extrinsic detail page. Copy the full hex string (starts with '0x'). You will use this in step 5. Paste it into a local file named 'call-data.txt' for reference."
+          "description": "This step is manual. Open Subscan for the source chain (e.g., https://polkadot.subscan.io or https://assethub-polkadot.subscan.io). Navigate to the extrinsic or event containing the XCM you want to replay. Find the encoded call data hex string \u2014 it typically appears in the 'Call Data' or 'Params' section of the extrinsic detail page. Copy the full hex string (starts with '0x'). You will use this in step 5. Paste it into a local file named 'call-data.txt' for reference."
         },
         {
           "order": 5,
@@ -2428,7 +2428,7 @@
             "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"xcmPallet_dryRunCall\",\"params\":[\"INSERT_SENDER_ADDRESS\", \"INSERT_CALL_DATA_HEX\"]}' http://localhost:8000"
           ],
           "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"executionResult\":{\"Ok\":{}},\"emittedEvents\":[],...},\"id\":1}",
-          "description": "Replace INSERT_SENDER_ADDRESS with the SS58 address that submitted the original XCM and INSERT_CALL_DATA_HEX with the hex string from Subscan (step 4). The response's executionResult indicates success or failure along with the failure reason if any. If the RPC method is not available on the forked chain, use 'xcmPallet_dryRunXcm' as an alternative — check the source page for the correct method name and parameter signature for your chain version. Chopsticks must be running (step 3) for this to work."
+          "description": "Replace INSERT_SENDER_ADDRESS with the SS58 address that submitted the original XCM and INSERT_CALL_DATA_HEX with the hex string from Subscan (step 4). The response's executionResult indicates success or failure along with the failure reason if any. If the RPC method is not available on the forked chain, use 'xcmPallet_dryRunXcm' as an alternative \u2014 check the source page for the correct method name and parameter signature for your chain version. Chopsticks must be running (step 3) for this to work."
         }
       ],
       "reference_code": {
@@ -2464,7 +2464,7 @@
           {
             "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-estimate-xcm-fees.md",
-            "relevance": "How to estimate XCM fees before submission — helps diagnose BuyExecution failures in a dry-run."
+            "relevance": "How to estimate XCM fees before submission \u2014 helps diagnose BuyExecution failures in a dry-run."
           },
           {
             "slug": "reference-tools-chopsticks",
@@ -2474,7 +2474,7 @@
           {
             "slug": "chain-interactions-send-transactions-interoperability-transfer-assets-parachains",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-transfer-assets-parachains.md",
-            "relevance": "How to submit a real XCM transfer between parachains — use after debugging with Chopsticks."
+            "relevance": "How to submit a real XCM transfer between parachains \u2014 use after debugging with Chopsticks."
           }
         ]
       },
@@ -2508,7 +2508,7 @@
       "id": "estimate-xcm-fees-teleport",
       "title": "Estimate XCM Fees for Asset Teleport",
       "objective": "Estimate local execution, delivery, and remote execution fees for an XCM asset teleport between Polkadot Hub TestNet and People Chain using Chopsticks-forked chains and PAPI fee estimation calls.",
-      "description": "Estimates all three fee components for an XCM teleport: local execution fee (source chain), delivery fee (network transport), and remote execution fee (destination chain). Uses Chopsticks to fork both Polkadot Hub TestNet and People Chain locally, then calls PAPI fee estimation methods against the forks. Use when you need to budget XCM fees before submitting a teleport, or when a BuyExecution instruction is failing due to insufficient fees. No real tokens required — Chopsticks mock-signature mode is used. Trigger phrases: 'estimate XCM fees', 'XCM teleport fee', 'BuyExecution fee calculation', 'cross-chain fee estimate Polkadot'.",
+      "description": "Estimates all three fee components for an XCM teleport: local execution fee (source chain), delivery fee (network transport), and remote execution fee (destination chain). Uses Chopsticks to fork both Polkadot Hub TestNet and People Chain locally, then calls PAPI fee estimation methods against the forks. Use when you need to budget XCM fees before submitting a teleport, or when a BuyExecution instruction is failing due to insufficient fees. No real tokens required \u2014 Chopsticks mock-signature mode is used. Trigger phrases: 'estimate XCM fees', 'XCM teleport fee', 'BuyExecution fee calculation', 'cross-chain fee estimate Polkadot'.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -2546,7 +2546,7 @@
           "order": 2,
           "action": "Create Chopsticks configs for source and destination chains",
           "working_directory": "xcm-fee-estimate",
-          "description": "Create two Chopsticks config files:\n\nFile 1 — 'chopsticks-hub.yml':\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db-hub.sqlite\nport: 8000\nmock-signature-host: true\n\nFile 2 — 'chopsticks-people.yml':\nendpoint: INSERT_PEOPLE_CHAIN_TESTNET_WS\ndb: ./db-people.sqlite\nport: 8001\nmock-signature-host: true\n\nReplace INSERT_PEOPLE_CHAIN_TESTNET_WS with the People Chain TestNet WebSocket endpoint. The two forks run on different ports (8000 and 8001) so they can be active simultaneously."
+          "description": "Create two Chopsticks config files:\n\nFile 1 \u2014 'chopsticks-hub.yml':\nendpoint: wss://asset-hub-paseo.dotters.network\ndb: ./db-hub.sqlite\nport: 8000\nmock-signature-host: true\n\nFile 2 \u2014 'chopsticks-people.yml':\nendpoint: INSERT_PEOPLE_CHAIN_TESTNET_WS\ndb: ./db-people.sqlite\nport: 8001\nmock-signature-host: true\n\nReplace INSERT_PEOPLE_CHAIN_TESTNET_WS with the People Chain TestNet WebSocket endpoint. The two forks run on different ports (8000 and 8001) so they can be active simultaneously."
         },
         {
           "order": 3,
@@ -2573,7 +2573,7 @@
           "order": 5,
           "action": "Create the fee estimation script",
           "working_directory": "xcm-fee-estimate",
-          "description": "Create a file named 'estimate-xcm-fees.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { hubFork } from \"@polkadot-api/descriptors\";\nimport { peopleFork } from \"@polkadot-api/descriptors\";\n\nconst SENDER = \"INSERT_SENDER_SS58_ADDRESS\";\nconst RECIPIENT = \"INSERT_RECIPIENT_SS58_ADDRESS\";\nconst AMOUNT = 1_000_000_000_000_000_000n; // 1 PAS (18 decimals)\n\nasync function main() {\n  const hubClient = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const peopleClient = createClient(getWsProvider(\"ws://localhost:8001\"));\n  const hubApi = hubClient.getTypedApi(hubFork);\n  const peopleApi = peopleClient.getTypedApi(peopleFork);\n\n  // 1. Local execution fee on Polkadot Hub (source)\n  const teleportTx = hubApi.tx.PolkadotXcm.limited_teleport_assets({\n    dest: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    beneficiary: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } },\n    assets: { type: \"V4\", value: [{ id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }] },\n    fee_asset_item: 0,\n    weight_limit: { type: \"Unlimited\" }\n  });\n  const localFeeInfo = await teleportTx.getPaymentInfo(SENDER);\n  console.log(\"Local execution fee (planck):\", localFeeInfo.partial_fee.toString());\n\n  // 2. Delivery fee\n  const deliveryFee = await hubApi.apis.XcmPaymentApi.query_delivery_fees(\n    { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    { type: \"V4\", value: [] }\n  );\n  console.log(\"Delivery fee assets:\", JSON.stringify(deliveryFee.value));\n\n  // 3. Remote execution fee on People Chain (destination)\n  const remoteWeight = await peopleApi.apis.XcmPaymentApi.query_xcm_weight(\n    { type: \"V4\", value: [{ type: \"ReceiveTeleportedAsset\", value: [] }, { type: \"BuyExecution\", value: { fees: { id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }, weight_limit: { type: \"Unlimited\" } } }, { type: \"DepositAsset\", value: { assets: { type: \"Wild\", value: { type: \"AllCounted\", value: 1 } }, beneficiary: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } } }] }\n  );\n  const remoteAsset = { parents: 1, interior: { type: \"Here\" } };\n  const remoteFee = await peopleApi.apis.XcmPaymentApi.query_weight_to_asset_fee(remoteWeight.value, { type: \"V4\", value: { Concrete: remoteAsset } });\n  console.log(\"Remote execution fee (planck):\", remoteFee.value?.toString());\n\n  hubClient.destroy();\n  peopleClient.destroy();\n}\nmain().catch(console.error);\n\nSubstitutions: (1) Replace INSERT_SENDER_SS58_ADDRESS with the sender SS58 address on Polkadot Hub. (2) Replace INSERT_RECIPIENT_SS58_ADDRESS with the recipient SS58 address on People Chain. (3) The XCM V4 MultiLocation structures and parachain ID (1004 for People Chain) are shown as examples — consult the source page for exact structures for other destination chains. (4) PAS has 18 decimals on Polkadot Hub TestNet (TestNet Chain ID: 420420417)."
+          "description": "Create a file named 'estimate-xcm-fees.ts' with the following content:\n\nimport { createClient } from \"polkadot-api\";\nimport { getWsProvider } from \"polkadot-api/ws-provider/node\";\nimport { hubFork } from \"@polkadot-api/descriptors\";\nimport { peopleFork } from \"@polkadot-api/descriptors\";\n\nconst SENDER = \"INSERT_SENDER_SS58_ADDRESS\";\nconst RECIPIENT = \"INSERT_RECIPIENT_SS58_ADDRESS\";\nconst AMOUNT = 1_000_000_000_000_000_000n; // 1 PAS (18 decimals)\n\nasync function main() {\n  const hubClient = createClient(getWsProvider(\"ws://localhost:8000\"));\n  const peopleClient = createClient(getWsProvider(\"ws://localhost:8001\"));\n  const hubApi = hubClient.getTypedApi(hubFork);\n  const peopleApi = peopleClient.getTypedApi(peopleFork);\n\n  // 1. Local execution fee on Polkadot Hub (source)\n  const teleportTx = hubApi.tx.PolkadotXcm.limited_teleport_assets({\n    dest: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    beneficiary: { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } },\n    assets: { type: \"V4\", value: [{ id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }] },\n    fee_asset_item: 0,\n    weight_limit: { type: \"Unlimited\" }\n  });\n  const localFeeInfo = await teleportTx.getPaymentInfo(SENDER);\n  console.log(\"Local execution fee (planck):\", localFeeInfo.partial_fee.toString());\n\n  // 2. Delivery fee\n  const deliveryFee = await hubApi.apis.XcmPaymentApi.query_delivery_fees(\n    { type: \"V4\", value: { parents: 0, interior: { type: \"X1\", value: { type: \"Parachain\", value: 1004 } } } },\n    { type: \"V4\", value: [] }\n  );\n  console.log(\"Delivery fee assets:\", JSON.stringify(deliveryFee.value));\n\n  // 3. Remote execution fee on People Chain (destination)\n  const remoteWeight = await peopleApi.apis.XcmPaymentApi.query_xcm_weight(\n    { type: \"V4\", value: [{ type: \"ReceiveTeleportedAsset\", value: [] }, { type: \"BuyExecution\", value: { fees: { id: { parents: 1, interior: { type: \"Here\" } }, fun: { type: \"Fungible\", value: AMOUNT } }, weight_limit: { type: \"Unlimited\" } } }, { type: \"DepositAsset\", value: { assets: { type: \"Wild\", value: { type: \"AllCounted\", value: 1 } }, beneficiary: { parents: 0, interior: { type: \"X1\", value: { type: \"AccountId32\", value: { network: undefined, id: RECIPIENT } } } } } }] }\n  );\n  const remoteAsset = { parents: 1, interior: { type: \"Here\" } };\n  const remoteFee = await peopleApi.apis.XcmPaymentApi.query_weight_to_asset_fee(remoteWeight.value, { type: \"V4\", value: { Concrete: remoteAsset } });\n  console.log(\"Remote execution fee (planck):\", remoteFee.value?.toString());\n\n  hubClient.destroy();\n  peopleClient.destroy();\n}\nmain().catch(console.error);\n\nSubstitutions: (1) Replace INSERT_SENDER_SS58_ADDRESS with the sender SS58 address on Polkadot Hub. (2) Replace INSERT_RECIPIENT_SS58_ADDRESS with the recipient SS58 address on People Chain. (3) The XCM V4 MultiLocation structures and parachain ID (1004 for People Chain) are shown as examples \u2014 consult the source page for exact structures for other destination chains. (4) PAS has 18 decimals on Polkadot Hub TestNet (TestNet Chain ID: 420420417)."
         },
         {
           "order": 6,
@@ -2675,7 +2675,7 @@
       "primary_page": "parachains/launch-a-parachain/set-up-the-parachain-template.md",
       "prerequisites": {
         "runtime": [
-          "Rust toolchain with wasm32-unknown-unknown target — complete the install-polkadot-sdk skill first",
+          "Rust toolchain with wasm32-unknown-unknown target \u2014 complete the install-polkadot-sdk skill first",
           "Git",
           "Disk: at least 5 GB free for the build artifacts",
           "RAM: 8 GB minimum; 16 GB recommended for parallel compilation"
@@ -2697,7 +2697,7 @@
           "order": 2,
           "action": "Review the template directory structure",
           "working_directory": "polkadot-sdk-parachain-template",
-          "description": "Familiarize yourself with the key directories before building: 'node/' contains the node binary crate (CLI, RPC, service); 'runtime/' contains the parachain runtime (pallets, weights, Wasm); 'pallets/' contains a sample custom pallet. The 'Cargo.toml' at the root defines the workspace. No files need to be created or modified for the initial setup — the default configuration targets a local development network."
+          "description": "Familiarize yourself with the key directories before building: 'node/' contains the node binary crate (CLI, RPC, service); 'runtime/' contains the parachain runtime (pallets, weights, Wasm); 'pallets/' contains a sample custom pallet. The 'Cargo.toml' at the root defines the workspace. No files need to be created or modified for the initial setup \u2014 the default configuration targets a local development network."
         },
         {
           "order": 3,
@@ -2717,7 +2717,7 @@
             "./target/release/parachain-template-node --version"
           ],
           "expected_output": "parachain-template-node 0.1.0-...",
-          "description": "Confirm the binary exists and reports its version. If the command fails with 'No such file or directory', the build did not complete successfully — review the cargo build output for compilation errors."
+          "description": "Confirm the binary exists and reports its version. If the command fails with 'No such file or directory', the build did not complete successfully \u2014 review the cargo build output for compilation errors."
         },
         {
           "order": 5,
@@ -2727,7 +2727,7 @@
             "./target/release/parachain-template-node --dev"
           ],
           "expected_output": "Running in --dev mode\n...\nIdle (0 peers)",
-          "description": "Start the node in development mode. In --dev mode the node runs as a single collator without a relay chain connection, using a local chain spec and instant block production. This verifies the binary works correctly. The node will not produce blocks in this mode without a connected relay chain — the 'Idle' output is expected. Press Ctrl+C to stop. The next step in the parachain launch series covers connecting to a relay chain."
+          "description": "Start the node in development mode. In --dev mode the node runs as a single collator without a relay chain connection, using a local chain spec and instant block production. This verifies the binary works correctly. The node will not produce blocks in this mode without a connected relay chain \u2014 the 'Idle' output is expected. Press Ctrl+C to stop. The next step in the parachain launch series covers connecting to a relay chain."
         }
       ],
       "reference_code": {
@@ -2748,7 +2748,7 @@
         },
         {
           "pattern": "Killed / process killed during compilation / OOM",
-          "cause": "Insufficient RAM for parallel Rust compilation — cargo uses one thread per CPU core by default.",
+          "cause": "Insufficient RAM for parallel Rust compilation \u2014 cargo uses one thread per CPU core by default.",
           "resolution": "Reduce parallel compilation jobs: CARGO_BUILD_JOBS=2 cargo build --release. Consider adding swap space on Linux: sudo fallocate -l 4G /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile."
         },
         {
@@ -2837,7 +2837,7 @@
           "order": 1,
           "action": "Choose deployment method and prepare the server",
           "working_directory": ".",
-          "description": "Decide on the deployment method: Docker (step 2) or systemd binary (step 3). A collator must maintain high uptime — choose a dedicated server or cloud VM. The collator's RPC port (9944) should NOT be exposed publicly; restrict it to localhost. The P2P ports (30333 for the parachain, 30334 for the embedded relay chain client) must be open for peer discovery.\n\nParachain substitution table:\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Paseo testnet equivalents: append -paseo to the chain names and use --chain=paseo for relay"
+          "description": "Decide on the deployment method: Docker (step 2) or systemd binary (step 3). A collator must maintain high uptime \u2014 choose a dedicated server or cloud VM. The collator's RPC port (9944) should NOT be exposed publicly; restrict it to localhost. The P2P ports (30333 for the parachain, 30334 for the embedded relay chain client) must be open for peer discovery.\n\nParachain substitution table:\n- Collectives Polkadot: --chain=collectives-polkadot, relay --chain=polkadot\n- BridgeHub Polkadot: --chain=bridge-hub-polkadot, relay --chain=polkadot\n- People Chain Polkadot: --chain=people-polkadot, relay --chain=polkadot\n- Paseo testnet equivalents: append -paseo to the chain names and use --chain=paseo for relay"
         },
         {
           "order": 2,
@@ -2848,7 +2848,7 @@
             "mkdir -p /var/lib/collator-data",
             "docker run -d --name parachain-collator --restart unless-stopped -p 30333:30333 -p 30334:30334 -v /var/lib/collator-data:/data parity/polkadot-parachain:stable --collator --chain=collectives-polkadot --base-path=/data --rpc-port=9944 --state-pruning=1000 --blocks-pruning=1000 -- --chain=polkadot --sync=fast"
           ],
-          "description": "Pull the stable polkadot-parachain image and start the collator. Key flags: --collator enables block production mode; the chain flag selects the parachain spec; the -- separator and --chain=polkadot configure the embedded relay chain client. RPC port 9944 is NOT mapped to the host — collators should not expose RPC publicly. Replace /var/lib/collator-data with your data directory and adjust chain names per the substitution table."
+          "description": "Pull the stable polkadot-parachain image and start the collator. Key flags: --collator enables block production mode; the chain flag selects the parachain spec; the -- separator and --chain=polkadot configure the embedded relay chain client. RPC port 9944 is NOT mapped to the host \u2014 collators should not expose RPC publicly. Replace /var/lib/collator-data with your data directory and adjust chain names per the substitution table."
         },
         {
           "order": 3,
@@ -2863,7 +2863,7 @@
           "commands": [
             "docker exec parachain-collator polkadot-parachain key generate-node-key --file /data/node-key"
           ],
-          "description": "Generate a persistent libp2p node key for the collator. For systemd, run: polkadot-parachain key generate-node-key --file /var/lib/collator-data/node-key. The node key is the collator's peer identity on the P2P network. Keep this key backed up — losing it changes the node's peer ID. Add --node-key-file=/data/node-key to the container startup command and restart the collator."
+          "description": "Generate a persistent libp2p node key for the collator. For systemd, run: polkadot-parachain key generate-node-key --file /var/lib/collator-data/node-key. The node key is the collator's peer identity on the P2P network. Keep this key backed up \u2014 losing it changes the node's peer ID. Add --node-key-file=/data/node-key to the container startup command and restart the collator."
         },
         {
           "order": 5,
@@ -2884,14 +2884,14 @@
             "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"author_rotateKeys\",\"params\":[]}' http://localhost:9944"
           ],
           "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":\"0x1234abcd...\",\"id\":1}",
-          "description": "Call author_rotateKeys to generate and store new session keys in the collator keystore. The result is a hex-encoded concatenation of all session keys (Aura key for parachain collators). Copy the full hex string from 'result' — you will use it in step 7 to register on-chain. This RPC call must be made against the local node (localhost:9944), not a public endpoint."
+          "description": "Call author_rotateKeys to generate and store new session keys in the collator keystore. The result is a hex-encoded concatenation of all session keys (Aura key for parachain collators). Copy the full hex string from 'result' \u2014 you will use it in step 7 to register on-chain. This RPC call must be made against the local node (localhost:9944), not a public endpoint."
         },
         {
           "order": 7,
           "action": "Register session keys on-chain",
           "working_directory": ".",
           "interactive": true,
-          "description": "This step requires a governance action for system parachains. Using Polkadot.js Apps (https://polkadot.js.org/apps): (1) Connect to the parachain's RPC endpoint. (2) Navigate to Developer > Extrinsics. (3) Select 'session' pallet and 'setKeys' extrinsic. (4) Paste the hex session key from step 6 into the 'keys' field. (5) Set 'proof' to '0x'. (6) Sign and submit using your collator account. For system parachains, collator set changes require an on-chain governance proposal — a simple setKeys call is not sufficient to immediately start collating. Follow the parachain's governance process to have your collator added to the invulnerable set or active collator list. Confirm the key is registered by querying the 'session.nextKeys' storage on-chain."
+          "description": "This step requires a governance action for system parachains. Using Polkadot.js Apps (https://polkadot.js.org/apps): (1) Connect to the parachain's RPC endpoint. (2) Navigate to Developer > Extrinsics. (3) Select 'session' pallet and 'setKeys' extrinsic. (4) Paste the hex session key from step 6 into the 'keys' field. (5) Set 'proof' to '0x'. (6) Sign and submit using your collator account. For system parachains, collator set changes require an on-chain governance proposal \u2014 a simple setKeys call is not sufficient to immediately start collating. Follow the parachain's governance process to have your collator added to the invulnerable set or active collator list. Confirm the key is registered by querying the 'session.nextKeys' storage on-chain."
         }
       ],
       "reference_code": {
@@ -2917,7 +2917,7 @@
         },
         {
           "pattern": "Collator node syncs but does not produce blocks after session key registration",
-          "cause": "System parachain collator registration requires governance approval — simple setKeys does not add a collator to the active set.",
+          "cause": "System parachain collator registration requires governance approval \u2014 simple setKeys does not add a collator to the active set.",
           "resolution": "Submit a governance proposal to add the collator to the invulnerables list via the parachainSystem or collatorSelection pallet. Follow the target parachain's governance process on Polkassembly or Subsquare."
         }
       ],
@@ -2927,12 +2927,12 @@
           {
             "slug": "node-infrastructure-run-a-node-parachain-rpc",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-parachain-rpc.md",
-            "relevance": "How to run a parachain RPC node (non-collator) — useful as reference for the underlying node setup without the collator flags."
+            "relevance": "How to run a parachain RPC node (non-collator) \u2014 useful as reference for the underlying node setup without the collator flags."
           },
           {
             "slug": "node-infrastructure-run-a-node-polkadot-hub-rpc",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-polkadot-hub-rpc.md",
-            "relevance": "How to run an RPC node specifically for Polkadot Hub — includes Ethereum RPC adapter setup."
+            "relevance": "How to run an RPC node specifically for Polkadot Hub \u2014 includes Ethereum RPC adapter setup."
           },
           {
             "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
@@ -2962,7 +2962,7 @@
             "Verify the session keys registered on-chain match the output of author_rotateKeys: query session.nextKeys storage",
             "Check that the node has peers and is fully synced via system_health and system_syncState",
             "Confirm the collator is in the active invulnerables list by querying collatorSelection.invulnerables storage",
-            "Wait for the next session rotation — key changes take effect at the start of the next session"
+            "Wait for the next session rotation \u2014 key changes take effect at the start of the next session"
           ],
           "result": "Collator begins producing blocks at the next session rotation once all keys and peer connections are confirmed"
         }
@@ -3000,7 +3000,7 @@
           "order": 1,
           "action": "Choose deployment method and sync type",
           "working_directory": ".",
-          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (step 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nPolkadot Hub uses the parity/polkadot-parachain Docker image with --chain=asset-hub-polkadot. For the Paseo TestNet (chain ID: 420420417), use --chain=asset-hub-paseo and relay --chain=paseo. Optionally download a database snapshot from the Polkadot ecosystem snapshot providers to accelerate initial sync — check https://snapshots.polkadot.io or community providers for current snapshots."
+          "description": "Decide on two choices before proceeding: (1) Deployment method: Docker (step 2) or systemd binary (step 3). (2) Sync type: 'archive' retains full historical state (2+ TB, enables all historical queries) vs 'pruned' retains only recent blocks (500 GB, sufficient for most uses).\n\nPolkadot Hub uses the parity/polkadot-parachain Docker image with --chain=asset-hub-polkadot. For the Paseo TestNet (chain ID: 420420417), use --chain=asset-hub-paseo and relay --chain=paseo. Optionally download a database snapshot from the Polkadot ecosystem snapshot providers to accelerate initial sync \u2014 check https://snapshots.polkadot.io or community providers for current snapshots."
         },
         {
           "order": 2,
@@ -3038,7 +3038,7 @@
             "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_syncState\",\"params\":[]}' http://localhost:9944"
           ],
           "expected_output": "{\"jsonrpc\":\"2.0\",\"result\":{\"startingBlock\":0,\"currentBlock\":12000,\"highestBlock\":15000},\"id\":1}",
-          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f polkadot-hub-rpc' with 'sudo journalctl -fu polkadot-hub-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync — initial sync can take hours to days depending on hardware."
+          "description": "Monitor sync using Docker logs (first command) or the JSON-RPC sync state query (second). For systemd, replace 'docker logs -f polkadot-hub-rpc' with 'sudo journalctl -fu polkadot-hub-rpc'. The node is fully synced when currentBlock equals highestBlock. Fast sync downloads state snapshots and is significantly faster than full sync \u2014 initial sync can take hours to days depending on hardware."
         },
         {
           "order": 6,
@@ -3049,7 +3049,7 @@
             "curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"system_health\",\"params\":[]}' http://localhost:9944"
           ],
           "expected_output": "{\"result\":\"Polkadot Asset Hub\",...}\n{\"result\":{\"peers\":5,\"isSyncing\":false,\"shouldHavePeers\":true},...}",
-          "description": "Confirm the node serves RPC requests. system_chain should return 'Polkadot Asset Hub'. system_health should show isSyncing: false and peers greater than 0. If peers is 0, verify port 30333 is open in your firewall. If isSyncing is true, wait for sync to complete. If the eth-rpc adapter is running, also verify it: curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_chainId\",\"params\":[]}' http://localhost:8545 — should return '0x18FF5B01' (420420417 in hex for Paseo TestNet)."
+          "description": "Confirm the node serves RPC requests. system_chain should return 'Polkadot Asset Hub'. system_health should show isSyncing: false and peers greater than 0. If peers is 0, verify port 30333 is open in your firewall. If isSyncing is true, wait for sync to complete. If the eth-rpc adapter is running, also verify it: curl -s -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_chainId\",\"params\":[]}' http://localhost:8545 \u2014 should return '0x18FF5B01' (420420417 in hex for Paseo TestNet)."
         }
       ],
       "reference_code": {
@@ -3090,7 +3090,7 @@
           {
             "slug": "node-infrastructure-run-a-node-relay-chain-secure-wss",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-node-relay-chain-secure-wss.md",
-            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx — required for production endpoints."
+            "relevance": "How to add a WSS (TLS) reverse proxy in front of the RPC port using nginx \u2014 required for production endpoints."
           },
           {
             "slug": "node-infrastructure-run-a-node-relay-chain-full-node",
@@ -3113,11 +3113,11 @@
           "result": "Polkadot Hub RPC node running, synced, serving requests on ws://localhost:9944"
         },
         {
-          "scenario": "Edge case: Ethereum tooling cannot connect — eth_chainId returns wrong value",
+          "scenario": "Edge case: Ethereum tooling cannot connect \u2014 eth_chainId returns wrong value",
           "user_says": "MetaMask connects to port 8545 but shows the wrong chain ID",
           "actions": [
             "Verify the eth-rpc adapter is configured with the correct --chain flag matching the running node",
-            "For Paseo TestNet, chain ID is 420420417 (0x18FF5B01 in hex) — confirm eth_chainId returns this value",
+            "For Paseo TestNet, chain ID is 420420417 (0x18FF5B01 in hex) \u2014 confirm eth_chainId returns this value",
             "If chain ID is wrong, restart the eth-rpc adapter with --chain=asset-hub-paseo for TestNet or --chain=asset-hub-polkadot for mainnet",
             "Update MetaMask network settings with the correct chain ID and RPC URL http://localhost:8545"
           ],
@@ -3160,7 +3160,7 @@
             "polkadot key generate-node-key"
           ],
           "expected_output": "<64-character hex public key printed to stdout>",
-          "description": "Generate a persistent ED25519 node key for the bootnode. The command prints the public key (peer ID) to stdout and stores the secret key at chains/<CHAIN>/network/secret_ed25519 under the --base-path directory. Record the public key — it is used in the bootnode multiaddress (e.g., /dns/your-host/tcp/30310/p2p/<PUBLIC_KEY>). Back up the secret key file immediately; if lost, the peer ID changes and chain specs referencing the old ID must be updated. Save the public key output — it is needed in step 4."
+          "description": "Generate a persistent ED25519 node key for the bootnode. The command prints the public key (peer ID) to stdout and stores the secret key at chains/<CHAIN>/network/secret_ed25519 under the --base-path directory. Record the public key \u2014 it is used in the bootnode multiaddress (e.g., /dns/your-host/tcp/30310/p2p/<PUBLIC_KEY>). Back up the secret key file immediately; if lost, the peer ID changes and chain specs referencing the old ID must be updated. Save the public key output \u2014 it is needed in step 4."
         },
         {
           "order": 2,
@@ -3169,7 +3169,7 @@
           "commands": [
             "polkadot --chain polkadot --name dot-bootnode --listen-addr /ip4/0.0.0.0/tcp/30310 --listen-addr /ip4/0.0.0.0/tcp/30311/ws"
           ],
-          "description": "Start the Polkadot bootnode. Replace 'polkadot' in --chain with your target chain name if running a different relay chain. --listen-addr /ip4/0.0.0.0/tcp/30310 binds the raw P2P port; --listen-addr /ip4/0.0.0.0/tcp/30311/ws binds the WebSocket P2P port. The WSS port (30312) is handled by the nginx proxy configured in the next step — do not pass a /wss listen-addr here. To run as a background service, wrap this command in a systemd unit file."
+          "description": "Start the Polkadot bootnode. Replace 'polkadot' in --chain with your target chain name if running a different relay chain. --listen-addr /ip4/0.0.0.0/tcp/30310 binds the raw P2P port; --listen-addr /ip4/0.0.0.0/tcp/30311/ws binds the WebSocket P2P port. The WSS port (30312) is handled by the nginx proxy configured in the next step \u2014 do not pass a /wss listen-addr here. To run as a background service, wrap this command in a systemd unit file."
         },
         {
           "order": 3,
@@ -3208,7 +3208,7 @@
         },
         {
           "pattern": "syncing 0 peers after several seconds",
-          "cause": "The bootnode is unreachable — port blocked, wrong DNS name, mismatched node ID, or the bootnode process exited.",
+          "cause": "The bootnode is unreachable \u2014 port blocked, wrong DNS name, mismatched node ID, or the bootnode process exited.",
           "resolution": "Confirm the bootnode process is running: ps aux | grep polkadot. Check firewall rules allow inbound on 30310/30311/30312. Verify DNS resolves to the correct server IP: nslookup INSERT_DNS_NAME. Double-check the node ID in the --reserved-nodes multiaddress matches the public key from step 1."
         }
       ],
@@ -3317,7 +3317,7 @@
             "chmod +x polkadot polkadot-prepare-worker polkadot-execute-worker",
             "sudo mv polkadot polkadot-prepare-worker polkadot-execute-worker /usr/local/bin/"
           ],
-          "description": "Download all three binaries for release polkadot-stable2512-2 and verify each with GPG. The release tag is polkadot-stable2512-2 — check https://github.com/paritytech/polkadot-sdk/releases for a newer stable release and replace all occurrences of 'polkadot-stable2512-2' in the commands if you want a different version. GPG key 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE is the ParityReleases key for current releases. A 'Good signature' message after each --verify confirms the binary is authentic. If GPG verification fails with 'BAD signature', discard the binary and re-download.\n\nALTERNATIVE — APT package manager (Ubuntu/Debian):\n  gpg --keyserver hkps://keyserver.ubuntu.com --receive-keys 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE\n  gpg --export 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE > /usr/share/keyrings/parity.gpg\n  echo 'deb [signed-by=/usr/share/keyrings/parity.gpg] https://releases.parity.io/deb release main' > /etc/apt/sources.list.d/parity.list\n  apt update && apt install parity-keyring polkadot\n\nALTERNATIVE — Docker:\n  docker pull parity/polkadot:stable2512-2"
+          "description": "Download all three binaries for release polkadot-stable2512-2 and verify each with GPG. The release tag is polkadot-stable2512-2 \u2014 check https://github.com/paritytech/polkadot-sdk/releases for a newer stable release and replace all occurrences of 'polkadot-stable2512-2' in the commands if you want a different version. GPG key 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE is the ParityReleases key for current releases. A 'Good signature' message after each --verify confirms the binary is authentic. If GPG verification fails with 'BAD signature', discard the binary and re-download.\n\nALTERNATIVE \u2014 APT package manager (Ubuntu/Debian):\n  gpg --keyserver hkps://keyserver.ubuntu.com --receive-keys 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE\n  gpg --export 90BD75EBBB8E95CB3DA6078F94A4029AB4B35DAE > /usr/share/keyrings/parity.gpg\n  echo 'deb [signed-by=/usr/share/keyrings/parity.gpg] https://releases.parity.io/deb release main' > /etc/apt/sources.list.d/parity.list\n  apt update && apt install parity-keyring polkadot\n\nALTERNATIVE \u2014 Docker:\n  docker pull parity/polkadot:stable2512-2"
         },
         {
           "order": 4,
@@ -3365,7 +3365,7 @@
           {
             "slug": "node-infrastructure-run-a-validator-requirements",
             "url": "https://docs.polkadot.com/ai/pages/node-infrastructure-run-a-validator-requirements.md",
-            "relevance": "Minimum hardware and skill requirements before starting a validator — read before this skill."
+            "relevance": "Minimum hardware and skill requirements before starting a validator \u2014 read before this skill."
           },
           {
             "slug": "node-infrastructure-run-a-validator-onboarding-and-offboarding-key-management",
@@ -3414,7 +3414,7 @@
       "id": "set-up-chopsticks-fork",
       "title": "Set Up and Use Chopsticks for Chain Forking",
       "objective": "Install Chopsticks, create a local fork of a Polkadot SDK chain from a live RPC endpoint, and interact with it via block replay and WebSocket manipulation commands.",
-      "description": "Installs Chopsticks and creates a local fork of any Polkadot SDK-based chain for testing, debugging, and XCM simulation without touching live state. Covers global and local npm installation, YAML config file setup, fork creation via CLI flags or config, Polkadot.js interaction, block replay, and multi-chain XCM testing. Use when you need to test extrinsics, replay historical blocks, override chain storage, or simulate XCM messages locally. Trigger phrases: 'fork a chain with Chopsticks', 'local chain fork', 'replay blocks Chopsticks', 'test XCM locally', 'Chopsticks install'. Version: 1.2.7. Note: Chopsticks uses the Smoldot light client and does not support Ethereum JSON-RPC — MetaMask cannot connect to a Chopsticks fork.",
+      "description": "Installs Chopsticks and creates a local fork of any Polkadot SDK-based chain for testing, debugging, and XCM simulation without touching live state. Covers global and local npm installation, YAML config file setup, fork creation via CLI flags or config, Polkadot.js interaction, block replay, and multi-chain XCM testing. Use when you need to test extrinsics, replay historical blocks, override chain storage, or simulate XCM messages locally. Trigger phrases: 'fork a chain with Chopsticks', 'local chain fork', 'replay blocks Chopsticks', 'test XCM locally', 'Chopsticks install'. Version: 1.2.7. Note: Chopsticks uses the Smoldot light client and does not support Ethereum JSON-RPC \u2014 MetaMask cannot connect to a Chopsticks fork.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -3449,7 +3449,7 @@
           "order": 2,
           "action": "Create a fork configuration file",
           "working_directory": ".",
-          "description": "Create a YAML configuration file (e.g., polkadot.yml) describing the chain to fork. Pre-built configs for common Polkadot SDK chains are available at https://github.com/AcalaNetwork/chopsticks/tree/master/configs — download one with:\n  curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/polkadot.yml -o polkadot.yml\n\nA minimal config for Polkadot looks like:\n  endpoint: wss://polkadot-rpc.dwellir.com\n  mock-signature-host: true\n  block: 1000  # optional: fork from this block number\n\nThe 'import-storage' section (optional) lets you override storage values before the fork starts — useful for funding test accounts:\n  import-storage:\n    System:\n      Account:\n        - - - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY  # Alice\n          - data:\n              free: '100000000000000000'\n\nReplace the endpoint with the WSS RPC URL for your target chain."
+          "description": "Create a YAML configuration file (e.g., polkadot.yml) describing the chain to fork. Pre-built configs for common Polkadot SDK chains are available at https://github.com/AcalaNetwork/chopsticks/tree/master/configs \u2014 download one with:\n  curl -sL https://raw.githubusercontent.com/AcalaNetwork/chopsticks/master/configs/polkadot.yml -o polkadot.yml\n\nA minimal config for Polkadot looks like:\n  endpoint: wss://polkadot-rpc.dwellir.com\n  mock-signature-host: true\n  block: 1000  # optional: fork from this block number\n\nThe 'import-storage' section (optional) lets you override storage values before the fork starts \u2014 useful for funding test accounts:\n  import-storage:\n    System:\n      Account:\n        - - - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY  # Alice\n          - data:\n              free: '100000000000000000'\n\nReplace the endpoint with the WSS RPC URL for your target chain."
         },
         {
           "order": 3,
@@ -3519,12 +3519,12 @@
           {
             "slug": "parachains-testing-fork-a-parachain",
             "url": "https://docs.polkadot.com/ai/pages/parachains-testing-fork-a-parachain.md",
-            "relevance": "Step-by-step cookbook tutorial for forking a parachain with Chopsticks — same tool, focused on the parachain testing workflow with a CI-backed example."
+            "relevance": "Step-by-step cookbook tutorial for forking a parachain with Chopsticks \u2014 same tool, focused on the parachain testing workflow with a CI-backed example."
           },
           {
             "slug": "chain-interactions-send-transactions-interoperability-debug-and-preview-xcms",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-interoperability-debug-and-preview-xcms.md",
-            "relevance": "Using Chopsticks to replay and dry-run XCM messages — advanced XCM debugging workflow."
+            "relevance": "Using Chopsticks to replay and dry-run XCM messages \u2014 advanced XCM debugging workflow."
           },
           {
             "slug": "chain-interactions-send-transactions-interoperability-estimate-xcm-fees",
@@ -3561,7 +3561,7 @@
       "id": "set-up-e2e-testing-moonwall",
       "title": "Set Up End-to-End Testing with Moonwall",
       "objective": "Install Moonwall, initialize a test environment configuration, write a test suite using describeSuite, and run tests against a local or remote Polkadot SDK blockchain node.",
-      "description": "Installs and configures Moonwall, an end-to-end testing framework for Polkadot SDK-based blockchains. Covers global and local npm installation, interactive configuration initialization, moonwall.config.json structure, writing test suites with the describeSuite function, and running tests via the CLI. Use when you need a standardized test environment for a Substrate-based chain — local dev node, remote testnet, or Chopsticks fork. Trigger phrases: 'set up Moonwall', 'e2e tests Polkadot SDK', 'Moonwall testing framework', 'describeSuite Moonwall', 'install moonwall cli'. Version: 5.18.3.",
+      "description": "Installs and configures Moonwall, an end-to-end testing framework for Polkadot SDK-based blockchains. Covers global and local npm installation, interactive configuration initialization, moonwall.config.json structure, writing test suites with the describeSuite function, and running tests via the CLI. Use when you need a standardized test environment for a Substrate-based chain \u2014 local dev node, remote testnet, or Chopsticks fork. Trigger phrases: 'set up Moonwall', 'e2e tests Polkadot SDK', 'Moonwall testing framework', 'describeSuite Moonwall', 'install moonwall cli'. Version: 5.18.3.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -3600,7 +3600,7 @@
             "moonwall init"
           ],
           "interactive": true,
-          "description": "The 'moonwall init' command launches an interactive wizard to create your moonwall.config file. Delegate this step to the user — do not attempt to automate it. Ask the user to run 'moonwall init' in their terminal and answer the prompts:\n\n  - label: a name for the test configuration (e.g., my-chain-tests)\n  - global timeout: maximum time in ms for test execution (e.g., 30000)\n  - environment name: name for the test environment (e.g., default_env)\n  - network foundation: type of blockchain environment (e.g., 'dev' for a local binary node, 'chopsticks' for a fork)\n  - tests directory: path for test files (e.g., ./tests)\n\nPress Enter to accept defaults or enter custom values. The wizard generates a moonwall.config file in the current directory. Ask the user to confirm when the wizard completes before proceeding."
+          "description": "The 'moonwall init' command launches an interactive wizard to create your moonwall.config file. Delegate this step to the user \u2014 do not attempt to automate it. Ask the user to run 'moonwall init' in their terminal and answer the prompts:\n\n  - label: a name for the test configuration (e.g., my-chain-tests)\n  - global timeout: maximum time in ms for test execution (e.g., 30000)\n  - environment name: name for the test environment (e.g., default_env)\n  - network foundation: type of blockchain environment (e.g., 'dev' for a local binary node, 'chopsticks' for a fork)\n  - tests directory: path for test files (e.g., ./tests)\n\nPress Enter to accept defaults or enter custom values. The wizard generates a moonwall.config file in the current directory. Ask the user to confirm when the wizard completes before proceeding."
         },
         {
           "order": 3,
@@ -3612,7 +3612,7 @@
           "order": 4,
           "action": "Write a test suite",
           "working_directory": ".",
-          "description": "Create a test file in the tests directory (e.g., ./tests/balance.test.ts). Moonwall uses the describeSuite function to define test suites:\n\n  import { describeSuite, expect } from '@moonwall/cli';\n\n  describeSuite({\n    id: 'D01',\n    title: 'Balance transfer test',\n    foundationMethods: 'dev',\n    testCases: ({ it, context }) => {\n      it('C100', 'Alice should have a balance', async () => {\n        const api = context.polkadotJs();\n        const accounts = await api.query.system.account('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');\n        expect(accounts.data.free.toBigInt()).toBeGreaterThan(0n);\n      });\n    },\n  });\n\nEach test case requires a unique ID ('C100'), a title, and an async function receiving it (test runner) and context (provides the polkadotJs API). The API is initialized by Moonwall before tests run — do not create API connections manually."
+          "description": "Create a test file in the tests directory (e.g., ./tests/balance.test.ts). Moonwall uses the describeSuite function to define test suites:\n\n  import { describeSuite, expect } from '@moonwall/cli';\n\n  describeSuite({\n    id: 'D01',\n    title: 'Balance transfer test',\n    foundationMethods: 'dev',\n    testCases: ({ it, context }) => {\n      it('C100', 'Alice should have a balance', async () => {\n        const api = context.polkadotJs();\n        const accounts = await api.query.system.account('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');\n        expect(accounts.data.free.toBigInt()).toBeGreaterThan(0n);\n      });\n    },\n  });\n\nEach test case requires a unique ID ('C100'), a title, and an async function receiving it (test runner) and context (provides the polkadotJs API). The API is initialized by Moonwall before tests run \u2014 do not create API connections manually."
         },
         {
           "order": 5,
@@ -3684,7 +3684,7 @@
           "scenario": "Edge case: test environment fails to start",
           "user_says": "Moonwall says it cannot connect to the node endpoint",
           "actions": [
-            "Check the foundation type in moonwall.config — for 'dev', verify binPath is correct and the binary has execute permission",
+            "Check the foundation type in moonwall.config \u2014 for 'dev', verify binPath is correct and the binary has execute permission",
             "For 'read_only' or 'chopsticks', start the node or Chopsticks fork manually and confirm it is listening on the configured endpoint",
             "Increase the connection timeout in moonwall.config if the node starts slowly"
           ],
@@ -3696,7 +3696,7 @@
       "id": "fork-parachain-chopsticks",
       "title": "Fork a Parachain Using Chopsticks",
       "objective": "Install Chopsticks, configure a local fork of a Polkadot SDK parachain from a live endpoint, and manipulate fork state using WebSocket commands.",
-      "description": "Installs Chopsticks and forks a live Polkadot SDK parachain locally for testing and development. Covers global npm installation, YAML configuration, fork startup, and WebSocket dev commands (dev_newBlock, dev_setStorage, dev_setHead, dev_timeTravel, dev_setRuntimeLogLevel). Use when testing parachain-specific logic, extrinsics, or storage mutations without deploying to a live network. Trigger phrases: 'fork a parachain', 'Chopsticks parachain fork', 'dev_setStorage chopsticks', 'local parachain test environment'. Version: 1.2.7. Note: does not support Ethereum JSON-RPC — MetaMask cannot connect.",
+      "description": "Installs Chopsticks and forks a live Polkadot SDK parachain locally for testing and development. Covers global npm installation, YAML configuration, fork startup, and WebSocket dev commands (dev_newBlock, dev_setStorage, dev_setHead, dev_timeTravel, dev_setRuntimeLogLevel). Use when testing parachain-specific logic, extrinsics, or storage mutations without deploying to a live network. Trigger phrases: 'fork a parachain', 'Chopsticks parachain fork', 'dev_setStorage chopsticks', 'local parachain test environment'. Version: 1.2.7. Note: does not support Ethereum JSON-RPC \u2014 MetaMask cannot connect.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -3824,6 +3824,913 @@
             "Switch to Instant mode with dev_setBlockBuildMode to get automatic per-transaction block production during testing"
           ],
           "result": "Storage override committed after block production; account shows updated balance"
+        }
+      ]
+    },
+    {
+      "id": "build-dapp-viem-nextjs",
+      "title": "Build a Zero-to-Hero Smart Contract DApp with Viem and Next.js",
+      "objective": "Deploy a Storage smart contract to Polkadot Hub TestNet and connect it to a Next.js frontend that reads and writes contract state using Viem.",
+      "description": "Scaffolds a full-stack Polkadot Hub dApp: deploys a Solidity Storage contract via Hardhat Ignition to TestNet, then builds a Next.js 14 frontend with Viem wallet connect, read, and write components. Use when building a complete end-to-end smart contract application on Polkadot Hub from scratch. Trigger phrases: 'build a dapp polkadot', 'zero to hero tutorial', 'smart contract with frontend viem', 'deploy and connect next.js'. Covers dotenv private key security, 5000 gwei gas config, evmVersion cancun, Ignition recovery, and Next.js/Viem component wiring. Output: running dApp at localhost:3000.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/dapps/zero-to-hero.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/dapps/zero-to-hero.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22+",
+          "npm",
+          "Git"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417, base fee 1000 gwei)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ \u2014 required for contract deployment gas"
+        ],
+        "wallet": [
+          "MetaMask configured for Polkadot Hub TestNet (chainId 420420417)",
+          "0x-prefixed EVM private key for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer wallet. Must be funded with testnet PAS. Edit .env directly \u2014 never paste in chat.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone the reference repository",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/polkadot-developers/revm-hardhat-examples.git"
+          ],
+          "description": "Clone revm-hardhat-examples. This repo contains the complete zero-to-hero-dapp with both the Hardhat contract project and the Next.js frontend."
+        },
+        {
+          "order": 2,
+          "action": "Install contract project dependencies",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/storage-contract",
+          "commands": [
+            "npm install",
+            "npm install dotenv"
+          ],
+          "description": "Install Hardhat and contract dependencies, then add dotenv. dotenv replaces Hardhat's interactive vars system, which cannot be used in agent shells."
+        },
+        {
+          "order": 3,
+          "action": "Create .env file and protect it with .gitignore",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/storage-contract",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder. Stop and ask the user to edit .env directly, filling in PRIVATE_KEY=0x<their_key>. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+        },
+        {
+          "order": 4,
+          "action": "Update hardhat.config.ts for TestNet and security",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/storage-contract",
+          "description": "Open hardhat.config.ts and apply ALL of the following changes:\n1. Add 'import \"dotenv/config\";' as the very first line.\n2. Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string \u2014 Hardhat interactive vars do not work in agent shells.\n3. Remove 'import { vars } from \"hardhat/config\";' if present.\n4. In the polkadotTestnet network block, set url: 'https://services.polkadothub-rpc.com/testnet' and chainId: 420420417.\n5. Add gasPrice: 5000000000000 to the polkadotTestnet network block (5000 gwei = 5x the 1000 gwei TestNet base fee).\n6. Add or confirm evmVersion: 'cancun' in the Solidity compiler settings \u2014 required for OpenZeppelin v5.4.0+ (mcopy opcode).\n7. Ensure requiredConfirmations is 1 in any ignition config block (never 0 \u2014 zero causes IGN401 errors on TestNet).\nSave the file."
+        },
+        {
+          "order": 5,
+          "action": "Compile the Storage contract",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/storage-contract",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled 1 Solidity file successfully",
+          "description": "Compile Storage.sol. If you see 'invalid opcode: MCOPY', verify evmVersion: 'cancun' is set in the Solidity compiler settings in hardhat.config.ts and recompile."
+        },
+        {
+          "order": 6,
+          "action": "Deploy the contract to Polkadot Hub TestNet",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/storage-contract",
+          "commands": [
+            "npx hardhat ignition deploy ignition/modules/Storage.ts --network polkadotTestnet"
+          ],
+          "expected_output": "Storage deployed to: 0x...",
+          "description": "Deploy via Hardhat Ignition. When prompted 'Do you want to deploy this?', answer 'yes'. Save the deployed contract address \u2014 needed in step 9.\n\nRecovery guidance:\n- 'priority is too low': verify gasPrice: 5000000000000 is in hardhat.config.ts, then redeploy.\n- IGN401 (transaction dropped): first check ignition/deployments/<chainId>/deployed_addresses.json \u2014 if the address is listed, deployment succeeded despite the error; use that address. If absent, delete ignition/deployments/ and redeploy.\n- 'Transaction Already Imported': do NOT retry at the same gas price. Delete ignition/deployments/ and add a higher gasPrice, then redeploy."
+        },
+        {
+          "order": 7,
+          "action": "Scaffold the Next.js frontend",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp",
+          "commands": [
+            "echo 'n\\nn\\nn\\nn\\nn\\nn' | npx create-next-app@14 frontend --typescript --no-eslint --no-tailwind --no-src-dir --app"
+          ],
+          "description": "Scaffold Next.js 14 TypeScript app named 'frontend'. Piped 'n' answers handle any unexpected interactive prompts from create-next-app. If this fails due to prompt changes, run: npx create-next-app@14 frontend and answer No to all questions except TypeScript (Yes) and App Router (Yes)."
+        },
+        {
+          "order": 8,
+          "action": "Install frontend dependencies",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/frontend",
+          "commands": [
+            "npm install viem wagmi @tanstack/react-query"
+          ],
+          "description": "Install viem for contract interaction, wagmi for React hooks, and React Query (required by wagmi v2)."
+        },
+        {
+          "order": 9,
+          "action": "Update contract address in contract config",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/frontend",
+          "description": "Open src/contracts/contract.ts (or the equivalent contract config file in the frontend). Replace the CONTRACT_ADDRESS placeholder or any hardcoded example address with the deployed contract address saved in step 6. Save the file."
+        },
+        {
+          "order": 10,
+          "action": "Start the development server",
+          "working_directory": "revm-hardhat-examples/zero-to-hero-dapp/frontend",
+          "commands": [
+            "npm run dev"
+          ],
+          "expected_output": "ready - started server on 0.0.0.0:3000",
+          "description": "Start the Next.js dev server. Open http://localhost:3000 in a browser. Click 'Connect Wallet' and approve the MetaMask popup. Read the current stored value, then write a new value and confirm the MetaMask transaction. Verify the displayed value updates after the transaction is mined."
+        }
+      ],
+      "reference_code": {
+        "repo": "revm-hardhat-examples",
+        "base_path": "zero-to-hero-dapp",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "priority is too low",
+          "cause": "Transaction gas price is below the 1000 gwei base fee on Polkadot Hub TestNet. Default Hardhat gas estimation produces values too low for this network.",
+          "resolution": "Set gasPrice: 5000000000000 in the polkadotTestnet network block in hardhat.config.ts. Delete ignition/deployments/ if a prior attempt was made, then redeploy."
+        },
+        {
+          "pattern": "IGN401 / Transaction dropped",
+          "cause": "Ignition lost track of the transaction. The transaction may have succeeded or may be stuck in the mempool.",
+          "resolution": "Check ignition/deployments/<chainId>/deployed_addresses.json. If the contract address is present, deployment succeeded \u2014 use that address. If absent: send a zero-value replacement transaction at the same nonce with gasPrice 2000000000000 (2x base fee), wait for it to mine, then delete ignition/deployments/ and redeploy."
+        },
+        {
+          "pattern": "invalid opcode: MCOPY",
+          "cause": "OpenZeppelin v5.4.0+ uses the mcopy opcode (Cancun EVM upgrade). Solidity defaults to an older EVM version.",
+          "resolution": "Add evmVersion: 'cancun' to the Solidity compiler settings in hardhat.config.ts. Recompile with 'npx hardhat compile'."
+        },
+        {
+          "pattern": "Error: could not detect network",
+          "cause": "Incorrect RPC URL or chain ID in hardhat.config.ts.",
+          "resolution": "Set url: 'https://services.polkadothub-rpc.com/testnet' and chainId: 420420417 in the polkadotTestnet network block."
+        },
+        {
+          "pattern": "Module not found: viem or wagmi",
+          "cause": "Frontend dependencies were not installed.",
+          "resolution": "Run 'npm install viem wagmi @tanstack/react-query' in the zero-to-hero-dapp/frontend directory."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for Hardhat configuration reference, Viem library details, or network connection parameters.",
+        "pages": [
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Full Hardhat EVM configuration options for Polkadot Hub, including network settings and contract verification."
+          },
+          {
+            "slug": "smart-contracts-libraries-viem",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-viem.md",
+            "relevance": "Viem library reference for chain config, wallet client, and contract interaction patterns on Polkadot Hub."
+          },
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network parameters (RPC URLs, chain IDs, WSS) for Polkadot Hub TestNet and Mainnet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: full dApp from scratch",
+          "user_says": "Build a smart contract dApp on Polkadot Hub with Viem and Next.js",
+          "actions": [
+            "Clone revm-hardhat-examples and navigate to zero-to-hero-dapp/storage-contract",
+            "Install dependencies and create .env with PRIVATE_KEY (user fills in)",
+            "Update hardhat.config.ts: dotenv, gasPrice 5000 gwei, evmVersion cancun, requiredConfirmations 1",
+            "Compile Storage.sol and deploy to polkadotTestnet via Ignition",
+            "Scaffold Next.js 14 frontend with create-next-app@14",
+            "Install viem, wagmi, react-query; update contract.ts with deployed address",
+            "Run npm run dev and test at localhost:3000"
+          ],
+          "result": "Storage contract deployed to TestNet; Next.js app at localhost:3000 with working wallet connect, read, and write contract interactions via MetaMask"
+        },
+        {
+          "scenario": "Edge case: Ignition reports transaction dropped but contract may have deployed",
+          "user_says": "Ignition says IGN401 but I don't know if the contract deployed",
+          "actions": [
+            "Check ignition/deployments/<chainId>/deployed_addresses.json for a Storage address",
+            "If address is present: deployment succeeded \u2014 use that address in contract.ts and proceed to step 7",
+            "If absent: delete ignition/deployments/ and redeploy with gasPrice: 5000000000000 confirmed in config"
+          ],
+          "result": "Contract address recovered from deployment state or clean redeployment completed"
+        }
+      ]
+    },
+    {
+      "id": "deploy-uniswap-v2-polkadot-hub",
+      "title": "Deploy Uniswap V2 on Polkadot Hub",
+      "objective": "Compile and deploy Uniswap V2 Factory and Pair contracts to Polkadot Hub TestNet using Hardhat.",
+      "description": "Clones and deploys Uniswap V2 (Factory and Pair contracts) to Polkadot Hub TestNet using Hardhat. Use when you need a Uniswap V2-compatible AMM deployment on Polkadot Hub for testing or integration. Trigger phrases: 'deploy uniswap v2 polkadot', 'uniswap v2 asset hub', 'AMM factory polkadot hub'. Covers dotenv credential setup for local and TestNet keys, 5000 gwei gas configuration, evmVersion cancun, Ignition deployment of Factory and Pair, and stuck-transaction recovery. Requires testnet PAS for gas.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/eth-dapps/uniswap-v2.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/eth-dapps/uniswap-v2.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22+",
+          "npm",
+          "Git"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417, base fee 1000 gwei)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ \u2014 required for deployment gas"
+        ],
+        "wallet": [
+          "MetaMask configured for Polkadot Hub TestNet (chainId 420420417)",
+          "0x-prefixed EVM private key for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "AH_PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for Polkadot Hub TestNet deployment. Must be funded with testnet PAS. Edit .env directly \u2014 never paste in chat.",
+          "required": true
+        },
+        {
+          "name": "LOCAL_PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for local dev node testing. Can use the default Hardhat dev key (0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80) for local testing only.",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone the reference repository",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/polkadot-developers/polkavm-hardhat-examples.git"
+          ],
+          "description": "Clone polkavm-hardhat-examples. Navigate to the uniswap-v2 example directory after cloning."
+        },
+        {
+          "order": 2,
+          "action": "Navigate to the Uniswap V2 example and install dependencies",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "commands": [
+            "npm install",
+            "npm install dotenv"
+          ],
+          "description": "Install all dependencies, then add dotenv. dotenv replaces Hardhat's interactive vars system for private key management. If the uniswap-v2 directory does not exist, list the cloned repo top-level directories to locate the correct subdirectory name."
+        },
+        {
+          "order": 3,
+          "action": "Create .env file and .gitignore",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "commands": [
+            "printf 'AH_PRIVATE_KEY=\\nLOCAL_PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create .env with placeholders for both keys. Stop and ask the user to edit .env directly:\n- AH_PRIVATE_KEY=0x<testnet_key> (funded with PAS on Polkadot Hub TestNet)\n- LOCAL_PRIVATE_KEY=0x<local_key> (for local dev node only; the Hardhat default key 0xac0974...f2ff80 works for local testing)\nDo NOT ask for private keys in chat. Wait for user confirmation before proceeding."
+        },
+        {
+          "order": 4,
+          "action": "Update hardhat.config.ts for TestNet and security",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "description": "Open hardhat.config.ts and apply ALL changes:\n1. Add 'import \"dotenv/config\";' as the very first line.\n2. Replace any vars.get('AH_PRIVATE_KEY') with process.env.AH_PRIVATE_KEY as string, and vars.get('LOCAL_PRIVATE_KEY') with process.env.LOCAL_PRIVATE_KEY as string.\n3. Remove any 'import { vars } from \"hardhat/config\";' if present.\n4. In the polkadotTestnet (or assetHub) network block, set url: 'https://services.polkadothub-rpc.com/testnet' and chainId: 420420417.\n5. Add gasPrice: 5000000000000 to the polkadotTestnet network block (5000 gwei = 5x the 1000 gwei base fee).\n6. Add or confirm evmVersion: 'cancun' in the Solidity compiler settings \u2014 required for OpenZeppelin v5.4.0+ (mcopy opcode).\n7. Ensure requiredConfirmations is 1 in any ignition config block.\nSave the file."
+        },
+        {
+          "order": 5,
+          "action": "Compile the Uniswap V2 contracts",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled successfully",
+          "description": "Compile the Uniswap V2 Factory and Pair contracts. If you see 'invalid opcode: MCOPY', add evmVersion: 'cancun' to the Solidity compiler settings and retry."
+        },
+        {
+          "order": 6,
+          "action": "Run the test suite against TestNet (optional)",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "commands": [
+            "npx hardhat test --network polkadotTestnet"
+          ],
+          "expected_output": "All tests passing",
+          "description": "Optionally run the test suite against Polkadot Hub TestNet to verify the contracts behave correctly. This consumes testnet PAS for gas. If PAS balance is low, skip and proceed directly to deployment. Local testing against a dev node is also possible with 'npx hardhat test' (omit --network flag)."
+        },
+        {
+          "order": 7,
+          "action": "Deploy contracts to Polkadot Hub TestNet",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "commands": [
+            "npx hardhat ignition deploy ignition/modules/UniswapV2.ts --network polkadotTestnet"
+          ],
+          "expected_output": "UniswapV2Factory deployed to: 0x...",
+          "description": "Deploy the Uniswap V2 Factory (and optionally Pair) contracts via Ignition. Answer 'yes' when prompted to confirm deployment. Save the Factory contract address from the output.\n\nIf the deployment script is not an Ignition module, check package.json for a deploy script and use: npx hardhat run scripts/deploy.ts --network polkadotTestnet\n\nRecovery for stuck transactions:\n- 'priority is too low': verify gasPrice: 5000000000000 in hardhat.config.ts, delete ignition/deployments/, and redeploy.\n- IGN401: check deployed_addresses.json first; if Factory address is present, deployment succeeded."
+        },
+        {
+          "order": 8,
+          "action": "Verify the deployment",
+          "working_directory": "polkavm-hardhat-examples/uniswap-v2",
+          "description": "After deployment completes, verify the Factory contract is live by calling eth_getCode at the deployed address via the TestNet RPC. Run: curl -s -X POST https://services.polkadothub-rpc.com/testnet -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_getCode\",\"params\":[\"<FACTORY_ADDRESS>\",\"latest\"],\"id\":1}' and confirm the response contains a non-empty bytecode string (not '0x')."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkavm-hardhat-examples",
+        "base_path": "uniswap-v2",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "priority is too low",
+          "cause": "Transaction gas price below the 1000 gwei base fee on Polkadot Hub TestNet.",
+          "resolution": "Set gasPrice: 5000000000000 in the polkadotTestnet network block in hardhat.config.ts, delete ignition/deployments/, and redeploy."
+        },
+        {
+          "pattern": "invalid opcode: MCOPY",
+          "cause": "Uniswap V2 contracts or their dependencies use the mcopy opcode (Cancun EVM), but the Solidity compiler defaults to an older EVM version.",
+          "resolution": "Add evmVersion: 'cancun' to the Solidity compiler settings in hardhat.config.ts. Recompile with npx hardhat compile."
+        },
+        {
+          "pattern": "Transaction Already Imported",
+          "cause": "A prior transaction is still pending in the mempool. Retrying at the same gas price produces this error.",
+          "resolution": "Do not retry at the same gas price. Send a zero-value replacement transaction at the same nonce with gasPrice 2000000000000 (2x base fee). Once mined, delete ignition/deployments/ and redeploy."
+        },
+        {
+          "pattern": "Cannot find directory uniswap-v2 in cloned repo",
+          "cause": "The example directory may be named differently in the reference repo.",
+          "resolution": "List the root directories of polkavm-hardhat-examples with 'ls polkavm-hardhat-examples/' and navigate to the directory that corresponds to the Uniswap V2 example."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for Hardhat configuration reference, local dev node setup, or Uniswap V2 architecture context.",
+        "pages": [
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Hardhat EVM configuration options for Polkadot Hub, including network settings and gas configuration."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-local-dev-node",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-local-dev-node.md",
+            "relevance": "How to set up a local Polkadot Hub dev node for running tests before deploying to TestNet."
+          },
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network parameters for Polkadot Hub TestNet and Mainnet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy Uniswap V2 to TestNet",
+          "user_says": "Deploy Uniswap V2 on Polkadot Hub TestNet",
+          "actions": [
+            "Clone polkavm-hardhat-examples and navigate to the uniswap-v2 directory",
+            "Install dependencies and dotenv",
+            "Create .env with AH_PRIVATE_KEY (user fills in testnet key)",
+            "Update hardhat.config.ts: dotenv import, process.env keys, gasPrice 5000 gwei, evmVersion cancun, requiredConfirmations 1",
+            "Compile contracts and optionally run tests",
+            "Deploy via Ignition to polkadotTestnet and save Factory address",
+            "Verify deployment via eth_getCode RPC call"
+          ],
+          "result": "Uniswap V2 Factory and Pair contracts deployed to Polkadot Hub TestNet; Factory address recorded for AMM integration"
+        },
+        {
+          "scenario": "Edge case: transaction stuck, need to verify if Factory deployed",
+          "user_says": "Deployment failed with transaction dropped \u2014 did the Factory deploy?",
+          "actions": [
+            "Check ignition/deployments/<chainId>/deployed_addresses.json for UniswapV2Factory address",
+            "If present: verify with eth_getCode at that address; if non-empty bytecode, deployment succeeded",
+            "If absent: delete ignition/deployments/, confirm gasPrice 5000000000000 is set, redeploy"
+          ],
+          "result": "Factory address confirmed from state or clean redeployment completed"
+        }
+      ]
+    },
+    {
+      "id": "deploy-erc20-token-remix",
+      "title": "Deploy an ERC-20 Token Using Remix IDE",
+      "objective": "Deploy an OpenZeppelin ERC-20 token contract to Polkadot Hub TestNet using the Remix browser IDE with MetaMask.",
+      "description": "Deploys a Solidity ERC-20 token contract to Polkadot Hub TestNet entirely through the Remix browser IDE with MetaMask wallet injection. Use when you prefer a no-CLI workflow or are demonstrating contract deployment to non-developers. Trigger phrases: 'deploy ERC-20 remix', 'erc20 token remix polkadot', 'deploy token browser IDE'. Covers fetching contract code from revm-hardhat-examples, Remix compile settings (evmVersion cancun for OpenZeppelin v5), MetaMask TestNet configuration, and minting tokens via the Remix UI. No local environment required beyond a browser and MetaMask.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-remix.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-remix.md",
+      "prerequisites": {
+        "runtime": [
+          "A modern web browser (Chrome or Firefox recommended)"
+        ],
+        "network": [
+          "Polkadot Hub TestNet (chainId 420420417) \u2014 configured in MetaMask"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ \u2014 required to pay deployment gas"
+        ],
+        "wallet": [
+          "MetaMask browser extension installed and unlocked",
+          "An account funded with testnet PAS on Polkadot Hub TestNet (chainId 420420417, RPC: https://services.polkadothub-rpc.com/testnet)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Fetch the ERC-20 contract source",
+          "working_directory": ".",
+          "description": "Fetch the OpenZeppelin ERC-20 contract source from the reference repository. The contract file is at: https://raw.githubusercontent.com/polkadot-developers/revm-hardhat-examples/master/erc20-hardhat/contracts/MyToken.sol\n\nRun: curl -sL https://raw.githubusercontent.com/polkadot-developers/revm-hardhat-examples/master/erc20-hardhat/contracts/MyToken.sol and display the contract source to the user. The user will paste this into Remix in the next step."
+        },
+        {
+          "order": 2,
+          "action": "Open Remix IDE and create the contract file",
+          "working_directory": ".",
+          "description": "Navigate to https://remix.ethereum.org in the browser. In the File Explorer panel (left sidebar), click the 'New File' icon and name it 'MyToken.sol'. Paste the full contract source fetched in step 1 into the editor. Save with Ctrl+S (or Cmd+S on Mac)."
+        },
+        {
+          "order": 3,
+          "action": "Configure the Solidity compiler in Remix",
+          "working_directory": ".",
+          "description": "Click the 'Solidity compiler' tab (shield icon) in the left sidebar. Set the following:\n- Compiler version: select 0.8.20 or higher (match the pragma in the contract source)\n- EVM version: select 'cancun' from the Advanced Configuration dropdown \u2014 required for OpenZeppelin v5.4.0+ (mcopy opcode)\nClick 'Compile MyToken.sol'. A green checkmark indicates success. If compilation fails with 'Unknown key', verify the EVM version is set to 'cancun'."
+        },
+        {
+          "order": 4,
+          "action": "Add Polkadot Hub TestNet to MetaMask",
+          "working_directory": ".",
+          "description": "If MetaMask does not already have Polkadot Hub TestNet configured, add it manually:\n1. Open MetaMask and go to Settings > Networks > Add Network > Add a network manually.\n2. Enter: Network Name: Polkadot Hub TestNet; RPC URL: https://services.polkadothub-rpc.com/testnet; Chain ID: 420420417; Currency Symbol: PAS.\n3. Click Save and switch to the Polkadot Hub TestNet network.\n4. Confirm the account shown in MetaMask has PAS tokens. If not, visit https://faucet.polkadot.io/ to request testnet PAS."
+        },
+        {
+          "order": 5,
+          "action": "Connect MetaMask to Remix and deploy",
+          "working_directory": ".",
+          "description": "In Remix, click the 'Deploy & run transactions' tab (Ethereum icon) in the left sidebar. Set:\n- Environment: select 'Injected Provider - MetaMask'\n- MetaMask will pop up asking to connect \u2014 click Connect and approve.\n- Confirm the Account field shows your MetaMask address and the network shows Polkadot Hub TestNet (chain ID 420420417).\n- In the Contract dropdown, select 'MyToken'.\n- Expand the Deploy section and fill in the constructor arguments: initialOwner = your MetaMask address.\n- Click the orange 'Deploy' button.\n- MetaMask will show a transaction confirmation \u2014 review the gas fee and click Confirm.\n- Wait for the transaction to be mined (10\u201330 seconds on TestNet). The deployed contract address appears in the 'Deployed Contracts' section below."
+        },
+        {
+          "order": 6,
+          "action": "Verify the deployment and mint tokens",
+          "working_directory": ".",
+          "description": "In the 'Deployed Contracts' section in Remix, expand the MyToken contract entry. Verify the deployment:\n- Click 'name' to confirm it returns your token name.\n- Click 'symbol' to confirm the token symbol.\n- Click 'totalSupply' \u2014 should return 0 if the contract has no initial supply.\n\nTo mint tokens:\n1. Expand the 'mint' function.\n2. Enter: to = your MetaMask address, amount = 1000000000000000000 (1 token with 18 decimals).\n3. Click 'transact' and confirm in MetaMask.\n4. After mining, click 'balanceOf' and enter your address to verify the balance increased."
+        }
+      ],
+      "reference_code": {
+        "repo": "revm-hardhat-examples",
+        "base_path": "erc20-hardhat",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Remix compilation fails with 'Unknown key evmVersion cancun'",
+          "cause": "Older Remix versions may not list 'cancun' in the EVM version dropdown.",
+          "resolution": "Update to the latest Remix version by refreshing the page. The cancun option should appear in Advanced Configuration. Alternatively, use a custom EVM version by typing 'cancun' in the input field if available."
+        },
+        {
+          "pattern": "MetaMask shows wrong network after connecting to Remix",
+          "cause": "MetaMask is on a different network than Polkadot Hub TestNet.",
+          "resolution": "In MetaMask, switch to 'Polkadot Hub TestNet' (chainId 420420417) before deploying. Confirm the Remix environment section shows the correct chain ID."
+        },
+        {
+          "pattern": "Transaction fails with insufficient funds",
+          "cause": "The MetaMask account does not have enough PAS tokens to pay for deployment gas.",
+          "resolution": "Visit https://faucet.polkadot.io/, enter your MetaMask address, and request testnet PAS. Wait for the tokens to arrive (usually under 1 minute), then retry deployment."
+        },
+        {
+          "pattern": "Remix shows 'Gas estimation failed'",
+          "cause": "Contract constructor arguments may be missing or invalid, or the MetaMask account has insufficient funds.",
+          "resolution": "Verify the initialOwner address is filled in correctly in the constructor arguments. Check PAS balance in MetaMask and top up via faucet if needed."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for ERC-20 Hardhat deployment (CLI alternative), network connection details, or wallet configuration.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat.md",
+            "relevance": "CLI-based ERC-20 deployment using Hardhat \u2014 use when the user prefers a terminal workflow over Remix."
+          },
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network parameters for manually adding Polkadot Hub to MetaMask."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-remix",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-remix.md",
+            "relevance": "How to connect Remix IDE to Polkadot Hub via MetaMask Injected Provider."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy ERC-20 via Remix",
+          "user_says": "Deploy an ERC-20 token on Polkadot Hub using Remix IDE",
+          "actions": [
+            "Fetch MyToken.sol from revm-hardhat-examples and display to user",
+            "Open https://remix.ethereum.org, create MyToken.sol, paste contract",
+            "In Remix Solidity compiler, set version 0.8.20+ and EVM version 'cancun'",
+            "Add Polkadot Hub TestNet to MetaMask (chainId 420420417, RPC testnet URL)",
+            "Connect Injected Provider in Remix Deploy tab, deploy with initialOwner set to wallet address",
+            "Verify deployment and mint tokens via Remix UI"
+          ],
+          "result": "ERC-20 token deployed on Polkadot Hub TestNet; contract visible in Remix with working name, symbol, mint, and balanceOf functions"
+        },
+        {
+          "scenario": "Edge case: user has no testnet PAS tokens",
+          "user_says": "Deployment failed \u2014 gas fee transaction rejected",
+          "actions": [
+            "Direct user to https://faucet.polkadot.io/ and ask them to enter their MetaMask address",
+            "Wait for confirmation that PAS tokens have arrived (check MetaMask balance)",
+            "Retry deployment from the Remix Deploy tab"
+          ],
+          "result": "Account funded with testnet PAS; deployment proceeds successfully"
+        }
+      ]
+    },
+    {
+      "id": "deploy-contracts-ethers-js",
+      "title": "Deploy Contracts to Polkadot Hub with Ethers.js",
+      "objective": "Compile a Solidity contract and deploy it to Polkadot Hub TestNet using Ethers.js v6 scripts from scratch.",
+      "description": "Sets up a Node.js project, compiles a Solidity contract with solc, deploys to Polkadot Hub TestNet using Ethers.js v6, and interacts with the deployed contract via read and write script calls. Use when integrating Ethers.js into a new or existing Node.js project targeting Polkadot Hub. Trigger phrases: 'deploy with ethers.js polkadot', 'ethers.js contract deployment', 'use ethers polkadot hub', 'ethersjs testnet'. Covers dotenv credential setup, custom Polkadot Hub provider configuration, and the compile-deploy-interact workflow. Produces a deployed contract with verified read/write interaction.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/libraries/ethers-js.md"
+      ],
+      "primary_page": "smart-contracts/libraries/ethers-js.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22+",
+          "npm"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417, base fee 1000 gwei)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ \u2014 required for deployment gas"
+        ],
+        "wallet": [
+          "0x-prefixed EVM private key for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key of the deployer wallet. Must be funded with testnet PAS. Edit .env directly \u2014 never paste in chat.",
+          "required": true
+        },
+        {
+          "name": "RPC_URL",
+          "description": "HTTP RPC endpoint for Polkadot Hub TestNet. Set to https://services.polkadothub-rpc.com/testnet.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create the project directory and initialize",
+          "working_directory": ".",
+          "commands": [
+            "mkdir ethers-deploy && cd ethers-deploy",
+            "npm init -y",
+            "npm pkg set type=module"
+          ],
+          "description": "Create and initialize an ESM Node.js project. ESM is required for Ethers.js v6 imports."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "ethers-deploy",
+          "commands": [
+            "npm install ethers dotenv",
+            "npm install --save-dev solc typescript tsx @types/node"
+          ],
+          "description": "Install ethers (v6), dotenv for credential management, solc for Solidity compilation, and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Create .env file and .gitignore",
+          "working_directory": "ethers-deploy",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\nRPC_URL=https://services.polkadothub-rpc.com/testnet\\n' > .env",
+            "echo '.env' > .gitignore"
+          ],
+          "description": "Create .env with RPC_URL pre-filled and empty PRIVATE_KEY. Stop and ask the user to edit .env directly by adding their 0x-prefixed private key as PRIVATE_KEY=0x<their_key>. Do NOT ask for the key in chat. Wait for confirmation before continuing."
+        },
+        {
+          "order": 4,
+          "action": "Fetch the contract compilation script",
+          "working_directory": "ethers-deploy",
+          "description": "Fetch the Solidity compilation helper from polkadot-cookbook. Run:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/ethers-js/compile.ts -o compile.ts\n\nIf the path returns 404, try without the compile.ts extension or check the available files at:\ncurl -s https://api.github.com/repos/polkadot-developers/polkadot-cookbook/contents/polkadot-docs/smart-contracts/libraries/ethers-js\n\nSubstitutions to apply in compile.ts: none \u2014 the file compiles a contract inline or from a local .sol file."
+        },
+        {
+          "order": 5,
+          "action": "Fetch the contract and deployment scripts",
+          "working_directory": "ethers-deploy",
+          "description": "Fetch the main deployment script from polkadot-cookbook:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/ethers-js/deploy.ts -o deploy.ts\n\nAlso fetch the interaction script:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/ethers-js/interact.ts -o interact.ts\n\nIf a contract .sol file is referenced in the scripts, fetch it as well. Apply ALL of these substitutions across any fetched files:\n1. Add 'import \"dotenv/config\";' as the first line of each script.\n2. Replace INSERT_RPC_URL with process.env.RPC_URL.\n3. Replace INSERT_CHAIN_ID or any hardcoded chain ID with 420420417.\n4. Replace INSERT_PRIVATE_KEY, INSERT_MNEMONIC, or any hardcoded credential with process.env.PRIVATE_KEY.\n5. For any provider construction, ensure it points to 'https://services.polkadothub-rpc.com/testnet'."
+        },
+        {
+          "order": 6,
+          "action": "Compile the Solidity contract",
+          "working_directory": "ethers-deploy",
+          "commands": [
+            "npx tsx compile.ts"
+          ],
+          "expected_output": "Compilation successful",
+          "description": "Run the compile script to generate the contract ABI and bytecode. If the output references a .json artifact file, confirm it was created before proceeding to deploy."
+        },
+        {
+          "order": 7,
+          "action": "Deploy the contract to Polkadot Hub TestNet",
+          "working_directory": "ethers-deploy",
+          "commands": [
+            "npx tsx deploy.ts"
+          ],
+          "expected_output": "Contract deployed to: 0x...",
+          "description": "Run the deployment script. Save the deployed contract address from the output \u2014 needed for the interact script.\n\nIf deployment fails with 'insufficient funds': visit https://faucet.polkadot.io/ and fund the deployer account.\nIf the transaction is stuck or rejected: verify the RPC URL is correct and the account is funded, then retry."
+        },
+        {
+          "order": 8,
+          "action": "Interact with the deployed contract",
+          "working_directory": "ethers-deploy",
+          "commands": [
+            "npx tsx interact.ts"
+          ],
+          "expected_output": "Stored value retrieved",
+          "description": "Run the interact script. If it expects a CONTRACT_ADDRESS environment variable or argument, update interact.ts with the deployed address from step 7 before running. Verify the output shows successful read and write operations against the deployed contract."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/libraries/ethers-js",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: insufficient funds for intrinsic transaction cost",
+          "cause": "The deployer account does not have enough PAS to pay for deployment gas.",
+          "resolution": "Visit https://faucet.polkadot.io/, enter the deployer address, and request testnet PAS. Confirm balance in MetaMask or via eth_getBalance RPC call, then retry."
+        },
+        {
+          "pattern": "Error: could not detect network",
+          "cause": "The RPC_URL in .env is incorrect or the endpoint is unreachable.",
+          "resolution": "Verify RPC_URL=https://services.polkadothub-rpc.com/testnet in .env. Test connectivity: curl -s -X POST https://services.polkadothub-rpc.com/testnet -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_blockNumber\",\"params\":[],\"id\":1}'"
+        },
+        {
+          "pattern": "SyntaxError: Cannot use import statement in a module",
+          "cause": "Project is not configured as ESM.",
+          "resolution": "Run 'npm pkg set type=module' in the ethers-deploy directory to enable ES modules."
+        },
+        {
+          "pattern": "Error: transaction underpriced",
+          "cause": "The gas price in the transaction is below the 1000 gwei TestNet base fee.",
+          "resolution": "Add an explicit gasPrice to the transaction options: { gasPrice: ethers.parseUnits('5000', 'gwei') }. Polkadot Hub TestNet has a base fee of 1000 gwei."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for network details, wallet setup, or other library alternatives.",
+        "pages": [
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network parameters (RPC URLs, chain IDs, WebSocket endpoints) for all Polkadot Hub environments."
+          },
+          {
+            "slug": "smart-contracts-libraries-viem",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-viem.md",
+            "relevance": "Alternative to Ethers.js: Viem deployment pattern for Polkadot Hub (more type-safe, recommended for new projects)."
+          },
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat.md",
+            "relevance": "Hardhat-based deployment workflow \u2014 use when the project needs a full Hardhat setup rather than lightweight scripts."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy and interact with a Storage contract",
+          "user_says": "Deploy a contract to Polkadot Hub using Ethers.js",
+          "actions": [
+            "Create ethers-deploy ESM project and install ethers, dotenv, solc, tsx",
+            "Create .env with RPC_URL and empty PRIVATE_KEY (user fills in)",
+            "Fetch compile.ts, deploy.ts, interact.ts from polkadot-cookbook",
+            "Apply substitutions: dotenv import, process.env.RPC_URL, process.env.PRIVATE_KEY, chainId 420420417",
+            "Run npx tsx compile.ts to build ABI/bytecode",
+            "Run npx tsx deploy.ts and save deployed contract address",
+            "Run npx tsx interact.ts to verify read/write contract operations"
+          ],
+          "result": "Solidity contract compiled, deployed to Polkadot Hub TestNet, and verified with read/write operations via Ethers.js scripts"
+        },
+        {
+          "scenario": "Edge case: transaction underpriced error during deployment",
+          "user_says": "Deploy failed with transaction underpriced",
+          "actions": [
+            "Open deploy.ts and add gasPrice override to the deployment transaction options",
+            "Set gasPrice: ethers.parseUnits('5000', 'gwei') \u2014 5x the 1000 gwei TestNet base fee",
+            "Retry with npx tsx deploy.ts"
+          ],
+          "result": "Deployment succeeds with sufficient gas price for Polkadot Hub TestNet"
+        }
+      ]
+    },
+    {
+      "id": "deploy-contracts-viem",
+      "title": "Deploy Contracts to Polkadot Hub with Viem",
+      "objective": "Compile a Solidity contract and deploy it to Polkadot Hub TestNet using Viem v2 TypeScript scripts.",
+      "description": "Sets up a TypeScript project, compiles a Solidity contract, deploys to Polkadot Hub TestNet using Viem v2 walletClient.deployContract, and interacts with the deployed contract via publicClient and walletClient. Use when building a TypeScript project that needs direct Viem integration with Polkadot Hub without a Hardhat setup. Trigger phrases: 'deploy with viem polkadot', 'viem contract deployment', 'use viem polkadot hub', 'deploy viem typescript'. Covers custom Polkadot Hub chain definition, dotenv credential setup, and the compile-deploy-interact pattern. Companion to deploy-contracts-ethers-js.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/libraries/viem.md"
+      ],
+      "primary_page": "smart-contracts/libraries/viem.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22+",
+          "npm"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417, base fee 1000 gwei)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ \u2014 required for deployment gas"
+        ],
+        "wallet": [
+          "0x-prefixed EVM private key for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key of the deployer wallet. Must be funded with testnet PAS. Edit .env directly \u2014 never paste in chat.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create the project directory and initialize",
+          "working_directory": ".",
+          "commands": [
+            "mkdir viem-deploy && cd viem-deploy",
+            "npm init -y",
+            "npm pkg set type=module"
+          ],
+          "description": "Create and initialize an ESM Node.js project in a new 'viem-deploy' directory. ESM is required for Viem v2."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "viem-deploy",
+          "commands": [
+            "npm install viem dotenv",
+            "npm install --save-dev solc typescript tsx @types/node"
+          ],
+          "description": "Install viem (v2), dotenv for credential management, solc for Solidity compilation, and TypeScript tooling."
+        },
+        {
+          "order": 3,
+          "action": "Create .env file and .gitignore",
+          "working_directory": "viem-deploy",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' > .gitignore"
+          ],
+          "description": "Create .env with an empty PRIVATE_KEY placeholder. Stop and ask the user to edit .env directly by adding PRIVATE_KEY=0x<their_key>. Do NOT ask for the key in chat. Wait for confirmation before continuing."
+        },
+        {
+          "order": 4,
+          "action": "Fetch the chain configuration file",
+          "working_directory": "viem-deploy",
+          "description": "Fetch the Polkadot Hub chain definition from polkadot-cookbook:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/viem/chain.ts -o chain.ts\n\nApply substitutions in chain.ts:\n1. Ensure the chain ID is 420420417.\n2. Ensure the RPC URL is 'https://services.polkadothub-rpc.com/testnet'.\n3. If the file uses INSERT_RPC_URL or INSERT_CHAIN_ID placeholders, replace them.\nIf chain.ts does not exist in the cookbook, create it manually with this content:\nimport { defineChain } from 'viem';\nexport const polkadotHubTestnet = defineChain({ id: 420420417, name: 'Polkadot Hub TestNet', nativeCurrency: { name: 'PAS', symbol: 'PAS', decimals: 18 }, rpcUrls: { default: { http: ['https://services.polkadothub-rpc.com/testnet'] } } });"
+        },
+        {
+          "order": 5,
+          "action": "Fetch the compilation and deployment scripts",
+          "working_directory": "viem-deploy",
+          "description": "Fetch the deployment script from polkadot-cookbook:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/viem/deploy.ts -o deploy.ts\n\nFetch the interaction script:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/viem/read.ts -o read.ts\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/viem/write.ts -o write.ts\n\nApply ALL substitutions across fetched files:\n1. Add 'import \"dotenv/config\";' as the first line of deploy.ts.\n2. Replace INSERT_PRIVATE_KEY with process.env.PRIVATE_KEY as `0x${string}`.\n3. Replace INSERT_RPC_URL with 'https://services.polkadothub-rpc.com/testnet'.\n4. Replace INSERT_CHAIN_ID with 420420417n (BigInt for Viem chain ID fields) or 420420417.\n5. Replace INSERT_CONTRACT_ADDRESS in read.ts/write.ts with the deployed address (available after step 6).\nIf any script is not found, check the cookbook directory listing: curl -s https://api.github.com/repos/polkadot-developers/polkadot-cookbook/contents/polkadot-docs/smart-contracts/libraries/viem"
+        },
+        {
+          "order": 6,
+          "action": "Compile the Solidity contract",
+          "working_directory": "viem-deploy",
+          "description": "If the deployment scripts reference a .sol file or require a compiled ABI/bytecode JSON, fetch or create the contract file first:\ncurl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/libraries/viem/Storage.sol -o Storage.sol\n\nThen compile with solc:\nnpx --yes solc@latest --combined-json abi,bin Storage.sol -o artifacts/\n\nAlternatively, if the script includes a compile step, run it: npx tsx compile.ts\n\nVerify ABI and bytecode artifacts exist in the artifacts/ directory before deploying."
+        },
+        {
+          "order": 7,
+          "action": "Deploy the contract to Polkadot Hub TestNet",
+          "working_directory": "viem-deploy",
+          "commands": [
+            "npx tsx deploy.ts"
+          ],
+          "expected_output": "Contract deployed to: 0x...",
+          "description": "Run the deployment script. Save the deployed contract address from the output.\n\nIf the transaction fails with 'insufficient funds': visit https://faucet.polkadot.io/ and fund the deployer account.\nIf the transaction fails with 'fee cap too low' or similar gas errors: add gasPrice override in deploy.ts:\nconst hash = await walletClient.deployContract({ ..., gasPrice: parseGwei('5000') });\nImport parseGwei from 'viem'."
+        },
+        {
+          "order": 8,
+          "action": "Interact with the deployed contract",
+          "working_directory": "viem-deploy",
+          "description": "Update read.ts and write.ts with the deployed contract address from step 7 (replace INSERT_CONTRACT_ADDRESS). Then run each script:\nnpx tsx read.ts   \u2014 reads the current stored value from the contract\nnpx tsx write.ts  \u2014 writes a new value and waits for transaction receipt\n\nVerify that the value returned by read.ts changes after write.ts has been executed."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/libraries/viem",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: fee cap too low / transaction underpriced",
+          "cause": "Viem's default gas estimation produces a gas price below the 1000 gwei TestNet base fee.",
+          "resolution": "Add an explicit gasPrice override to the deployContract call: { gasPrice: parseGwei('5000') }. Import parseGwei from 'viem'. Polkadot Hub TestNet requires at least 1000 gwei; use 5000 gwei (5x) as a safe margin."
+        },
+        {
+          "pattern": "Error: Chain ID mismatch",
+          "cause": "The Viem chain definition's id does not match the connected network's chain ID.",
+          "resolution": "Verify the chain object has id: 420420417. Check with: const chainId = await publicClient.getChainId(); and confirm it returns 420420417."
+        },
+        {
+          "pattern": "Cannot find module 'viem'",
+          "cause": "Viem package not installed.",
+          "resolution": "Run 'npm install viem' in the viem-deploy directory."
+        },
+        {
+          "pattern": "Error: insufficient funds for intrinsic transaction cost",
+          "cause": "The deployer account does not have enough PAS for gas.",
+          "resolution": "Visit https://faucet.polkadot.io/ and request testnet PAS for the deployer address. Verify balance with: await publicClient.getBalance({ address: '0x...' })"
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for network details, Ethers.js comparison, or a full Hardhat-based workflow.",
+        "pages": [
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Network parameters for Polkadot Hub including chain IDs, RPC URLs, and WebSocket endpoints."
+          },
+          {
+            "slug": "smart-contracts-libraries-ethers-js",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-ethers-js.md",
+            "relevance": "Ethers.js equivalent workflow \u2014 use when the user prefers Ethers.js v6 over Viem."
+          },
+          {
+            "slug": "smart-contracts-cookbook-dapps-zero-to-hero",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-dapps-zero-to-hero.md",
+            "relevance": "Full-stack dApp tutorial combining Viem with a Next.js frontend \u2014 the natural next step after deploying a contract with Viem."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy and interact with a contract",
+          "user_says": "Deploy a smart contract to Polkadot Hub with Viem",
+          "actions": [
+            "Create viem-deploy ESM project, install viem, dotenv, solc, tsx",
+            "Create .env with empty PRIVATE_KEY (user fills in)",
+            "Fetch chain.ts from polkadot-cookbook, verify chain ID 420420417 and TestNet RPC",
+            "Fetch deploy.ts, read.ts, write.ts; apply dotenv import and process.env.PRIVATE_KEY substitutions",
+            "Compile Solidity contract to ABI/bytecode artifacts",
+            "Run npx tsx deploy.ts and save deployed contract address",
+            "Update read.ts/write.ts with deployed address; run both to verify contract interaction"
+          ],
+          "result": "Contract deployed to Polkadot Hub TestNet; read and write operations confirmed via Viem scripts"
+        },
+        {
+          "scenario": "Edge case: gas fee cap too low during deployment",
+          "user_says": "Deployment fails with fee cap too low error",
+          "actions": [
+            "Open deploy.ts and locate the walletClient.deployContract call",
+            "Add gasPrice: parseGwei('5000') to the transaction options object",
+            "Import parseGwei from 'viem' at the top of the file",
+            "Retry with npx tsx deploy.ts"
+          ],
+          "result": "Deployment succeeds with 5000 gwei gas price, above the 1000 gwei TestNet base fee"
         }
       ]
     }
