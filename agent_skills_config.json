@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "generated": "2026-04-21T22:30:00Z",
-  "content_hash": "sha256:559aaa10ba5004216c6bb56bd2974ee52dddc3660cc1de057d14e5ec617b5b0e",
+  "content_hash": "sha256:d08cfd8882c40382369beddf38b226945f9a814049a871f9bdb043c7554c174c",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -9173,6 +9173,682 @@
             "Or use curl: curl -H \"Content-Type: application/json\" -d '{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"state_getMetadata\"}' http://127.0.0.1:9944"
           ],
           "result": "Metadata from the local dev node retrieved; reflects the exact runtime version currently running locally."
+        }
+      ]
+    },
+    {
+      "id": "use-polkadot-js-api",
+      "title": "Query and Transact on Polkadot Chains with the Polkadot.js API",
+      "objective": "Connect to a Polkadot chain, read chain constants and account state, and submit a signed balance transfer using the @polkadot/api library.",
+      "description": "Installs @polkadot/api and demonstrates creating a WsProvider connection, reading chain constants and on-chain storage, and submitting a signed balance transfer. Use when maintaining or migrating legacy TypeScript/JavaScript projects that already depend on @polkadot/api. Warning: this library is in maintenance mode — new projects should use Polkadot API (PAPI) or Dedot. Trigger phrases: 'polkadot.js api', '@polkadot/api', 'polkadot javascript sdk', 'use polkadot js'. Outcome: TypeScript script that connects to a node, reads account state, and sends a signed transaction.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/tools/polkadot-js-api.md"
+      ],
+      "primary_page": "reference/tools/polkadot-js-api.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v18+",
+          "npm or pnpm"
+        ],
+        "network": [
+          "WebSocket RPC endpoint for the target chain (e.g., wss://rpc.ibp.network/polkadot for Polkadot mainnet)"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "WS_ENDPOINT",
+          "description": "WebSocket URL for the target chain (e.g., wss://services.polkadothub-rpc.com/testnet for Polkadot Hub TestNet).",
+          "required": true
+        },
+        {
+          "name": "MNEMONIC",
+          "description": "12 or 24-word seed phrase for the signing account. Required only for the transaction-sending step.",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Initialize ESM Node.js project and install @polkadot/api",
+          "working_directory": ".",
+          "commands": [
+            "mkdir polkadot-api-demo && cd polkadot-api-demo",
+            "npm init -y && npm pkg set type=module",
+            "npm install @polkadot/api @polkadot/keyring dotenv"
+          ],
+          "description": "Create a new directory named polkadot-api-demo and initialize it as an ESM Node.js project. The type=module flag is required because @polkadot packages use ESM-only imports. Install dotenv for secure credential loading."
+        },
+        {
+          "order": 2,
+          "action": "Create .env file and add to .gitignore",
+          "working_directory": "polkadot-api-demo",
+          "commands": [
+            "printf 'WS_ENDPOINT=\\nMNEMONIC=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create .env with empty placeholders and exclude it from git. Stop and ask the user to edit the .env file directly — do NOT ask for the mnemonic or endpoint in chat. Set WS_ENDPOINT to the WebSocket URL for the target chain (e.g., wss://services.polkadothub-rpc.com/testnet for Polkadot Hub TestNet, or wss://rpc.ibp.network/polkadot for mainnet). Set MNEMONIC if you plan to send transactions. Wait for confirmation before proceeding."
+        },
+        {
+          "order": 3,
+          "action": "Create the chain-query script",
+          "working_directory": "polkadot-api-demo",
+          "description": "Create a file named query.ts with the following content. Replace INSERT_ADDRESS with the SS58-encoded address to query (e.g., an address from the create-polkadot-account skill output):\n\nimport 'dotenv/config';\nimport { ApiPromise, WsProvider } from '@polkadot/api';\n\nasync function main() {\n  const provider = new WsProvider(process.env.WS_ENDPOINT!);\n  const api = await ApiPromise.create({ provider });\n  const chain = await api.rpc.system.chain();\n  const existentialDeposit = api.consts.balances.existentialDeposit;\n  console.log(`Connected to: ${chain}`);\n  console.log(`Existential deposit: ${existentialDeposit.toHuman()}`);\n  const account = await api.query.system.account('INSERT_ADDRESS');\n  console.log('Account data:', account.toHuman());\n  await api.disconnect();\n}\n\nmain().catch(console.error);"
+        },
+        {
+          "order": 4,
+          "action": "Run the query script",
+          "working_directory": "polkadot-api-demo",
+          "commands": [
+            "npx tsx query.ts"
+          ],
+          "expected_output": "Connected to: Polkadot (or your target chain name)\nExistential deposit: 10 mDOT (or equivalent)\nAccount data: { nonce: ..., data: { free: ..., reserved: ... } }"
+        },
+        {
+          "order": 5,
+          "action": "Create and run the transaction script",
+          "working_directory": "polkadot-api-demo",
+          "description": "Create a file named transfer.ts. Only proceed if MNEMONIC is set in .env. Replace INSERT_RECIPIENT with the destination SS58 address and INSERT_AMOUNT with the transfer amount in planck units (e.g., 1000000000000 = 1 DOT with 10 decimals, or 1000000000000000000 = 1 PAS with 18 decimals):\n\nimport 'dotenv/config';\nimport { ApiPromise, WsProvider, Keyring } from '@polkadot/api';\n\nasync function main() {\n  const provider = new WsProvider(process.env.WS_ENDPOINT!);\n  const api = await ApiPromise.create({ provider });\n  const keyring = new Keyring({ type: 'sr25519' });\n  const sender = keyring.addFromUri(process.env.MNEMONIC!);\n  console.log(`Sending from: ${sender.address}`);\n  const txHash = await api.tx.balances\n    .transferKeepAlive('INSERT_RECIPIENT', INSERT_AMOUNT)\n    .signAndSend(sender);\n  console.log(`Transaction hash: ${txHash}`);\n  await api.disconnect();\n}\n\nmain().catch(console.error);\n\nThen run: npx tsx transfer.ts"
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: WebSocket is not open / ECONNREFUSED",
+          "cause": "The WS_ENDPOINT URL is unreachable or the protocol is wrong.",
+          "resolution": "Verify WS_ENDPOINT in .env starts with wss:// (not https://). Check the node is online. For Polkadot Hub TestNet use wss://services.polkadothub-rpc.com/testnet."
+        },
+        {
+          "pattern": "SyntaxError: Cannot use import statement in a module",
+          "cause": "The project is not configured as an ESM module.",
+          "resolution": "Run 'npm pkg set type=module' in the polkadot-api-demo directory, then retry."
+        },
+        {
+          "pattern": "Error: Cannot find module '@polkadot/api'",
+          "cause": "Dependencies not installed.",
+          "resolution": "Run 'npm install @polkadot/api @polkadot/keyring dotenv' in the polkadot-api-demo directory."
+        },
+        {
+          "pattern": "RpcError: 1010: Invalid Transaction: Inability to pay some fees",
+          "cause": "The sender account has insufficient funds to pay transaction fees.",
+          "resolution": "Fund the sender account with tokens. For Polkadot Hub TestNet use the faucet at https://faucet.polkadot.io/."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user asks about API alternatives, migration paths, or needs deeper context on chain interactions.",
+        "pages": [
+          {
+            "slug": "reference-tools-papi",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-papi.md",
+            "relevance": "Polkadot API (PAPI) — the recommended replacement for @polkadot/api in new projects."
+          },
+          {
+            "slug": "reference-tools-dedot",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-dedot.md",
+            "relevance": "Dedot — modern lightweight alternative to @polkadot/api with better TypeScript inference."
+          },
+          {
+            "slug": "chain-interactions-send-transactions-with-sdks",
+            "url": "https://docs.polkadot.com/ai/pages/chain-interactions-send-transactions-with-sdks.md",
+            "relevance": "Multi-SDK transaction guide covering PAPI, Polkadot.js, Dedot, and Subxt variants."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: query account balance",
+          "user_says": "Use @polkadot/api to check an account balance on Polkadot Hub",
+          "actions": [
+            "Initialize ESM Node.js project and install @polkadot/api",
+            "Create .env with WS_ENDPOINT set to the Polkadot Hub TestNet WebSocket URL",
+            "Create query.ts with ApiPromise.create() and api.query.system.account()",
+            "Run npx tsx query.ts and read account balance output"
+          ],
+          "result": "Account free/reserved/frozen balances printed to console; chain name and existential deposit shown"
+        },
+        {
+          "scenario": "Edge case: user is starting a new project",
+          "user_says": "I want to build a new Polkadot app with polkadot.js api",
+          "actions": [
+            "Surface maintenance-mode warning: @polkadot/api is in maintenance mode",
+            "Recommend PAPI (reference-tools-papi) or Dedot (reference-tools-dedot) for new projects",
+            "If user confirms they want @polkadot/api anyway, proceed with installation steps"
+          ],
+          "result": "User informed of deprecation status; skill proceeds with @polkadot/api if that is the deliberate choice"
+        }
+      ]
+    },
+    {
+      "id": "bootstrap-parachain-pop-cli",
+      "title": "Bootstrap Parachain Development with Pop CLI",
+      "objective": "Scaffold, build, and launch a new Polkadot SDK parachain project locally using Pop CLI.",
+      "description": "Installs Pop CLI and uses it to set up Polkadot SDK build dependencies, scaffold a new parachain project, compile it in release mode, and spin up a local test network. Use when starting a new parachain from scratch and wanting an opinionated, guided scaffold over manual Polkadot SDK setup. Requires Rust stable toolchain and build dependencies from parachains/install-polkadot-sdk. Trigger phrases: 'pop cli', 'pop new parachain', 'bootstrap parachain pop', 'scaffold parachain with pop cli'. Outcome: local parachain network running with a freshly scaffolded template.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "reference/tools/pop-cli.md"
+      ],
+      "primary_page": "reference/tools/pop-cli.md",
+      "prerequisites": {
+        "runtime": [
+          "Rust stable toolchain (install via rustup: https://rustup.rs)",
+          "Polkadot SDK system dependencies — run the install script from parachains/install-polkadot-sdk.md first"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install Pop CLI",
+          "working_directory": ".",
+          "commands": [
+            "cargo install pop-cli"
+          ],
+          "description": "Install Pop CLI from crates.io. This requires the Rust stable toolchain and Polkadot SDK build dependencies (clang, cmake, protobuf-compiler, etc.). If cargo is not found, install Rust first: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh. Verify the install succeeded by running: pop --help",
+          "expected_output": "pop-cli installed. Run 'pop --help' for usage."
+        },
+        {
+          "order": 2,
+          "action": "Install Polkadot SDK build dependencies via Pop",
+          "working_directory": ".",
+          "commands": [
+            "pop install"
+          ],
+          "description": "Run 'pop install' to let Pop CLI detect and install missing system dependencies required to build the Polkadot SDK (libssl, protobuf-compiler, cmake, etc.). This is equivalent to following the parachains/install-polkadot-sdk guide. The command may prompt for sudo password on Linux. Confirm each installation prompt.",
+          "expected_output": "All dependencies installed successfully."
+        },
+        {
+          "order": 3,
+          "action": "Scaffold a new parachain project",
+          "working_directory": ".",
+          "commands": [
+            "pop new parachain my-parachain"
+          ],
+          "description": "Scaffold a new parachain named my-parachain using the default Polkadot SDK parachain template. Replace my-parachain with your desired project name (use kebab-case). Pop CLI creates the project directory with a complete Polkadot SDK parachain skeleton including runtime, node, and pallets.",
+          "expected_output": "my-parachain/ directory created with Polkadot SDK parachain template."
+        },
+        {
+          "order": 4,
+          "action": "Build the parachain in release mode",
+          "working_directory": "my-parachain",
+          "commands": [
+            "pop build --release"
+          ],
+          "description": "Compile the parachain runtime and node binary. The first build takes 20-40 minutes. Subsequent builds are faster due to cargo caching. Replace my-parachain in the working_directory with the actual project directory name used in step 3.",
+          "expected_output": "Compiling ... Finished release [optimized] target(s) in <N>m<N>s"
+        },
+        {
+          "order": 5,
+          "action": "Launch a local test network",
+          "working_directory": "my-parachain",
+          "commands": [
+            "pop up network"
+          ],
+          "description": "Start a local Zombienet-based parachain test network using Pop CLI. Pop CLI looks for a network.toml configuration file in the project root. If no network.toml exists, create one by copying the example from the Pop CLI documentation or the project template. The network starts relay chain validators plus a parachain collator. Press Ctrl+C to stop.",
+          "expected_output": "Network launched. Relay chain and parachain collator endpoints printed to console."
+        },
+        {
+          "order": 6,
+          "action": "Interact with the running network",
+          "working_directory": "my-parachain",
+          "commands": [
+            "pop call chain"
+          ],
+          "description": "Use 'pop call chain' to send an extrinsic or query chain state against the running local network. Pop CLI guides you through selecting a pallet, extrinsic/query, and parameters interactively. Keep the network from step 5 running in a separate terminal."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "error: could not find Cargo.toml in ... or any parent directory",
+          "cause": "Running pop build from outside the project directory.",
+          "resolution": "Change into the my-parachain directory before running pop build --release."
+        },
+        {
+          "pattern": "error[E0463]: can't find crate for 'std' / note: the ... target may not be installed",
+          "cause": "The wasm32-unknown-unknown target is not installed in the Rust toolchain.",
+          "resolution": "Run 'rustup target add wasm32-unknown-unknown' then retry the build."
+        },
+        {
+          "pattern": "cmake: command not found / protoc: command not found",
+          "cause": "Polkadot SDK build dependencies are not installed.",
+          "resolution": "Run 'pop install' to install missing system dependencies, then retry."
+        },
+        {
+          "pattern": "error: Failed to execute 'pop up network' / network.toml not found",
+          "cause": "No network configuration file found in the project root.",
+          "resolution": "Create a network.toml file in the my-parachain directory. Refer to the Pop CLI documentation or the spawn-local-parachain-network-zombienet skill for a minimal example Zombienet TOML config."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs context on parachain setup, Polkadot SDK dependencies, or local testing.",
+        "pages": [
+          {
+            "slug": "parachains-install-polkadot-sdk",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-install-polkadot-sdk.md",
+            "relevance": "Full Polkadot SDK installation guide with system dependencies for all OS platforms."
+          },
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Manual parachain template setup guide for users who prefer not to use Pop CLI."
+          },
+          {
+            "slug": "reference-tools-zombienet",
+            "url": "https://docs.polkadot.com/ai/pages/reference-tools-zombienet.md",
+            "relevance": "Zombienet documentation for writing and running network.toml configs used by pop up network."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: new parachain from scratch",
+          "user_says": "Use Pop CLI to bootstrap a new Polkadot parachain project",
+          "actions": [
+            "Install Pop CLI via cargo install pop-cli",
+            "Run pop install to set up Polkadot SDK dependencies",
+            "Run pop new parachain my-parachain to scaffold the project",
+            "Run pop build --release inside the project directory",
+            "Run pop up network to start a local test network"
+          ],
+          "result": "Local parachain network running; relay chain and collator endpoints printed to console"
+        },
+        {
+          "scenario": "Edge case: build fails due to missing WASM target",
+          "user_says": "pop build --release fails with wasm32 target error",
+          "actions": [
+            "Run 'rustup target add wasm32-unknown-unknown' to install the missing target",
+            "Retry pop build --release"
+          ],
+          "result": "Build succeeds after adding the wasm32 Rust target"
+        }
+      ]
+    },
+    {
+      "id": "deploy-basic-contract-remix",
+      "title": "Deploy a Basic Smart Contract with Remix IDE",
+      "objective": "Deploy Remix IDE's built-in Storage.sol contract to Polkadot Hub TestNet using the browser-based IDE and MetaMask.",
+      "description": "Guides the user through deploying Remix IDE's default Storage.sol contract to Polkadot Hub TestNet via the browser-based Remix IDE and MetaMask wallet. All steps are browser GUI interactions — no local toolchain required. Use when testing the Polkadot Hub EVM environment, learning contract deployment basics, or demonstrating how Remix works with Polkadot Hub. Prerequisites: MetaMask installed and configured for Polkadot Hub TestNet (chain ID 420420417), testnet PAS tokens from https://faucet.polkadot.io/. Trigger phrases: 'deploy contract remix polkadot', 'remix ide polkadot hub', 'deploy storage contract remix'. Outcome: Storage contract deployed on Polkadot Hub TestNet.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-remix.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-remix.md",
+      "prerequisites": {
+        "runtime": [
+          "Modern web browser (Chrome or Firefox recommended)"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet",
+          "Chain ID: 420420417"
+        ],
+        "tokens": [
+          "Testnet PAS tokens from https://faucet.polkadot.io/ (rate limit: check faucet page)"
+        ],
+        "wallet": [
+          "MetaMask browser extension installed and configured for Polkadot Hub TestNet",
+          "Wallet funded with testnet PAS tokens"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Verify MetaMask is connected to Polkadot Hub TestNet",
+          "working_directory": ".",
+          "description": "Instruct the user: Open MetaMask and confirm the selected network is 'Polkadot Hub TestNet' (chain ID 420420417). If not configured, use the connect-wallet-polkadot-hub skill to add the network. Also confirm the account balance shows testnet PAS tokens. If the balance is zero, visit https://faucet.polkadot.io/ to request tokens. Wait for the user to confirm both conditions before proceeding."
+        },
+        {
+          "order": 2,
+          "action": "Open Remix IDE and locate Storage.sol",
+          "working_directory": ".",
+          "description": "Instruct the user: Open https://remix.ethereum.org in the browser. In the left file explorer panel, expand the 'contracts/' folder. Click on '1_Storage.sol' to open it in the editor. This is the default Remix sample contract — no changes needed."
+        },
+        {
+          "order": 3,
+          "action": "Compile Storage.sol in Remix",
+          "working_directory": ".",
+          "description": "Instruct the user: Click the Solidity Compiler icon (second icon in the left sidebar). Confirm the compiler version is 0.8.x or higher. Click the blue 'Compile 1_Storage.sol' button. Wait for the green checkmark indicating successful compilation. If there are errors, verify the compiler version matches the pragma in the file.",
+          "expected_output": "Green checkmark on the Solidity Compiler sidebar icon; no errors shown."
+        },
+        {
+          "order": 4,
+          "action": "Deploy to Polkadot Hub TestNet via MetaMask",
+          "working_directory": ".",
+          "description": "Instruct the user: Click the Deploy and Run Transactions icon (fourth icon in the left sidebar). In the Environment dropdown, select 'Injected Provider - MetaMask'. MetaMask will prompt for permission — click Connect. Confirm the Account field shows your MetaMask address and the Network shows Polkadot Hub TestNet (chain ID 420420417). Click the orange 'Deploy' button. MetaMask will open a transaction confirmation — click Confirm. Wait for the transaction to be mined (typically 15-30 seconds on TestNet).",
+          "expected_output": "Deployed contract appears in the 'Deployed Contracts' section at the bottom of the Deploy panel."
+        },
+        {
+          "order": 5,
+          "action": "Interact with the deployed Storage contract",
+          "working_directory": ".",
+          "description": "Instruct the user: In the 'Deployed Contracts' panel, expand the deployed Storage contract. To write a value: enter a number in the field next to the 'store' button and click 'store'. Confirm the MetaMask transaction. To read the stored value: click the 'retrieve' button (no transaction needed). The return value shows in the Remix console below.",
+          "expected_output": "retrieve() returns the number stored in the previous store() call."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "MetaMask: User denied account access / MetaMask not connected",
+          "cause": "MetaMask connection was rejected or MetaMask is not installed.",
+          "resolution": "Click the MetaMask extension icon and ensure it is unlocked. Re-select 'Injected Provider - MetaMask' in the Remix Environment dropdown and approve the connection prompt."
+        },
+        {
+          "pattern": "Transaction failed: insufficient funds for gas",
+          "cause": "The connected MetaMask account has no testnet PAS tokens.",
+          "resolution": "Visit https://faucet.polkadot.io/ to obtain testnet PAS tokens. Ensure the faucet is sending to the correct address shown in MetaMask."
+        },
+        {
+          "pattern": "Wrong network in MetaMask / chain ID mismatch",
+          "cause": "MetaMask is connected to a different network instead of Polkadot Hub TestNet.",
+          "resolution": "Open MetaMask and switch to 'Polkadot Hub TestNet' (chain ID 420420417). If not configured, use the connect-wallet-polkadot-hub skill to add it."
+        },
+        {
+          "pattern": "Solidity compile error: pragma mismatch",
+          "cause": "The Remix compiler version does not match the pragma in Storage.sol.",
+          "resolution": "In the Solidity Compiler tab, select a compiler version compatible with the pragma at the top of the contract file."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs to set up MetaMask, obtain tokens, or move to a CLI-based deployment workflow.",
+        "pages": [
+          {
+            "slug": "smart-contracts-integrations-wallets",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-integrations-wallets.md",
+            "relevance": "How to configure MetaMask or Talisman for Polkadot Hub TestNet."
+          },
+          {
+            "slug": "smart-contracts-faucet",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-faucet.md",
+            "relevance": "How to obtain testnet PAS tokens for deployment transactions."
+          },
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat.md",
+            "relevance": "CLI-based alternative: deploy the same Storage contract using Hardhat and a local toolchain."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: first contract deployment",
+          "user_says": "Deploy a smart contract on Polkadot Hub using Remix IDE",
+          "actions": [
+            "Verify MetaMask is on Polkadot Hub TestNet and account has PAS tokens",
+            "Open remix.ethereum.org and locate contracts/1_Storage.sol",
+            "Compile with Solidity Compiler tab",
+            "Select Injected Provider - MetaMask in Deploy tab and click Deploy",
+            "Confirm MetaMask transaction and wait for mining"
+          ],
+          "result": "Storage contract deployed; appears in Remix Deployed Contracts panel with callable store/retrieve functions"
+        },
+        {
+          "scenario": "Edge case: no testnet tokens",
+          "user_says": "I try to deploy but MetaMask says insufficient funds",
+          "actions": [
+            "Direct user to https://faucet.polkadot.io/ to request testnet PAS tokens",
+            "Ask user to confirm the faucet sent tokens to the correct address",
+            "Once confirmed, retry the Deploy step in Remix"
+          ],
+          "result": "User obtains testnet PAS tokens and deployment proceeds successfully"
+        }
+      ]
+    },
+    {
+      "id": "connect-remix-polkadot",
+      "title": "Connect Remix IDE to Polkadot Hub",
+      "objective": "Configure Remix IDE to use MetaMask as the injected provider so it can deploy and call contracts on Polkadot Hub TestNet.",
+      "description": "Walks the user through selecting the MetaMask injected provider in Remix IDE's Deploy and Run tab to connect the browser-based IDE to Polkadot Hub TestNet. All steps are browser GUI interactions. Use before deploying or testing smart contracts via Remix on Polkadot Hub. Prerequisite: MetaMask must be installed and already configured with Polkadot Hub TestNet (chain ID 420420417) — use the connect-wallet-polkadot-hub skill first if needed. Trigger phrases: 'connect remix to polkadot', 'use remix ide polkadot hub', 'remix metamask polkadot', 'injected provider remix'. Outcome: Remix displays the MetaMask account address and is ready for contract deployment.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/dev-environments/remix.md"
+      ],
+      "primary_page": "smart-contracts/dev-environments/remix.md",
+      "prerequisites": {
+        "runtime": [
+          "Modern web browser (Chrome or Firefox recommended)"
+        ],
+        "wallet": [
+          "MetaMask installed and unlocked with Polkadot Hub TestNet configured (chain ID 420420417)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Open Remix IDE",
+          "working_directory": ".",
+          "description": "Instruct the user: Open https://remix.ethereum.org in the browser. Wait for the IDE to fully load (the file explorer appears on the left). Ensure MetaMask is unlocked and set to Polkadot Hub TestNet before proceeding."
+        },
+        {
+          "order": 2,
+          "action": "Navigate to the Deploy and Run Transactions tab",
+          "working_directory": ".",
+          "description": "Instruct the user: Click the Deploy and Run Transactions icon in the left sidebar (it looks like a plug/Ethereum diamond — the fourth icon from top). The Deploy and Run Transactions panel opens on the left."
+        },
+        {
+          "order": 3,
+          "action": "Select Injected Provider - MetaMask",
+          "working_directory": ".",
+          "description": "Instruct the user: In the Environment dropdown at the top of the Deploy panel, select 'Injected Provider - MetaMask'. MetaMask will open a connection request popup — click 'Next' then 'Connect' to approve. If MetaMask does not open automatically, click the MetaMask extension icon, unlock it, then repeat this step."
+        },
+        {
+          "order": 4,
+          "action": "Verify the connection",
+          "working_directory": ".",
+          "description": "Instruct the user: Confirm the following in the Deploy panel: 1) The Account field shows your MetaMask wallet address. 2) The network indicator shows chain ID 420420417 (Polkadot Hub TestNet). If the chain ID shows a different value, switch networks in MetaMask to Polkadot Hub TestNet and the Remix panel will update automatically.",
+          "expected_output": "Remix Deploy panel shows MetaMask account address and Polkadot Hub TestNet (chain ID 420420417)."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "MetaMask not detected / No injected Web3 provider",
+          "cause": "MetaMask extension is not installed or is disabled in the browser.",
+          "resolution": "Install the MetaMask browser extension from https://metamask.io and reload Remix. Ensure the extension is enabled for the remix.ethereum.org domain."
+        },
+        {
+          "pattern": "Wrong network shown in Remix (chain ID is not 420420417)",
+          "cause": "MetaMask is connected to a different chain.",
+          "resolution": "Open MetaMask and manually switch to Polkadot Hub TestNet. If Polkadot Hub TestNet is not in the list, follow the connect-wallet-polkadot-hub skill to add it."
+        },
+        {
+          "pattern": "Remix Deploy panel shows 'JavaScript VM' after trying to switch",
+          "cause": "The injected provider selection was not saved or MetaMask was not connected.",
+          "resolution": "Click the Environment dropdown again and re-select 'Injected Provider - MetaMask'. Approve the MetaMask connection popup if it appears."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages for wallet setup or when the user wants to deploy a contract after connecting.",
+        "pages": [
+          {
+            "slug": "smart-contracts-integrations-wallets",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-integrations-wallets.md",
+            "relevance": "How to add Polkadot Hub TestNet to MetaMask before using Remix."
+          },
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-basic-basic-remix",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-basic-basic-remix.md",
+            "relevance": "Next step after connecting Remix: deploy the default Storage.sol contract."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: connect Remix before deployment",
+          "user_says": "Connect Remix IDE to Polkadot Hub so I can deploy a contract",
+          "actions": [
+            "Open https://remix.ethereum.org",
+            "Click Deploy and Run Transactions tab",
+            "Select Injected Provider - MetaMask in the Environment dropdown",
+            "Approve the MetaMask connection popup",
+            "Verify account address and chain ID 420420417 appear in the Deploy panel"
+          ],
+          "result": "Remix IDE is connected to Polkadot Hub TestNet via MetaMask and ready for contract deployment"
+        },
+        {
+          "scenario": "Edge case: MetaMask on wrong network",
+          "user_says": "Remix shows the wrong chain ID after connecting",
+          "actions": [
+            "Ask user to open MetaMask and switch to Polkadot Hub TestNet",
+            "If network not present, direct to connect-wallet-polkadot-hub skill",
+            "Confirm Remix updates to show chain ID 420420417 automatically"
+          ],
+          "result": "Remix shows correct network after MetaMask network switch"
+        }
+      ]
+    },
+    {
+      "id": "connect-wallet-polkadot-hub",
+      "title": "Connect a Wallet to Polkadot Hub",
+      "objective": "Add Polkadot Hub TestNet to MetaMask or Talisman and switch to it so the wallet is ready for smart contract interactions.",
+      "description": "Guides the user through adding Polkadot Hub TestNet (RPC, chain ID 420420417, PAS token) to MetaMask or Talisman and switching the active network. All steps are browser extension GUI interactions. Use before deploying smart contracts, using Remix IDE with Polkadot Hub, or obtaining testnet tokens. Trigger phrases: 'connect metamask polkadot hub', 'add polkadot network metamask', 'set up wallet polkadot testnet', 'configure talisman polkadot hub'. Outcome: wallet shows Polkadot Hub TestNet as active network and is ready for on-chain interactions.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/integrations/wallets.md"
+      ],
+      "primary_page": "smart-contracts/integrations/wallets.md",
+      "prerequisites": {
+        "runtime": [
+          "Modern web browser (Chrome or Firefox recommended)"
+        ],
+        "wallet": [
+          "MetaMask installed (https://metamask.io) OR Talisman installed (https://talisman.xyz)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Open MetaMask network settings",
+          "working_directory": ".",
+          "description": "Instruct the user: Click the MetaMask extension icon in the browser toolbar to open it. Click the network selector at the top of the MetaMask popup (shows 'Ethereum Mainnet' by default). Click 'Add network' at the bottom of the network list. On the Add Network page, click 'Add a network manually'."
+        },
+        {
+          "order": 2,
+          "action": "Enter Polkadot Hub TestNet network details",
+          "working_directory": ".",
+          "description": "Instruct the user: Fill in the following fields exactly as shown:\n- Network name: Polkadot Hub TestNet\n- New RPC URL: https://services.polkadothub-rpc.com/testnet\n- Chain ID: 420420417\n- Currency symbol: PAS\n- Block explorer URL: (leave blank — no standard explorer URL is defined)\nClick 'Save'. MetaMask will confirm the network was added."
+        },
+        {
+          "order": 3,
+          "action": "Switch to Polkadot Hub TestNet",
+          "working_directory": ".",
+          "description": "Instruct the user: In MetaMask, click the network selector again. Select 'Polkadot Hub TestNet' from the list. The header now shows 'Polkadot Hub TestNet' and the balance shows PAS.",
+          "expected_output": "MetaMask header displays 'Polkadot Hub TestNet'; account balance shows PAS balance."
+        },
+        {
+          "order": 4,
+          "action": "Obtain testnet PAS tokens if needed",
+          "working_directory": ".",
+          "description": "If the PAS balance is 0, instruct the user: Visit https://faucet.polkadot.io/ in the browser. Paste the MetaMask account address (click the address in MetaMask to copy it). Select 'Polkadot Hub TestNet' in the faucet network dropdown. Click 'Get tokens'. Tokens typically arrive within 30 seconds.",
+          "expected_output": "MetaMask PAS balance shows a non-zero amount."
+        },
+        {
+          "order": 5,
+          "action": "Alternative: Add Polkadot Hub TestNet to Talisman",
+          "working_directory": ".",
+          "description": "If the user prefers Talisman instead of MetaMask, instruct them: Open the Talisman extension and click the settings icon. Go to Networks and Tokens, then Add Network. Enter the same network details as step 2: RPC URL: https://services.polkadothub-rpc.com/testnet, Chain ID: 420420417, Symbol: PAS. Save and switch to the Polkadot Hub TestNet network in Talisman."
+        }
+      ],
+      "reference_code": {
+        "repo": "none",
+        "base_path": "",
+        "files": []
+      },
+      "error_patterns": [
+        {
+          "pattern": "Could not fetch chain ID / Invalid RPC URL",
+          "cause": "The RPC URL was entered incorrectly or the TestNet endpoint is temporarily unavailable.",
+          "resolution": "Verify the RPC URL is exactly: https://services.polkadothub-rpc.com/testnet (no trailing slash). Check the Polkadot Hub TestNet status page or Discord for outages."
+        },
+        {
+          "pattern": "Chain ID mismatch: expected 420420417",
+          "cause": "A different endpoint was used that returns a different chain ID.",
+          "resolution": "Delete the incorrectly configured network from MetaMask and re-add it using the exact RPC URL and chain ID 420420417."
+        },
+        {
+          "pattern": "Network added but balance shows 0 PAS",
+          "cause": "Account not funded with testnet tokens.",
+          "resolution": "Visit https://faucet.polkadot.io/, paste your address, select Polkadot Hub TestNet, and request tokens."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load these pages when the user needs network reference data or wants to proceed to contract deployment after wallet setup.",
+        "pages": [
+          {
+            "slug": "smart-contracts-connect",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-connect.md",
+            "relevance": "Full network connection reference with RPC URLs, chain IDs, and WSS endpoints for all Polkadot Hub environments."
+          },
+          {
+            "slug": "smart-contracts-faucet",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-faucet.md",
+            "relevance": "Step-by-step guide to obtaining testnet PAS tokens from the Polkadot faucet."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-remix",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-remix.md",
+            "relevance": "How to connect Remix IDE to Polkadot Hub using the configured MetaMask wallet."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: add Polkadot Hub TestNet to MetaMask",
+          "user_says": "Add Polkadot Hub TestNet to MetaMask and get some test tokens",
+          "actions": [
+            "Open MetaMask, click network selector, click Add network, then Add a network manually",
+            "Enter network name, RPC URL (https://services.polkadothub-rpc.com/testnet), chain ID 420420417, symbol PAS",
+            "Save and switch to Polkadot Hub TestNet",
+            "Visit https://faucet.polkadot.io/ and request testnet PAS tokens"
+          ],
+          "result": "MetaMask shows Polkadot Hub TestNet as active network with a non-zero PAS balance"
+        },
+        {
+          "scenario": "Edge case: RPC URL rejected by MetaMask",
+          "user_says": "MetaMask says it could not fetch the chain ID when I enter the RPC URL",
+          "actions": [
+            "Verify the RPC URL is exactly https://services.polkadothub-rpc.com/testnet with no trailing slash",
+            "Check whether the Polkadot Hub TestNet is experiencing downtime",
+            "Retry adding the network once the endpoint is confirmed reachable"
+          ],
+          "result": "Network added successfully once the correct RPC URL is verified and the endpoint is reachable"
         }
       ]
     }

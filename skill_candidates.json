@@ -1680,7 +1680,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Covers installation, dynamic API generation, creating an API instance, reading chain constants/state, and sending transactions. Rubric yields priority=high (score=18) but overridden to medium: page carries a prominent maintenance-mode warning directing new projects to Dedot or PAPI. Building an agent skill around a deprecated library has limited value. Ambiguous guide/reference (procedural=11, reference=8, diff=3).",
       "scoring": {
         "signals": [
@@ -1707,7 +1707,8 @@
           "reference"
         ],
         "priority_score": 18
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "bootstrap-parachain-pop-cli",
@@ -1717,7 +1718,7 @@
       ],
       "category": "tutorial",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Sequential workflow from install (cargo install pop-cli) through environment setup (pop install), project scaffolding (pop new parachain), building (pop build --release), launching a local network (pop up network), and interacting via pop call chain. Verifiable install step (pop --help). Priority is medium because K2 and K3 don't fire: the network.toml config file is referenced but not shown, and prerequisites (Rust toolchain, Polkadot SDK dependencies) are not explicitly listed on the page.",
       "scoring": {
         "signals": [
@@ -1737,7 +1738,8 @@
           "not_applicable": 0
         },
         "priority_score": 15
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "interact-polkadot-node-py-substrate",
@@ -1983,7 +1985,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "GUI-only guide for deploying the default Remix Storage.sol contract via Remix IDE browser interface. No CLI commands (P2 = 0) and no source files to create (P3 = 0) — uses Remix's built-in sample contract. All steps are click-based (S1 = 0). Procedural score (10) qualifies as guide via rule 3. Priority is medium (14) due to K1 = 5 (self-contained given MetaMask prerequisite), K3 = 3 (explicit prerequisites listed), S2 = 3, and S3 = 3 (deploy-contract-remix is a known skill shape in this vertical). K4 = 0 (no reference repo for Remix path); K2 = 0 (no code examples to assess).",
       "scoring": {
         "signals": [
@@ -2001,7 +2003,8 @@
           "not_applicable": 0
         },
         "priority_score": 14
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "deploy-erc20-token-hardhat",
@@ -2239,7 +2242,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Ambiguous: procedural=10 vs conceptual=7 (difference=3, within ambiguity threshold). Resolved as guide because numbered connection steps (1-4) and a verifiable outcome ('Remix will display your MetaMask account address') are present. However, all steps are GUI-only clicks/dropdowns (S1=0), reducing agent executability. K1=0: requires MetaMask already configured for Polkadot (references Wallet Integrations guide). No reference repo. Useful as a prerequisite context page before Remix-based deploy tutorials.",
       "scoring": {
         "signals": [
@@ -2263,7 +2266,8 @@
           "conceptual"
         ],
         "priority_score": 10
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "get-testnet-tokens-faucet",
@@ -2332,7 +2336,7 @@
       ],
       "category": "guide",
       "priority": "medium",
-      "status": "pending",
+      "status": "built",
       "notes": "Numbered GUI steps for connecting MetaMask and Talisman to Polkadot Hub TestNet. K1=0: step 4 for MetaMask defers to smart-contracts/connect/ for RPC parameters. S1=0: all steps are browser-extension UI clicks with no CLI equivalent. Medium priority reflects GUI-only workflow limiting automation fitness.",
       "scoring": {
         "signals": [
@@ -2351,7 +2355,8 @@
           "not_applicable": 0
         },
         "priority_score": 10
-      }
+      },
+      "built_at": "2026-04-21T22:30:00Z"
     },
     {
       "skill_id": "deploy-contracts-ethers-js",

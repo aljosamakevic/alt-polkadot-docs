@@ -3,9 +3,9 @@
   "generated": "2026-04-21T22:30:00Z",
   "summary": {
     "total_candidates": 136,
-    "up_to_date": 61,
+    "up_to_date": 66,
     "stale": 0,
-    "uncovered": 75,
+    "uncovered": 70,
     "reviewed_no_skill": 0
   },
   "pages": {
@@ -658,15 +658,19 @@
     },
     "reference/tools/polkadot-js-api.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "use-polkadot-js-api"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/pop-cli.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "bootstrap-parachain-pop-cli"
+      ],
+      "status": "up_to_date"
     },
     "reference/tools/py-substrate-interface.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -736,9 +740,11 @@
     },
     "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-remix.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "deploy-basic-contract-remix"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-hardhat.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -806,9 +812,11 @@
     },
     "smart-contracts/dev-environments/remix.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "connect-remix-polkadot"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/explorers.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
@@ -872,9 +880,11 @@
     },
     "smart-contracts/integrations/wallets.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
-      "last_scanned": null,
-      "skills": [],
-      "status": "uncovered"
+      "last_scanned": "2026-04-21T22:30:00Z",
+      "skills": [
+        "connect-wallet-polkadot-hub"
+      ],
+      "status": "up_to_date"
     },
     "smart-contracts/libraries/ethers-js.md": {
       "last_edited": "2026-04-21T13:05:20+00:00",
