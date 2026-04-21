@@ -490,7 +490,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:00:00Z",
       "notes": "Multi-OS installation guide (macOS, Linux, Windows WSL) for the Polkadot SDK. Numbered steps throughout, multiple CLI commands (brew, apt, rustup, cargo build), and verification steps with expected output. Cookbook CI badge present (K4). Self-contained from scratch \u2014 covers all dependency installation and SDK build. Optional kitchensink explore step uses Polkadot.js Apps GUI but does not affect the primary installation workflow (S1 still fires). Serves as prerequisite for most parachain development skills (create-frame-pallet, set-up-the-parachain-template, etc.).",
       "scoring": {
         "signals": [
@@ -1906,7 +1907,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:00:00Z",
       "notes": "Concise end-to-end tutorial: scaffold Hardhat project, configure polkadotTestnet network, create Storage.sol, compile, deploy via Ignition to TestNet. All code uses --8<-- snippet includes from polkadot-cookbook (K4 = 3; CI badge confirms tested). K2 = 4 (includes expand to complete code in the published site). All steps are CLI-driven with no GUI interactions (S1 = 4). Explicit prerequisites section covers Node.js version, test tokens, and wallet (K3 = 3). Verified outcome shown via terminal output snippet.",
       "scoring": {
         "signals": [
@@ -1967,7 +1969,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:00:00Z",
       "notes": "Complete end-to-end tutorial: clone template, compile, test, deploy to Polkadot Hub TestNet. Reference repo revm-hardhat-examples confirmed in context. P3 not fired \u2014 tutorial uses a cloned template repo rather than instructing the reader to create files from scratch. CI badge confirms recipe is tested in polkadot-cookbook.",
       "scoring": {
         "signals": [
@@ -2123,7 +2126,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:00:00Z",
       "notes": "Complete workflow: initialize project, compile Solidity to PVM bytecode via resolc, test locally with a Substrate node, and deploy to TestNet. Has an explicit prerequisites section, numbered steps throughout, and clear outcome language ('You should see JSON files containing the contract ABIs and bytecodes'). Backed by polkadot-cookbook CI. PVM variant using @parity/hardhat-polkadot \u2014 mirrors the EVM skill but targets PolkaVM runtime. P3 not fired: the init wizard creates project files; no explicit file-creation code block on the page.",
       "scoring": {
         "signals": [
@@ -2155,7 +2159,8 @@
       ],
       "category": "tutorial",
       "priority": "high",
-      "status": "pending",
+      "status": "built",
+      "built_at": "2026-04-21T18:00:00Z",
       "notes": "Covers Hardhat project initialization, network configuration for Polkadot Hub TestNet (full hardhat.config.ts file shown \u2014 P3 fires), and contract verification with Blockscout or Routescan. Self-contained setup workflow with explicit prerequisites and outcome language. Backed by polkadot-cookbook CI. Standard EVM variant with no PVM/resolc dependency.",
       "scoring": {
         "signals": [

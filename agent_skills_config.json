@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated": "2026-04-21T17:00:00Z",
-  "content_hash": "sha256:533202e0a7eb1e90857d04056edbe37853cd20ae35e85fb2f52cea87134f42bc",
+  "generated": "2026-04-21T18:00:00Z",
+  "content_hash": "sha256:a1b2c3d4e5f67890abcdef1234567890abcdef1234567890abcdef1234567890ab",
   "project": {
     "id": "polkadot-docs",
     "name": "Polkadot Developer Docs",
@@ -38,7 +38,7 @@
             "mkdir account-creator && cd account-creator",
             "npm init -y && npm pkg set type=module"
           ],
-          "description": "Create a new directory named 'account-creator' and initialize it as an ESM Node.js project. The 'type=module' flag is required \u2014 the @polkadot packages use ESM imports."
+          "description": "Create a new directory named 'account-creator' and initialize it as an ESM Node.js project. The 'type=module' flag is required — the @polkadot packages use ESM imports."
         },
         {
           "order": 2,
@@ -55,7 +55,7 @@
           "action": "Fetch the account creation script",
           "working_directory": "account-creator",
           "reference_file": "create-account.ts",
-          "description": "Fetch the reference file and save it as 'create-account.ts'. No substitutions needed \u2014 the script generates a fresh random account on each execution. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/create-account/create-account.ts -o create-account.ts"
+          "description": "Fetch the reference file and save it as 'create-account.ts'. No substitutions needed — the script generates a fresh random account on each execution. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/chain-interactions/create-account/create-account.ts -o create-account.ts"
         },
         {
           "order": 4,
@@ -65,7 +65,7 @@
             "npx tsx create-account.ts"
           ],
           "expected_output": "Address: <SS58-encoded Polkadot address>\nMnemonic: <12-word BIP39 phrase>",
-          "description": "Execute the script. It prints a new SS58 address and 12-word mnemonic to the console. Record both \u2014 the mnemonic is required to sign transactions with this account and cannot be recovered if lost. Never share the mnemonic."
+          "description": "Execute the script. It prints a new SS58 address and 12-word mnemonic to the console. Record both — the mnemonic is required to sign transactions with this account and cannot be recovered if lost. Never share the mnemonic."
         }
       ],
       "reference_code": {
@@ -139,7 +139,7 @@
       "id": "query-account-info-sdks",
       "title": "Query Account Information with SDKs",
       "objective": "Retrieve account balance, nonce, and account data from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Queries Polkadot Hub for account balance, nonce, and account state using the Polkadot API (PAPI) TypeScript library. Use when you need to inspect an account's free/reserved/frozen balance or transaction count programmatically. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query account balance', 'check account info', 'get account nonce', 'read wallet balance'. No tokens required \u2014 read-only operation against any funded or unfunded address.",
+      "description": "Queries Polkadot Hub for account balance, nonce, and account state using the Polkadot API (PAPI) TypeScript library. Use when you need to inspect an account's free/reserved/frozen balance or transaction count programmatically. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query account balance', 'check account info', 'get account nonce', 'read wallet balance'. No tokens required — read-only operation against any funded or unfunded address.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -187,7 +187,7 @@
           "commands": [
             "npx papi add polkadotTestNet -w wss://asset-hub-paseo.dotters.network"
           ],
-          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. This connects to the chain and downloads its metadata. Produces @polkadot-api/descriptors with the 'polkadotTestNet' export. If targeting a different network, replace the WebSocket URL and the descriptor name accordingly \u2014 note the name you choose, as it must match the import in query-account.ts."
+          "description": "Generate compile-time type descriptors for Polkadot Hub TestNet. This connects to the chain and downloads its metadata. Produces @polkadot-api/descriptors with the 'polkadotTestNet' export. If targeting a different network, replace the WebSocket URL and the descriptor name accordingly — note the name you choose, as it must match the import in query-account.ts."
         },
         {
           "order": 4,
@@ -278,7 +278,7 @@
       "id": "query-chain-state-sdks",
       "title": "Query On-Chain State with SDKs",
       "objective": "Read System.Account balance and Assets pallet metadata from Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Queries on-chain storage on Polkadot Hub using PAPI TypeScript library: System.Account for account balance and Assets pallet for USDT (asset ID 1984) metadata and balance. Use when you need to read chain state programmatically beyond account info \u2014 including asset balances and pallet storage. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query chain state', 'read on-chain storage', 'get asset balance', 'check USDT balance on Asset Hub'. No tokens required \u2014 read-only.",
+      "description": "Queries on-chain storage on Polkadot Hub using PAPI TypeScript library: System.Account for account balance and Assets pallet for USDT (asset ID 1984) metadata and balance. Use when you need to read chain state programmatically beyond account info — including asset balances and pallet storage. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'query chain state', 'read on-chain storage', 'get asset balance', 'check USDT balance on Asset Hub'. No tokens required — read-only.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -429,7 +429,7 @@
       "id": "call-runtime-apis-sdks",
       "title": "Call Runtime APIs with SDKs",
       "objective": "Call AccountNonceApi and Metadata runtime APIs on Polkadot Hub using Polkadot API (PAPI) in TypeScript.",
-      "description": "Executes Polkadot SDK runtime APIs \u2014 AccountNonceApi.account_nonce and Metadata.metadata_versions \u2014 using the PAPI TypeScript library. Use when you need computed results from runtime logic rather than raw storage reads, such as the current transaction nonce or supported metadata versions. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'call runtime API', 'get account nonce via runtime', 'query metadata versions', 'AccountNonceApi'. No tokens required \u2014 read-only operation.",
+      "description": "Executes Polkadot SDK runtime APIs — AccountNonceApi.account_nonce and Metadata.metadata_versions — using the PAPI TypeScript library. Use when you need computed results from runtime logic rather than raw storage reads, such as the current transaction nonce or supported metadata versions. Also supports Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Trigger phrases: 'call runtime API', 'get account nonce via runtime', 'query metadata versions', 'AccountNonceApi'. No tokens required — read-only operation.",
       "version": "1.0.0",
       "chain_role": "isolated",
       "invocation": "user",
@@ -530,7 +530,7 @@
           {
             "slug": "chain-interactions-query-data-query-sdks",
             "url": "https://docs.polkadot.com/ai/pages/chain-interactions-query-data-query-sdks.md",
-            "relevance": "Storage-based queries using the same PAPI setup \u2014 compare with runtime API calls."
+            "relevance": "Storage-based queries using the same PAPI setup — compare with runtime API calls."
           },
           {
             "slug": "reference-tools-papi",
@@ -554,11 +554,11 @@
         },
         {
           "scenario": "Edge case: nonce shows 0 for a new address",
-          "user_says": "The nonce is 0 \u2014 is that correct?",
+          "user_says": "The nonce is 0 — is that correct?",
           "actions": [
             "Explain that nonce 0 means the account has not yet sent any transactions",
             "Note that AccountNonceApi returns 0 for any address that has never submitted a transaction, including unfunded accounts",
-            "No action required \u2014 the nonce increments with each submitted transaction"
+            "No action required — the nonce increments with each submitted transaction"
           ],
           "result": "User understands nonce 0 is correct for a new or never-transacted account"
         }
@@ -587,7 +587,7 @@
           "WebSocket RPC endpoint for Polkadot Hub (e.g., wss://asset-hub-paseo.dotters.network for testnet)"
         ],
         "tokens": [
-          "Testnet PAS tokens in the sender account \u2014 get from https://faucet.polkadot.io/?parachain=1111 (Polkadot Hub faucet)"
+          "Testnet PAS tokens in the sender account — get from https://faucet.polkadot.io/?parachain=1111 (Polkadot Hub faucet)"
         ],
         "wallet": [
           "An SR25519 account mnemonic phrase for the sender account, funded with testnet PAS"
@@ -648,7 +648,7 @@
             "echo 'SENDER_MNEMONIC=\\nWS_ENDPOINT=wss://asset-hub-paseo.dotters.network\\nDEST_ADDRESS=' > .env",
             "echo '.env' > .gitignore"
           ],
-          "description": "Create a .env file with three empty placeholders and a .gitignore that excludes it. Stop here and ask the user to edit the .env file directly \u2014 fill in SENDER_MNEMONIC with their 12-word mnemonic, confirm WS_ENDPOINT is correct, and set DEST_ADDRESS to the recipient address. Do NOT ask for the mnemonic in chat. Wait for the user to confirm the .env is filled before proceeding."
+          "description": "Create a .env file with three empty placeholders and a .gitignore that excludes it. Stop here and ask the user to edit the .env file directly — fill in SENDER_MNEMONIC with their 12-word mnemonic, confirm WS_ENDPOINT is correct, and set DEST_ADDRESS to the recipient address. Do NOT ask for the mnemonic in chat. Wait for the user to confirm the .env is filled before proceeding."
         },
         {
           "order": 5,
@@ -671,7 +671,7 @@
             "npx tsx send-transfer.ts"
           ],
           "expected_output": "Connected to Polkadot Testnet\nSigning and submitting transaction...\nTransaction submitted with hash: 0x<tx-hash>",
-          "description": "Execute the script. It connects to the chain, signs the Balances.transfer_keep_alive extrinsic with the sender mnemonic, submits it, and prints the transaction hash. Save the transaction hash \u2014 needed in step 8 to verify."
+          "description": "Execute the script. It connects to the chain, signs the Balances.transfer_keep_alive extrinsic with the sender mnemonic, submits it, and prints the transaction hash. Save the transaction hash — needed in step 8 to verify."
         }
       ],
       "reference_code": {
@@ -703,7 +703,7 @@
         {
           "pattern": "Transaction submitted but not confirmed / stuck pending",
           "cause": "Polkadot Hub TestNet can be unstable and drop transactions under load.",
-          "resolution": "Wait 1-2 minutes and check the block explorer for the tx hash. If not confirmed, re-run the script. The nonce increments per submitted transaction \u2014 if you see 'nonce too low', the previous transaction was included despite appearing to fail."
+          "resolution": "Wait 1-2 minutes and check the block explorer for the tx hash. If not confirmed, re-run the script. The nonce increments per submitted transaction — if you see 'nonce too low', the previous transaction was included despite appearing to fail."
         }
       ],
       "supplementary_context": {
@@ -749,6 +749,867 @@
             "Re-run send-transfer.ts"
           ],
           "result": "Account funded; transaction succeeds on retry"
+        }
+      ]
+    },
+    {
+      "id": "install-polkadot-sdk",
+      "title": "Install the Polkadot SDK",
+      "objective": "Install Rust, system dependencies, and the Polkadot SDK on macOS, Linux, or Windows WSL, then verify the build produces working binaries.",
+      "description": "Installs all Polkadot SDK build dependencies and compiles the SDK from source on macOS, Linux (Ubuntu/Debian/Arch/Fedora/OpenSUSE), and Windows WSL. Use when setting up a new development machine for Polkadot parachain or runtime development. Covers OS package installation, Rust toolchain setup, wasm32 target addition, git clone, and a full cargo build. Trigger phrases: 'install Polkadot SDK', 'set up parachain dev environment', 'install Rust for Polkadot', 'build polkadot-sdk', 'set up Substrate environment'. Expected outcome: polkadot binary executes and prints its version string.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "parachains/install-polkadot-sdk.md"
+      ],
+      "primary_page": "parachains/install-polkadot-sdk.md",
+      "prerequisites": {
+        "runtime": [
+          "macOS 10.7+, Ubuntu/Debian/Arch/Fedora/OpenSUSE Linux, or Windows 10 v2004+ with WSL2",
+          "At least 10 GB free disk space and 8 GB RAM (16 GB recommended for parallel compilation)",
+          "Broadband internet connection (downloads several GB of Rust crates and dependencies)"
+        ]
+      },
+      "env_vars": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Install OS-level system dependencies",
+          "working_directory": ".",
+          "description": "Install the packages required to compile the Polkadot SDK. Run the command block for your OS:\n\nmacOS: First install Homebrew if missing (/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)\"), then run: brew install protobuf openssl cmake\n\nUbuntu or Debian: sudo apt install --assume-yes git clang curl libssl-dev llvm libclang-dev libudev-dev make protobuf-compiler\n\nArch Linux: pacman -Syu --needed --noconfirm curl git clang make protobuf\n\nFedora: sudo dnf update && sudo dnf install clang curl git openssl-devel make protobuf-compiler\n\nOpenSUSE: sudo zypper install clang curl git openssl-devel llvm-devel libudev-devel make protobuf\n\nWindows WSL (Ubuntu): open the WSL Ubuntu terminal, then run: sudo apt install --assume-yes git clang curl libssl-dev llvm libclang-dev libudev-dev make protobuf-compiler"
+        },
+        {
+          "order": 2,
+          "action": "Install Rust via rustup",
+          "working_directory": ".",
+          "commands": [
+            "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
+            "source ~/.cargo/env"
+          ],
+          "description": "Download and run the rustup installer. When prompted, accept the default installation (press Enter or type 1). After installation completes, source the Cargo environment so the current shell session can find the Rust toolchain. On Windows WSL, use source ~/.cargo/env; on some Linux distributions use source $HOME/.cargo/env."
+        },
+        {
+          "order": 3,
+          "action": "Configure the Rust toolchain",
+          "working_directory": ".",
+          "commands": [
+            "rustup default stable",
+            "rustup update",
+            "rustup target add wasm32-unknown-unknown",
+            "rustup component add rust-src"
+          ],
+          "expected_output": "info: setting default toolchain to 'stable-...'",
+          "description": "Set the stable toolchain as default, update it to the latest release, and add the WebAssembly compilation target plus the Rust source component. Both wasm32-unknown-unknown and rust-src are required for building Substrate/Polkadot SDK runtime WASM blobs."
+        },
+        {
+          "order": 4,
+          "action": "Clone the Polkadot SDK repository",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/paritytech/polkadot-sdk.git",
+            "cd polkadot-sdk"
+          ],
+          "description": "Clone the official Polkadot SDK repository. The clone is several hundred MB and may take a few minutes on a slower connection. All subsequent steps run from inside the polkadot-sdk directory."
+        },
+        {
+          "order": 5,
+          "action": "Compile the Polkadot SDK",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "cargo build --release --locked"
+          ],
+          "expected_output": "Compiling polkadot ... Finished release [optimized] target(s)",
+          "description": "Build the entire SDK in release mode. This compiles all components and verifies the full toolchain. Expect 20-60 minutes on typical developer hardware. A successful build produces binaries in target/release/ including polkadot, polkadot-parachain, polkadot-omni-node, and substrate-node."
+        },
+        {
+          "order": 6,
+          "action": "Verify the build",
+          "working_directory": "polkadot-sdk",
+          "commands": [
+            "./target/release/polkadot --version"
+          ],
+          "expected_output": "polkadot 1.x.x-xxxxxxx",
+          "description": "Confirm the polkadot binary runs and prints its version. If you see version output without errors, the development environment is correctly configured and ready for Polkadot SDK work. Save this version string — needed when matching binary versions in parachain template setup."
+        }
+      ],
+      "error_patterns": [
+        {
+          "pattern": "error: linker 'cc' not found",
+          "cause": "C compiler and build tools are not installed.",
+          "resolution": "On Ubuntu/Debian run: sudo apt install build-essential clang. On macOS run: xcode-select --install. On Fedora run: sudo dnf install gcc."
+        },
+        {
+          "pattern": "error: failed to run custom build command for 'openssl-sys'",
+          "cause": "OpenSSL development headers are missing.",
+          "resolution": "On Ubuntu/Debian run: sudo apt install libssl-dev. On macOS run: brew install openssl. On Fedora run: sudo dnf install openssl-devel."
+        },
+        {
+          "pattern": "error[E0463]: can't find crate for 'std' ... target wasm32-unknown-unknown",
+          "cause": "The wasm32-unknown-unknown target is not installed.",
+          "resolution": "Run: rustup target add wasm32-unknown-unknown && rustup component add rust-src"
+        },
+        {
+          "pattern": "LLVM ERROR: out of memory / build killed / OOM",
+          "cause": "Insufficient RAM for the default number of parallel compilation jobs.",
+          "resolution": "Limit parallelism: cargo build --release --locked -j 4. On Linux you can also temporarily increase swap: sudo fallocate -l 8G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile"
+        },
+        {
+          "pattern": "error: failed to compile protobuf files / protoc not found",
+          "cause": "The protobuf compiler is missing.",
+          "resolution": "On Ubuntu/Debian: sudo apt install protobuf-compiler. On macOS: brew install protobuf. On Fedora: sudo dnf install protobuf-compiler."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user asks about next steps after installing the SDK or about the parachain template.",
+        "pages": [
+          {
+            "slug": "parachains-launch-a-parachain-set-up-the-parachain-template",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-launch-a-parachain-set-up-the-parachain-template.md",
+            "relevance": "Next step after SDK installation: clone and run the Polkadot SDK parachain template locally."
+          },
+          {
+            "slug": "parachains-get-started",
+            "url": "https://docs.polkadot.com/ai/pages/parachains-get-started.md",
+            "relevance": "Overview of parachain development paths and starting points available after SDK setup."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: fresh Ubuntu developer machine",
+          "user_says": "Install the Polkadot SDK on my Linux machine",
+          "actions": [
+            "Run apt install for required packages (git, clang, libssl-dev, etc.)",
+            "Install Rust via rustup and source ~/.cargo/env",
+            "Run rustup default stable && rustup target add wasm32-unknown-unknown && rustup component add rust-src",
+            "Clone https://github.com/paritytech/polkadot-sdk.git and cd polkadot-sdk",
+            "Run cargo build --release --locked",
+            "Verify with ./target/release/polkadot --version"
+          ],
+          "result": "Polkadot binary prints version string — SDK toolchain ready for parachain development"
+        },
+        {
+          "scenario": "Edge case: build runs out of memory on a machine with limited RAM",
+          "user_says": "The build keeps getting killed or runs out of memory",
+          "actions": [
+            "Re-run with reduced parallelism: cargo build --release --locked -j 4",
+            "If still failing on Linux, add swap: sudo fallocate -l 8G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile, then retry"
+          ],
+          "result": "Build completes with reduced parallel jobs or additional swap space"
+        }
+      ]
+    },
+    {
+      "id": "deploy-basic-contract-hardhat",
+      "title": "Deploy a Basic Smart Contract with Hardhat",
+      "objective": "Scaffold a Hardhat project, create a Storage.sol contract, compile it, and deploy it to Polkadot Hub TestNet using Hardhat Ignition.",
+      "description": "Scaffolds a Hardhat v2 TypeScript project, configures it for Polkadot Hub TestNet (chain ID 420420417), creates a Storage.sol contract, compiles it, and deploys via Hardhat Ignition. Use when deploying a first EVM smart contract to Polkadot Hub using a professional Hardhat workflow. Uses dotenv for private key security. Trigger phrases: 'deploy smart contract with Hardhat', 'Hardhat deployment Polkadot', 'deploy Storage contract', 'Hardhat Ignition deploy'. Requires testnet PAS tokens. Do NOT use for PVM (PolkaVM) deployments; use set-up-hardhat-pvm for that.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-hardhat.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-basic/basic-hardhat.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22.13.1 or later",
+          "npm"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for gas fees — get from https://faucet.polkadot.io/ (Polkadot Hub TestNet base fee is 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer account. Must correspond to a testnet account funded with PAS tokens. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and initialize npm",
+          "working_directory": ".",
+          "commands": [
+            "mkdir hardhat-deployment && cd hardhat-deployment",
+            "npm init -y"
+          ],
+          "description": "Create a new directory named 'hardhat-deployment' and initialize a Node.js project. Do NOT run npx hardhat init at this stage — interactive init is non-deterministic across Hardhat versions. All project files will be fetched from the reference repository in subsequent steps."
+        },
+        {
+          "order": 2,
+          "action": "Install Hardhat and dependencies",
+          "working_directory": "hardhat-deployment",
+          "commands": [
+            "npm install --save-dev hardhat@^2.27.0 @nomicfoundation/hardhat-toolbox typescript ts-node @types/node",
+            "npm install dotenv"
+          ],
+          "description": "Install Hardhat v2 with the Toolbox plugin, TypeScript support, and dotenv for secure private key loading. The dotenv package is required — the skill uses process.env.PRIVATE_KEY instead of Hardhat's interactive vars system, which does not work in agent shells."
+        },
+        {
+          "order": 3,
+          "action": "Create project directory structure",
+          "working_directory": "hardhat-deployment",
+          "commands": [
+            "mkdir -p contracts ignition/modules"
+          ],
+          "description": "Create the contracts and ignition/modules directories that Hardhat expects. The test directory is optional and not needed for this deployment workflow."
+        },
+        {
+          "order": 4,
+          "action": "Create .env file and .gitignore for private key",
+          "working_directory": "hardhat-deployment",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder and a .gitignore entry to prevent accidental commits. Stop here and ask the user to edit the .env file directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm the .env file is filled before proceeding to step 5."
+        },
+        {
+          "order": 5,
+          "action": "Fetch and configure hardhat.config.ts",
+          "working_directory": "hardhat-deployment",
+          "reference_file": "hardhat.config.ts",
+          "description": "Fetch the reference file and save it as 'hardhat.config.ts'. Then apply all of the following modifications before saving:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any 'vars.get(\"PRIVATE_KEY\")' or \"vars.get('PRIVATE_KEY')\" with 'process.env.PRIVATE_KEY as string'.\n(3) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei — 5x the TestNet base fee of 1000 gwei; prevents stuck transactions).\n(4) Add an 'ignition: { requiredConfirmations: 1 }' top-level key to the config object (zero confirmations only works on local nodes — on TestNet it causes IGN401 dropped-transaction errors).\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/hardhat.config.ts -o hardhat.config.ts"
+        },
+        {
+          "order": 6,
+          "action": "Fetch Storage.sol contract",
+          "working_directory": "hardhat-deployment",
+          "reference_file": "contracts/Storage.sol",
+          "description": "Fetch the reference file and save it as 'contracts/Storage.sol'. No substitutions needed — this is a generic Storage contract with get/set functions. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/contracts/Storage.sol -o contracts/Storage.sol"
+        },
+        {
+          "order": 7,
+          "action": "Compile the contract",
+          "working_directory": "hardhat-deployment",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled 1 Solidity file successfully",
+          "description": "Compile Storage.sol. Successful output shows 'Compiled 1 Solidity file successfully' and creates artifacts in the artifacts/ directory. If compilation fails with 'invalid opcode: MCOPY', add 'evmVersion: \"cancun\"' inside the solidity.settings.evmVersion field of hardhat.config.ts and recompile."
+        },
+        {
+          "order": 8,
+          "action": "Fetch the Ignition deployment module",
+          "working_directory": "hardhat-deployment",
+          "reference_file": "ignition/modules/Storage.ts",
+          "description": "Fetch the reference file and save it as 'ignition/modules/Storage.ts'. No substitutions needed — the module deploys the Storage contract by name. If the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/basic-hardhat/ignition/modules/Storage.ts -o ignition/modules/Storage.ts"
+        },
+        {
+          "order": 9,
+          "action": "Deploy the contract to Polkadot Hub TestNet",
+          "working_directory": "hardhat-deployment",
+          "commands": [
+            "npx hardhat ignition deploy ignition/modules/Storage.ts --network polkadotTestnet"
+          ],
+          "expected_output": "Hardhat Ignition 🚀 ... Storage deployed to: 0x...",
+          "interactive": true,
+          "description": "Deploy the contract. Hardhat Ignition will prompt to confirm the target network and chain ID — delegate this confirmation to the user (they must type the network name or press Enter). After confirmation, Ignition broadcasts the deployment transaction. Save the deployed contract address printed at the end — needed for contract interaction. If the transaction becomes stuck, see error_patterns for the IGN401 recovery procedure."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/basic-hardhat",
+        "files": [
+          {
+            "path": "hardhat.config.ts",
+            "description": "Hardhat config with polkadotTestnet network (RPC, chain ID, accounts via vars). Requires dotenv conversion and gasPrice addition per skill steps."
+          },
+          {
+            "path": "contracts/Storage.sol",
+            "description": "Simple Storage contract with uint256 store/retrieve functions"
+          },
+          {
+            "path": "ignition/modules/Storage.ts",
+            "description": "Hardhat Ignition module that deploys the Storage contract"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: vars is not defined / Cannot read properties of undefined (reading 'get')",
+          "cause": "The hardhat.config.ts still contains vars.get('PRIVATE_KEY') instead of the dotenv substitution.",
+          "resolution": "Open hardhat.config.ts, replace vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string, and add 'import \"dotenv/config\";' as the first line of the file."
+        },
+        {
+          "pattern": "Error: insufficient funds / Priority is too low",
+          "cause": "The deployer account has no testnet PAS tokens, or the gasPrice in hardhat.config.ts is below the network minimum (1000 gwei base fee).",
+          "resolution": "Get testnet tokens from https://faucet.polkadot.io/. Also verify the polkadotTestnet network block in hardhat.config.ts includes gasPrice: 5000000000000 (5000 gwei)."
+        },
+        {
+          "pattern": "IGN401: Transaction dropped / Transaction Already Imported on retry",
+          "cause": "Ignition lost track of the deployment transaction. Often caused by requiredConfirmations: 0 or gasPrice below the base fee.",
+          "resolution": "First check if the contract was actually deployed: look in ignition/deployments/ for deployed_addresses.json. If deployed, import the existing deployment. If not deployed: (1) delete the ignition/deployments/ directory, (2) ensure hardhat.config.ts has gasPrice: 5000000000000 and ignition.requiredConfirmations: 1, (3) redeploy."
+        },
+        {
+          "pattern": "CompilationError: Invalid opcode: MCOPY",
+          "cause": "The Solidity contract uses OpenZeppelin v5.4.0+ which requires the Cancun EVM version.",
+          "resolution": "In hardhat.config.ts, add evmVersion: 'cancun' inside the solidity compiler settings: solidity: { version: '0.8.28', settings: { evmVersion: 'cancun' } }"
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants to build on this deployment or needs to connect a frontend.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat.md",
+            "relevance": "Next step: deploy an ERC-20 token using the same Hardhat workflow."
+          },
+          {
+            "slug": "smart-contracts-dev-environments-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-dev-environments-hardhat.md",
+            "relevance": "Hardhat configuration reference for Polkadot Hub including verification setup."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy a first smart contract to Polkadot Hub",
+          "user_says": "Deploy a Storage contract to Polkadot Hub TestNet using Hardhat",
+          "actions": [
+            "Scaffold hardhat-deployment/ with npm init -y",
+            "Install hardhat, toolbox, dotenv",
+            "Create .env with PRIVATE_KEY placeholder; ask user to fill it in",
+            "Fetch and configure hardhat.config.ts: add dotenv import, replace vars.get, add gasPrice 5000 gwei, set requiredConfirmations: 1",
+            "Fetch contracts/Storage.sol",
+            "Run npx hardhat compile",
+            "Fetch ignition/modules/Storage.ts",
+            "Run npx hardhat ignition deploy --network polkadotTestnet; delegate confirmation prompt to user"
+          ],
+          "result": "Storage contract deployed; address printed to console"
+        },
+        {
+          "scenario": "Edge case: deployment transaction gets stuck (IGN401)",
+          "user_says": "Ignition says the transaction was dropped and retrying gives 'Transaction Already Imported'",
+          "actions": [
+            "Check ignition/deployments/ for deployed_addresses.json to determine if contract was actually deployed",
+            "If not deployed: delete ignition/deployments/, verify gasPrice: 5000000000000 and requiredConfirmations: 1 in config, then redeploy"
+          ],
+          "result": "Fresh deployment succeeds with correct gas configuration"
+        }
+      ]
+    },
+    {
+      "id": "deploy-erc20-token-hardhat",
+      "title": "Deploy an ERC-20 Token Using Hardhat",
+      "objective": "Clone the revm-hardhat-examples ERC-20 template, compile and test it, then deploy an OpenZeppelin ERC-20 contract to Polkadot Hub TestNet.",
+      "description": "Clones the polkadot-developers/revm-hardhat-examples ERC-20 template, installs dependencies, configures dotenv for private key security, compiles the OpenZeppelin ERC-20 contract, runs the test suite against TestNet, and deploys via Hardhat Ignition. Use when deploying a standards-compliant ERC-20 fungible token on Polkadot Hub. Requires testnet PAS tokens. Trigger phrases: 'deploy ERC-20 token', 'deploy fungible token Polkadot', 'ERC-20 Hardhat Polkadot', 'deploy MyToken'. Uses OpenZeppelin Contracts v5.4.0+ — requires evmVersion cancun.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-hardhat.md"
+      ],
+      "primary_page": "smart-contracts/cookbook/smart-contracts/deploy-erc20/erc20-hardhat.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22.13.1 or later",
+          "npm",
+          "Git"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens for gas fees and test transactions — get from https://faucet.polkadot.io/ (base fee: 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer/test account. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Clone the ERC-20 template repository",
+          "working_directory": ".",
+          "commands": [
+            "git clone https://github.com/polkadot-developers/revm-hardhat-examples/",
+            "cd revm-hardhat-examples/erc20-hardhat"
+          ],
+          "description": "Clone the revm-hardhat-examples repository and navigate into the erc20-hardhat subdirectory. This template contains a pre-configured Hardhat project with an OpenZeppelin ERC-20 contract, test suite, and Ignition deployment module."
+        },
+        {
+          "order": 2,
+          "action": "Install dependencies",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "commands": [
+            "npm i",
+            "npm install dotenv"
+          ],
+          "description": "Install all template dependencies from package.json, then additionally install dotenv. dotenv is needed to replace Hardhat's interactive vars system (which cannot be used in agent shells) with a .env-based private key approach."
+        },
+        {
+          "order": 3,
+          "action": "Create .env file and .gitignore for private key",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with an empty PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for an account funded with testnet PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+        },
+        {
+          "order": 4,
+          "action": "Convert hardhat.config.ts to use dotenv and add gas configuration",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "description": "Open hardhat.config.ts and apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line of the file.\n(2) Replace any vars.get('PRIVATE_KEY') or vars.get(\"PRIVATE_KEY\") with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, add 'gasPrice: 5000000000000,' (5000 gwei — 5x the TestNet 1000 gwei base fee).\n(5) Confirm or add 'evmVersion: \"cancun\"' in the solidity compiler settings block — required because the template uses OpenZeppelin Contracts v5.4.0+ which uses the mcopy opcode from the Cancun EVM upgrade.\n(6) Confirm ignition.requiredConfirmations is 1 (not 0).\nSave the file."
+        },
+        {
+          "order": 5,
+          "action": "Compile the contract",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled 1 Solidity file successfully",
+          "description": "Compile the ERC-20 contract. If compilation fails with 'Invalid opcode: MCOPY', ensure evmVersion: 'cancun' is set in the solidity compiler settings and recompile."
+        },
+        {
+          "order": 6,
+          "action": "Run the test suite",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "commands": [
+            "npx hardhat test --network polkadotTestnet"
+          ],
+          "expected_output": "7 passing",
+          "description": "Run the predefined test suite against Polkadot Hub TestNet. Tests verify token name/symbol, owner, initial supply, minting, and balance tracking. This consumes testnet PAS for gas. If the account is low on PAS, visit https://faucet.polkadot.io/ first. Save the test output — it confirms the contract logic is correct before deployment."
+        },
+        {
+          "order": 7,
+          "action": "Deploy the ERC-20 contract",
+          "working_directory": "revm-hardhat-examples/erc20-hardhat",
+          "commands": [
+            "npx hardhat ignition deploy ./ignition/modules/MyToken.ts --network polkadotTestnet"
+          ],
+          "expected_output": "MyToken deployed to: 0x...",
+          "interactive": true,
+          "description": "Deploy the ERC-20 contract via Hardhat Ignition. Ignition will prompt to confirm the target network and chain ID — delegate this confirmation to the user. After confirmation, the deployment transaction is broadcast. Save the contract address printed on success — needed for token interaction and verification."
+        }
+      ],
+      "error_patterns": [
+        {
+          "pattern": "CompilationError: Invalid opcode: MCOPY",
+          "cause": "OpenZeppelin Contracts v5.4.0+ uses the mcopy opcode which requires Cancun EVM version. The hardhat.config.ts does not specify evmVersion: 'cancun'.",
+          "resolution": "In hardhat.config.ts, set evmVersion: 'cancun' inside solidity.settings: solidity: { version: '0.8.28', settings: { evmVersion: 'cancun' } }. Then recompile."
+        },
+        {
+          "pattern": "Error: vars is not defined / Cannot read properties of undefined",
+          "cause": "hardhat.config.ts still uses Hardhat's vars.get() system rather than dotenv.",
+          "resolution": "Add 'import \"dotenv/config\";' as the first line of hardhat.config.ts and replace vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string."
+        },
+        {
+          "pattern": "Error: insufficient funds / Priority is too low",
+          "cause": "Deployer account has insufficient PAS, or gasPrice is below the TestNet 1000 gwei base fee.",
+          "resolution": "Get testnet tokens at https://faucet.polkadot.io/. Verify hardhat.config.ts polkadotTestnet block includes gasPrice: 5000000000000."
+        },
+        {
+          "pattern": "IGN401: Transaction dropped / Transaction Already Imported",
+          "cause": "Ignition lost track of deployment, commonly due to missing gasPrice or requiredConfirmations: 0.",
+          "resolution": "Delete ignition/deployments/, ensure gasPrice: 5000000000000 and ignition.requiredConfirmations: 1 in config, then redeploy."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants to build a dApp on top of the deployed ERC-20 or interact with it.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-dapps-zero-to-hero",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-dapps-zero-to-hero.md",
+            "relevance": "Build a full dApp (Next.js + Viem) on top of a deployed smart contract."
+          },
+          {
+            "slug": "smart-contracts-libraries-ethers-js",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-libraries-ethers-js.md",
+            "relevance": "How to interact with the deployed ERC-20 contract using Ethers.js."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: deploy a new ERC-20 token to Polkadot Hub",
+          "user_says": "Deploy an ERC-20 token to Polkadot Hub TestNet",
+          "actions": [
+            "Clone revm-hardhat-examples and cd erc20-hardhat",
+            "Run npm i && npm install dotenv",
+            "Create .env with PRIVATE_KEY placeholder; ask user to fill it in",
+            "Modify hardhat.config.ts: add dotenv import, replace vars.get, add gasPrice 5000 gwei, set evmVersion cancun, confirm requiredConfirmations: 1",
+            "Run npx hardhat compile",
+            "Run npx hardhat test --network polkadotTestnet to verify contract logic",
+            "Run npx hardhat ignition deploy ./ignition/modules/MyToken.ts --network polkadotTestnet; delegate confirmation to user"
+          ],
+          "result": "ERC-20 token contract deployed; address printed to console"
+        },
+        {
+          "scenario": "Edge case: compilation fails with MCOPY opcode error",
+          "user_says": "Compilation fails with 'Invalid opcode: MCOPY'",
+          "actions": [
+            "Open hardhat.config.ts",
+            "Change the solidity field to: { version: '0.8.28', settings: { evmVersion: 'cancun' } }",
+            "Run npx hardhat compile again"
+          ],
+          "result": "Compilation succeeds with Cancun EVM version"
+        }
+      ]
+    },
+    {
+      "id": "set-up-hardhat-pvm",
+      "title": "Set Up Hardhat with the Polkadot Plugin (PVM)",
+      "objective": "Initialize a Hardhat project with the @parity/hardhat-polkadot plugin to compile Solidity contracts to PVM bytecode and deploy to Polkadot Hub TestNet.",
+      "description": "Sets up a Hardhat project using the @parity/hardhat-polkadot plugin and the resolc compiler to compile Solidity to PolkaVM (PVM) bytecode. Use when targeting Polkadot Hub's PVM runtime rather than the standard EVM runtime. Covers project initialization, resolc installation, dotenv private key setup, TestNet config with gasPrice, and a compile-verify step. Trigger phrases: 'Hardhat PVM', 'hardhat-polkadot plugin', 'compile to PolkaVM', 'resolc Hardhat', 'PVM smart contract Polkadot'. Do NOT use this skill for standard EVM deployments; use set-up-hardhat-evm instead.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/dev-environments/hardhat-polkadot.md"
+      ],
+      "primary_page": "smart-contracts/dev-environments/hardhat-polkadot.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js v22.5+ and npm v10.9.0+ (required for @parity/hardhat-polkadot compatibility)",
+          "npm or pnpm or yarn"
+        ],
+        "network": [
+          "Polkadot Hub TestNet RPC: https://services.polkadothub-rpc.com/testnet (chain ID 420420417)"
+        ],
+        "tokens": [
+          "Testnet PAS tokens — get from https://faucet.polkadot.io/ (TestNet base fee: 1000 gwei)"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key for the deployer account. Must be funded with testnet PAS. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and initialize npm",
+          "working_directory": ".",
+          "commands": [
+            "mkdir hardhat-pvm-example && cd hardhat-pvm-example",
+            "npm init -y"
+          ],
+          "description": "Create a new directory and initialize a Node.js project."
+        },
+        {
+          "order": 2,
+          "action": "Install the Polkadot Hardhat plugin and resolc compiler",
+          "working_directory": "hardhat-pvm-example",
+          "commands": [
+            "npm install --save-dev @parity/hardhat-polkadot",
+            "npm install --save-dev @parity/resolc",
+            "npm install dotenv"
+          ],
+          "description": "Install the @parity/hardhat-polkadot plugin (provides the Hardhat task runner for PVM), the @parity/resolc compiler (compiles Solidity to PVM bytecode), and dotenv (for secure private key loading). Do not pin specific versions unless the docs page specifies them — use latest."
+        },
+        {
+          "order": 3,
+          "action": "Initialize the Hardhat PVM project structure",
+          "working_directory": "hardhat-pvm-example",
+          "commands": [
+            "npx hardhat-polkadot init"
+          ],
+          "interactive": true,
+          "description": "Run the project creation wizard. This is an interactive command — delegate it to the user. The wizard creates the contracts/, ignition/, and test/ directories and places a sample contract and deployment module. After the wizard completes, instruct the user to confirm which sample files were created before proceeding."
+        },
+        {
+          "order": 4,
+          "action": "Install all project dependencies after init",
+          "working_directory": "hardhat-pvm-example",
+          "commands": [
+            "npm install",
+            "echo '/ignition/deployments/' >> .gitignore"
+          ],
+          "description": "Install any additional dependencies added by the init wizard, then add ignition/deployments/ to .gitignore to avoid committing deployment state to version control."
+        },
+        {
+          "order": 5,
+          "action": "Create .env file and .gitignore entry for private key",
+          "working_directory": "hardhat-pvm-example",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key for a testnet account funded with PAS. Do NOT ask for the private key in chat. Wait for the user to confirm .env is filled before proceeding."
+        },
+        {
+          "order": 6,
+          "action": "Fetch and configure hardhat.config.ts for TestNet",
+          "working_directory": "hardhat-pvm-example",
+          "reference_file": "hardhat.config.ts",
+          "description": "Fetch the reference hardhat.config.ts and replace the existing one in the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Confirm the polkadotTestnet network block contains: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, and accounts: [process.env.PRIVATE_KEY as string].\n(4) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei — 5x the 1000 gwei TestNet base fee).\n(5) Set or confirm 'ignition: { requiredConfirmations: 1 }' in the top-level config object.\nSave the file.\nIf the AI fetch tool is blocked, run: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-pvm/hardhat.config.ts -o hardhat.config.ts"
+        },
+        {
+          "order": 7,
+          "action": "Compile the sample contract to verify setup",
+          "working_directory": "hardhat-pvm-example",
+          "commands": [
+            "npx hardhat compile"
+          ],
+          "expected_output": "Compiled ... Solidity file(s) successfully",
+          "description": "Compile the sample contract generated by the init wizard. Successful compilation confirms resolc is working and the project structure is correct. The compiled artifacts appear in artifacts/contracts/. If compilation fails with resolc errors, verify @parity/resolc is installed and the version matches what the hardhat.config.ts specifies in the resolc field."
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/dev-environments/hardhat-pvm",
+        "files": [
+          {
+            "path": "hardhat.config.ts",
+            "description": "Hardhat config with @parity/hardhat-polkadot plugin, resolc compiler settings, polkadotTestnet and localNode networks"
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: Cannot find module '@parity/hardhat-polkadot' / resolc not found",
+          "cause": "The Polkadot plugin or resolc compiler was not installed.",
+          "resolution": "Run: npm install --save-dev @parity/hardhat-polkadot @parity/resolc in the project directory."
+        },
+        {
+          "pattern": "Compilation fails with resolc errors / unsupported Solidity version",
+          "cause": "The resolc compiler version does not support the contract's Solidity pragma version.",
+          "resolution": "Check the @parity/resolc version installed and the Solidity pragma in the contract. Update the version field in hardhat.config.ts resolc settings to match what is installed, or downgrade the Solidity pragma in the contract to a supported version."
+        },
+        {
+          "pattern": "Error: vars is not defined",
+          "cause": "hardhat.config.ts uses Hardhat's vars.get() system instead of dotenv.",
+          "resolution": "Add 'import \"dotenv/config\";' as the first line of hardhat.config.ts and replace vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string."
+        },
+        {
+          "pattern": "Deployment hangs on local node / requiredConfirmations: 0",
+          "cause": "The ignition config has requiredConfirmations: 0, which causes Ignition to misinterpret pending transactions as dropped on local nodes that don't produce blocks instantly.",
+          "resolution": "Set ignition.requiredConfirmations: 1 in hardhat.config.ts."
+        },
+        {
+          "pattern": "Binary permission issues on macOS (binary is quarantined)",
+          "cause": "macOS Gatekeeper quarantines downloaded binaries for dev-node and eth-rpc adapter.",
+          "resolution": "Run: xattr -d com.apple.quarantine /path/to/binary. Also ensure executable permission: chmod +x /path/to/binary."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user wants to deploy a contract after setting up the PVM environment, or needs to understand PVM vs EVM differences.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat.md",
+            "relevance": "Next step: deploy a basic contract once the Hardhat PVM environment is set up."
+          },
+          {
+            "slug": "smart-contracts-for-eth-devs-evm-vs-pvm",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-for-eth-devs-evm-vs-pvm.md",
+            "relevance": "Understand the differences between EVM and PVM to choose the right compilation target."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: set up a PVM Hardhat project from scratch",
+          "user_says": "Set up Hardhat with the Polkadot PVM plugin",
+          "actions": [
+            "Create hardhat-pvm-example/ and run npm init -y",
+            "Install @parity/hardhat-polkadot, @parity/resolc, dotenv",
+            "Run npx hardhat-polkadot init wizard (delegate to user)",
+            "Run npm install and add ignition/deployments/ to .gitignore",
+            "Create .env with PRIVATE_KEY placeholder; ask user to fill it in",
+            "Fetch and configure hardhat.config.ts: add dotenv, replace vars.get, add gasPrice 5000 gwei, requiredConfirmations: 1",
+            "Run npx hardhat compile to verify setup"
+          ],
+          "result": "PVM Hardhat project compiles successfully; ready to deploy contracts to Polkadot Hub"
+        },
+        {
+          "scenario": "Edge case: user is on macOS and binary is quarantined",
+          "user_says": "The dev-node binary is blocked by macOS Gatekeeper",
+          "actions": [
+            "Run: xattr -d com.apple.quarantine /path/to/dev-node",
+            "Run: chmod +x /path/to/dev-node",
+            "Restart the local node"
+          ],
+          "result": "Binary executes without quarantine errors"
+        }
+      ]
+    },
+    {
+      "id": "set-up-hardhat-evm",
+      "title": "Set Up Hardhat for Polkadot Hub (EVM)",
+      "objective": "Initialize a Hardhat v2 TypeScript project configured for Polkadot Hub's EVM runtime, with dotenv-based private key management and optional contract verification.",
+      "description": "Initializes a Hardhat v2 TypeScript project for the standard Polkadot Hub EVM runtime (not PVM). Configures the polkadotTestnet network with correct RPC URL, chain ID (420420417), gasPrice (5000 gwei), and dotenv-based private key management. Optionally configures Blockscout or Routescan contract verification. Use when setting up a reusable EVM development environment before deploying any contract. Trigger phrases: 'set up Hardhat for Polkadot EVM', 'configure Hardhat Polkadot Hub', 'Hardhat EVM Polkadot setup', 'Hardhat network config Polkadot'. Do NOT use for PVM; use set-up-hardhat-pvm instead.",
+      "version": "1.0.0",
+      "chain_role": "isolated",
+      "invocation": "user",
+      "workflow_pattern": "sequential",
+      "license": "CC-BY-4.0",
+      "source_pages": [
+        "smart-contracts/dev-environments/hardhat.md"
+      ],
+      "primary_page": "smart-contracts/dev-environments/hardhat.md",
+      "prerequisites": {
+        "runtime": [
+          "Node.js LTS (18.x, 20.x, or 22.x — even major version numbers only)",
+          "npm, pnpm, or yarn"
+        ],
+        "wallet": [
+          "An EVM private key (0x-prefixed) for a funded testnet account — needed before deploying contracts"
+        ]
+      },
+      "env_vars": [
+        {
+          "name": "PRIVATE_KEY",
+          "description": "0x-prefixed EVM private key used in the polkadotTestnet accounts array. Fill before running any deployment. Never commit to version control.",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Create project directory and initialize npm",
+          "working_directory": ".",
+          "commands": [
+            "mkdir hardhat-example && cd hardhat-example",
+            "npm init -y"
+          ],
+          "description": "Create a new directory and initialize a Node.js project. Do NOT run npx hardhat init at this stage — the interactive init wizard is non-deterministic across Hardhat v2/v3 transitions. All configuration will be set up manually in the following steps."
+        },
+        {
+          "order": 2,
+          "action": "Install Hardhat and dependencies",
+          "working_directory": "hardhat-example",
+          "commands": [
+            "npm install --save-dev hardhat@^2.27.0 @nomicfoundation/hardhat-toolbox typescript ts-node @types/node",
+            "npm install dotenv"
+          ],
+          "description": "Install Hardhat v2, the Hardhat Toolbox (includes ethers.js, chai, and testing utilities), TypeScript support, and dotenv. The dotenv package replaces Hardhat's interactive 'npx hardhat vars set' mechanism, which cannot be used in agent shells."
+        },
+        {
+          "order": 3,
+          "action": "Create project directory structure",
+          "working_directory": "hardhat-example",
+          "commands": [
+            "mkdir -p contracts ignition/modules test",
+            "echo '/ignition/deployments/' >> .gitignore",
+            "echo '/artifacts/' >> .gitignore",
+            "echo '/cache/' >> .gitignore"
+          ],
+          "description": "Create the standard Hardhat directory structure and add common output directories to .gitignore."
+        },
+        {
+          "order": 4,
+          "action": "Create .env file and .gitignore entry for private key",
+          "working_directory": "hardhat-example",
+          "commands": [
+            "printf 'PRIVATE_KEY=\\n' > .env",
+            "echo '.env' >> .gitignore"
+          ],
+          "description": "Create a .env file with a PRIVATE_KEY placeholder. Stop here and ask the user to edit .env directly — fill in PRIVATE_KEY with their 0x-prefixed EVM private key. For initial setup without a deployment, leaving PRIVATE_KEY empty is acceptable — the project will compile but deployment commands will fail until it is set. Do NOT ask for the key in chat."
+        },
+        {
+          "order": 5,
+          "action": "Fetch and configure hardhat.config.ts",
+          "working_directory": "hardhat-example",
+          "reference_file": "hardhat.config.ts",
+          "description": "Fetch the reference hardhat.config.ts and save it to the project root. Then apply all of the following modifications:\n(1) Add 'import \"dotenv/config\";' as the very first line.\n(2) Replace any vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string.\n(3) Remove the 'import { vars } from \"hardhat/config\";' line if present.\n(4) In the polkadotTestnet network block, confirm or add: url: 'https://services.polkadothub-rpc.com/testnet', chainId: 420420417, accounts: [process.env.PRIVATE_KEY as string].\n(5) Add 'gasPrice: 5000000000000,' to the polkadotTestnet block (5000 gwei — 5x the TestNet 1000 gwei base fee; prevents stuck deployment transactions).\n(6) Add top-level 'ignition: { requiredConfirmations: 1 }' to the config object.\nSave the file.\nIf the AI fetch is blocked: curl -sL https://raw.githubusercontent.com/polkadot-developers/polkadot-cookbook/main/polkadot-docs/smart-contracts/dev-environments/hardhat-evm/hardhat.config.ts -o hardhat.config.ts"
+        }
+      ],
+      "reference_code": {
+        "repo": "polkadot-cookbook",
+        "base_path": "polkadot-docs/smart-contracts/dev-environments/hardhat-evm",
+        "files": [
+          {
+            "path": "hardhat.config.ts",
+            "description": "Hardhat config with polkadotTestnet network, solidity version, and Hardhat Toolbox import. Requires dotenv conversion and gasPrice addition per skill steps."
+          }
+        ]
+      },
+      "error_patterns": [
+        {
+          "pattern": "Error: vars is not defined",
+          "cause": "hardhat.config.ts still uses Hardhat's vars.get() system.",
+          "resolution": "Add 'import \"dotenv/config\";' as the first line of hardhat.config.ts and replace vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string."
+        },
+        {
+          "pattern": "HardhatError: HH8: There's one or more errors in your config / Cannot read properties of undefined (reading 'get')",
+          "cause": "The vars import is present but vars is undefined because the interactive vars store was never populated.",
+          "resolution": "Remove 'import { vars } from \"hardhat/config\";' and all vars.get() calls. Replace with process.env.PRIVATE_KEY loaded by dotenv."
+        },
+        {
+          "pattern": "Error: insufficient funds for intrinsic transaction cost on deployment",
+          "cause": "gasPrice is missing or below the TestNet base fee of 1000 gwei.",
+          "resolution": "Add gasPrice: 5000000000000 to the polkadotTestnet network block in hardhat.config.ts. Also ensure the deployer account has testnet PAS from https://faucet.polkadot.io/."
+        },
+        {
+          "pattern": "Cannot find module 'ts-node' / TypeScript compilation error on npx hardhat",
+          "cause": "TypeScript dependencies were not installed.",
+          "resolution": "Run: npm install --save-dev typescript ts-node @types/node in the project directory."
+        }
+      ],
+      "supplementary_context": {
+        "description": "Load when the user is ready to deploy a contract or wants to verify a deployed contract.",
+        "pages": [
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-basic-basic-hardhat.md",
+            "relevance": "Next step: deploy a basic Storage contract using the configured Hardhat project."
+          },
+          {
+            "slug": "smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat",
+            "url": "https://docs.polkadot.com/ai/pages/smart-contracts-cookbook-smart-contracts-deploy-erc20-erc20-hardhat.md",
+            "relevance": "Deploy an ERC-20 token using the configured Hardhat environment."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "scenario": "Common scenario: configure a Hardhat project for Polkadot Hub from scratch",
+          "user_says": "Set up a Hardhat project for Polkadot Hub EVM",
+          "actions": [
+            "Create hardhat-example/ and run npm init -y",
+            "Install hardhat@^2.27.0, hardhat-toolbox, typescript, ts-node, dotenv",
+            "Create contracts/, ignition/modules/, test/ directories and set .gitignore",
+            "Create .env with PRIVATE_KEY placeholder; ask user to fill it in",
+            "Fetch hardhat.config.ts from cookbook; add dotenv import, replace vars.get, add gasPrice 5000 gwei, add ignition.requiredConfirmations: 1"
+          ],
+          "result": "Hardhat project configured for Polkadot Hub TestNet; ready for contract development and deployment"
+        },
+        {
+          "scenario": "Edge case: existing project uses Hardhat vars and breaks in CI or agent shell",
+          "user_says": "My Hardhat config uses vars.get and it fails with 'vars is not defined'",
+          "actions": [
+            "Open hardhat.config.ts",
+            "Add 'import \"dotenv/config\";' as the first line",
+            "Replace all vars.get('PRIVATE_KEY') with process.env.PRIVATE_KEY as string",
+            "Remove the 'import { vars } from \"hardhat/config\";' line",
+            "Create .env with PRIVATE_KEY= and add .env to .gitignore"
+          ],
+          "result": "Project loads private key from .env; works in agent shells and CI without interactive prompts"
         }
       ]
     }
