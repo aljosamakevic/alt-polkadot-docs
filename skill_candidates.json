@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:43:06Z",
+  "generated": "2026-04-21T15:47:47Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -3244,6 +3244,108 @@
           "conceptual",
           "reference"
         ]
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/dual-vm-stack.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-local-dev-node-revive",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Architecture overview of Polkadot's dual VM stack (REVM vs PVM). Provides background context on why REVM is used for Ethereum compatibility and when to choose PVM. Useful as supplementary context for any smart contract development skill on Polkadot Hub.",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/evm-vs-pvm.md",
+      "category": "reference",
+      "relevant_to": [
+        "set-up-local-dev-node-revive",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Detailed technical reference comparing EVM and PVM architectures, gas models, memory limits, account management, and YUL IR translation differences. Reference wins over conceptual (12 vs 10) due to structured comparison tables, memory limit tables, and YUL opcode listings. Ambiguous with conceptual given the volume of architectural prose. Essential supplementary context for any skill involving PVM contract development.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 12,
+          "conceptual": 10,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "reference",
+          "conceptual"
+        ]
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/gas-model.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "set-up-local-dev-node-revive",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Conceptual explanation of how Polkadot Hub maps Ethereum gas onto its three-dimensional resource system (ref_time, proof_size, storage_deposit). Contains a mermaid transaction flow diagram and prose on dynamic pricing. No CLI commands or procedures. Relevant to any skill where gas estimation or fee handling matters.",
+      "scoring": {
+        "signals": [
+          "R3",
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 3,
+          "conceptual": 10,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "smart-contracts/for-eth-devs/json-rpc-apis.md",
+      "category": "reference",
+      "relevant_to": [
+        "set-up-local-dev-node-revive",
+        "deploy-erc20-token-hardhat",
+        "deploy-erc20-token-remix"
+      ],
+      "notes": "Comprehensive reference for supported Ethereum JSON-RPC methods on Polkadot Hub, with parameter specs and curl examples for each method. High reference score (R1+R2+R3=12) from structured method documentation. Procedural score is 5 (curl commands present) but there is no ordered workflow or verifiable outcome, so rule 4 assigns reference. Useful supplementary context for any skill involving on-chain queries or transaction submission.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "category_scores": {
+          "procedural": 5,
+          "reference": 12,
+          "conceptual": 0,
+          "not_applicable": 0
+        }
       }
     }
   ],
