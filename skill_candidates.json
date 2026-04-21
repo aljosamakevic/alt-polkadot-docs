@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:59:18Z",
+  "generated": "2026-04-21T16:04:52Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -2484,6 +2484,105 @@
           "reference"
         ]
       }
+    },
+    {
+      "skill_id": "interact-storage-precompile-remix",
+      "title": "Interact with the Storage Precompile",
+      "source_pages": [
+        "smart-contracts/precompiles/storage.md"
+      ],
+      "category": "tutorial",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Complete walkthrough of connecting to and using the Storage precompile via Remix IDE. Reference API documentation (R1, R3) dominates the bulk of the page but a discrete 6-step interaction workflow with verifiable outcome qualifies it as a tutorial by Rule 2 (procedural=15, P4 present). GUI-only Remix steps prevent S1 from firing, capping priority at medium.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P3",
+          "P4",
+          "R1",
+          "R3",
+          "K1",
+          "K2",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 8,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 15
+      }
+    },
+    {
+      "skill_id": "interact-system-precompile-remix",
+      "title": "Interact with the System Precompile",
+      "source_pages": [
+        "smart-contracts/precompiles/system.md"
+      ],
+      "category": "tutorial",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Complete walkthrough of connecting to the System precompile (BLAKE2 hashing, sr25519 verification, account management, contract lifecycle) via Remix IDE. Rule 2 fires (procedural=15, P4 present). Several code examples contain unfilled placeholders (e.g. `sig = ...`, `pubKey = 0x...`), so K2 does not fire. GUI-only Remix steps prevent S1. Priority score=11 → medium.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P3",
+          "P4",
+          "R1",
+          "R3",
+          "K1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 8,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 11
+      }
+    },
+    {
+      "skill_id": "interact-xcm-precompile-remix",
+      "title": "Interact with the XCM Precompile",
+      "source_pages": [
+        "smart-contracts/precompiles/xcm.md"
+      ],
+      "category": "tutorial",
+      "priority": "medium",
+      "status": "pending",
+      "notes": "Demonstrates weighing, executing, and sending XCM messages from a Solidity smart contract via Remix IDE using the XCM precompile. Rule 2 fires (procedural=15, P4 present), selecting tutorial over reference despite strong reference signals (R1+R2+R3=12) and conceptual XCM architecture context (C1=5). Category is ambiguous with reference (diff=3 points). A complete SCALE-encoded example message is provided (K2 fires). GUI-only Remix steps prevent S1.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P3",
+          "P4",
+          "R1",
+          "R2",
+          "R3",
+          "C1",
+          "K1",
+          "K2",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 15,
+          "reference": 12,
+          "conceptual": 5,
+          "not_applicable": 0
+        },
+        "priority_score": 15,
+        "category_ambiguous": true,
+        "contending_categories": [
+          "tutorial",
+          "reference"
+        ]
+      }
     }
   ],
   "supplementary_only": [
@@ -3594,6 +3693,34 @@
           "conceptual": 0,
           "not_applicable": 0
         }
+      }
+    },
+    {
+      "page": "smart-contracts/precompiles/eth-native.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "interact-storage-precompile-remix",
+        "interact-system-precompile-remix",
+        "interact-xcm-precompile-remix"
+      ],
+      "notes": "Overview of Ethereum-native precompiles in Polkadot Hub's Revive pallet: explains what precompiles are, how to call them, and lists all standard precompile addresses. No workflow, no commands, no file creation. Conceptual=7 (C1+C3) vs reference=5 (R1); ambiguous (diff=2). Rule 5 assigns conceptual because conceptual>=5, procedural<10, and reference<7. Useful background for any skill involving these precompiles.",
+      "scoring": {
+        "signals": [
+          "R1",
+          "C1",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 5,
+          "conceptual": 7,
+          "not_applicable": 0
+        },
+        "category_ambiguous": true,
+        "contending_categories": [
+          "conceptual",
+          "reference"
+        ]
       }
     }
   ],
