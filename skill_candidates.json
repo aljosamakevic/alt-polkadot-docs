@@ -1,0 +1,324 @@
+{
+    "schema_version": "2",
+    "generated": "2026-04-21T00:00:00Z",
+    "project_id": "polkadot-docs",
+    "scoring_rubric_version": "1.0",
+    "candidates": [
+        {
+            "skill_id": "create-polkadot-account",
+            "title": "Create a Polkadot Account Programmatically",
+            "source_pages": [
+                "chain-interactions/accounts/create-account.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Complete, multi-language tutorial (TypeScript, Python, Rust) covering account key generation. Fully self-contained with cookbook-tested code. All three language variants could become one skill or three; one skill covering the PAPI/TypeScript path is recommended.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "query-account-info-sdks",
+            "title": "Query Account Information with SDKs",
+            "source_pages": [
+                "chain-interactions/accounts/query-accounts.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Multi-SDK tutorial covering PAPI, Polkadot.js, Dedot, Python Substrate Interface, and Subxt. Each SDK variant is self-contained. Cookbook-backed with CI badges. Recommend one skill targeting the PAPI variant as the primary path.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "query-chain-data-sidecar-rest",
+            "title": "Query On-Chain State with Sidecar REST API",
+            "source_pages": [
+                "chain-interactions/query-data/query-rest.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Covers querying account balances, asset metadata, and block info via curl against the Sidecar REST API. P3 absent (no files to create, only curl commands). Reference tables for response fields contribute to reference score but procedural score still meets tutorial threshold. Has cookbook CI badge (K4).",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "R1", "R3", "K1", "K2", "K3", "K4", "S1", "S2"],
+                "category_scores": { "procedural": 15, "reference": 8, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "query-chain-state-sdks",
+            "title": "Query On-Chain State with SDKs",
+            "source_pages": [
+                "chain-interactions/query-data/query-sdks.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Multi-SDK tutorial (PAPI, Polkadot.js, Dedot, Python Substrate Interface, Subxt) for querying account balance and asset info. Cookbook-backed. Recommend primary skill targeting PAPI TypeScript path.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "call-runtime-apis-sdks",
+            "title": "Call Runtime APIs with SDKs",
+            "source_pages": [
+                "chain-interactions/query-data/runtime-api-calls.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Multi-SDK tutorial demonstrating AccountNonceApi and Metadata runtime API calls. Reference API table at the bottom is supplementary. Cookbook-backed with CI badge.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "R1", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 5, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "calculate-transaction-fees-papi",
+            "title": "Calculate Transaction Fees Programmatically",
+            "source_pages": [
+                "chain-interactions/send-transactions/calculate-transaction-fees.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Covers fee estimation using PAPI and Polkadot.js SDK. Includes a GUI section via Polkadot.js Apps (S2 notes this adds non-deterministic path) but the primary SDK workflow is fully programmatic. No cookbook badge (K4 absent).",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "replay-dry-run-xcm-chopsticks",
+            "title": "Replay and Dry-Run XCMs Using Chopsticks",
+            "source_pages": [
+                "chain-interactions/send-transactions/interoperability/debug-and-preview-xcms.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Advanced tutorial covering XCM replay and dry-run via Chopsticks local fork. Requires building a Wasm binary and using Subscan to locate call data (partial manual step reduces S2). No cookbook badge. Specialized debugging skill for XCM developers.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 19
+            }
+        },
+        {
+            "skill_id": "estimate-xcm-fees-teleport",
+            "title": "Estimate XCM Fees for Asset Teleport",
+            "source_pages": [
+                "chain-interactions/send-transactions/interoperability/estimate-xcm-fees.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Tutorial for estimating local execution, delivery, and remote execution fees for XCM teleports between Polkadot Hub TestNet and People Chain. Uses Chopsticks for forked chains. Code is presented in segments then assembled; full code collapsible available. No cookbook badge.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 19
+            }
+        },
+        {
+            "skill_id": "bridge-eth-to-polkadot-snowbridge",
+            "title": "Bridge Assets from Ethereum to Polkadot via Snowbridge",
+            "source_pages": [
+                "chain-interactions/send-transactions/interoperability/transfer-assets-into-polkadot.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Covers bridging ERC-20 tokens (WETH) from Ethereum mainnet to Polkadot Hub using ParaSpell SDK and Snowbridge. K1 absent — requires real mainnet WETH tokens which an agent cannot autonomously obtain. S2 absent — bridge relay takes ~30 minutes with variable external state. Priority reduced to medium.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K2", "K3", "S1"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 11
+            }
+        },
+        {
+            "skill_id": "transfer-assets-parachains-paraspell",
+            "title": "Transfer Assets Between Parachains with ParaSpell XCM SDK",
+            "source_pages": [
+                "chain-interactions/send-transactions/interoperability/transfer-assets-parachains.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Covers full XCM transfer workflow using ParaSpell SDK: build transaction, dry-run, verify existential deposit, get fee estimates, and submit. Uses Paseo testnet with faucet tokens. Self-contained. No cookbook badge.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "pay-fees-alternative-token",
+            "title": "Pay Transaction Fees with an Alternative Token",
+            "source_pages": [
+                "chain-interactions/send-transactions/pay-fees-with-different-tokens.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Demonstrates paying DOT transfer fees in USDT using PAPI, Polkadot.js, or Subxt against a Chopsticks local fork (Alice dev account — no real tokens needed). Self-contained. No cookbook badge.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "send-transactions-sdks",
+            "title": "Send Transactions with SDKs",
+            "source_pages": [
+                "chain-interactions/send-transactions/with-sdks.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Multi-SDK tutorial for constructing, signing, and submitting balance transfers (PAPI, Polkadot.js, Dedot, Python Substrate Interface, Subxt). Cookbook-backed. Fundamental SDK skill and likely prerequisite for other chain-interaction skills.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "K4", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 25
+            }
+        },
+        {
+            "skill_id": "convert-assets-asset-hub",
+            "title": "Convert Assets on Asset Hub via AMM",
+            "source_pages": [
+                "chain-interactions/token-operations/convert-assets.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Covers creating liquidity pools, adding/removing liquidity, and swapping assets using the AssetConversion pallet via Polkadot.js Apps UI. P3 absent (no source files to create); workflow is GUI-dependent (S1 absent). K2 absent. Reaches tutorial threshold via P1+P2+P4=15 with P4 present. Priority medium due to GUI-only execution and absence of programmatic code.",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "C2", "K1", "K3", "S2"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 11
+            }
+        },
+        {
+            "skill_id": "register-foreign-asset-polkadot-hub",
+            "title": "Register a Foreign Asset on Polkadot Hub",
+            "source_pages": [
+                "chain-interactions/token-operations/register-foreign-asset.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Walks through registering a foreign asset via two-step XCM: generate encoded call data on Polkadot Hub, then dispatch via source parachain. Uses Polkadot.js Apps UI (GUI-dependent, S1 absent). P3 absent. Reaches tutorial threshold via P1+P2+P4=15. Priority medium due to GUI-only workflow.",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "C2", "K1", "K3", "S2"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 11
+            }
+        },
+        {
+            "skill_id": "register-local-asset-polkadot-hub",
+            "title": "Register a Local Asset on Polkadot Hub",
+            "source_pages": [
+                "chain-interactions/token-operations/register-local-asset.md"
+            ],
+            "category": "tutorial",
+            "priority": "medium",
+            "status": "pending",
+            "notes": "Step-by-step guide for creating a local (integer-ID) asset on Polkadot Hub via the Network > Assets UI in Polkadot.js Apps. GUI-dependent throughout (S1 absent). P3 absent. Reaches tutorial threshold via P1+P2+P4=15. Priority medium due to GUI-only execution.",
+            "scoring": {
+                "signals": ["P1", "P2", "P4", "C2", "K1", "K3", "S2"],
+                "category_scores": { "procedural": 15, "reference": 0, "conceptual": 3, "not_applicable": 0 },
+                "priority_score": 11
+            }
+        },
+        {
+            "skill_id": "run-collator-system-parachain",
+            "title": "Run a Block-Producing Collator for a System Parachain",
+            "source_pages": [
+                "node-infrastructure/run-a-collator.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Covers full collator setup: install binary (Docker or systemd), generate node key, obtain chain spec, run collator, generate session keys, and register on-chain. Registration requires governance approval for system parachains (S2 absent for that step). Core node setup is deterministic. Matches node/validator setup skill shape.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 19
+            }
+        },
+        {
+            "skill_id": "run-parachain-rpc-node",
+            "title": "Run a Parachain RPC Node",
+            "source_pages": [
+                "node-infrastructure/run-a-node/parachain-rpc.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Comprehensive setup guide for any parachain RPC node (archive or pruned) via Docker or systemd. Uses People Chain as example; substitution table provided for other system parachains. Covers snapshot download, binary install, service config, and sync verification. Node/validator setup shape.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 0, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "run-polkadot-hub-rpc-node",
+            "title": "Run an RPC Node for Polkadot Hub",
+            "source_pages": [
+                "node-infrastructure/run-a-node/polkadot-hub-rpc.md"
+            ],
+            "category": "tutorial",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Setup guide for Polkadot Hub RPC node (archive or pruned) via Docker or systemd, plus optional Ethereum RPC adapter (eth-rpc) for EVM compatibility. Includes snapshot download, service config, and sync verification. CLI flags reference table (R2) is supplementary. Node/validator setup shape.",
+            "scoring": {
+                "signals": ["P1", "P2", "P3", "P4", "R2", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 20, "reference": 4, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        },
+        {
+            "skill_id": "set-up-relay-chain-bootnode",
+            "title": "Set Up a Relay Chain Bootnode",
+            "source_pages": [
+                "node-infrastructure/run-a-node/relay-chain/bootnode.md"
+            ],
+            "category": "guide",
+            "priority": "high",
+            "status": "pending",
+            "notes": "Guide for running a Polkadot relay chain bootnode with P2P, WS, and WSS endpoints. P1 absent (no numbered-step lists; content is command blocks under section headings). Procedural score 14 → guide category. Includes nginx proxy config file. Prerequisites require an external polkadot binary and nginx install, but core steps are self-contained.",
+            "scoring": {
+                "signals": ["P2", "P3", "P4", "R2", "K1", "K2", "K3", "S1", "S2", "S3"],
+                "category_scores": { "procedural": 14, "reference": 4, "conceptual": 0, "not_applicable": 0 },
+                "priority_score": 22
+            }
+        }
+    ],
+    "supplementary_only": [],
+    "not_applicable": [
+        {
+            "page": "get-support.md",
+            "category": "not_applicable",
+            "reason": "Community support hub listing channels (Telegram, Discord, Matrix, Stack Exchange, Reddit, YouTube, X/Twitter, Forum, Polkassembly). No procedural content, code, or tutorials.",
+            "scoring": {
+                "signals": ["N1", "N2"],
+                "category_scores": { "procedural": 0, "reference": 0, "conceptual": 0, "not_applicable": 8 }
+            }
+        }
+    ]
+}
