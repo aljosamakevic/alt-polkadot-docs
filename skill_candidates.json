@@ -1,6 +1,6 @@
 {
   "schema_version": "2",
-  "generated": "2026-04-21T15:03:47Z",
+  "generated": "2026-04-21T15:08:00Z",
   "project_id": "polkadot-docs",
   "scoring_rubric_version": "1.0",
   "candidates": [
@@ -1456,6 +1456,141 @@
           "reference"
         ]
       }
+    },
+    {
+      "skill_id": "set-up-chopsticks-fork",
+      "title": "Set Up and Use Chopsticks for Chain Forking",
+      "source_pages": [
+        "reference/tools/chopsticks.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Full end-to-end workflow: install, configure, fork a live chain, interact via JS API, replay blocks, and test XCM. Verifiable outcome ('you will see output indicating the RPC is listening'). Also contains a rich WebSocket API reference section (R1+R2+R3=12) that co-exists with the procedural content, but procedural score dominates at 20.",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "R1",
+          "R2",
+          "R3",
+          "K1",
+          "K2",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 12,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 22
+      }
+    },
+    {
+      "skill_id": "interact-with-chain-dedot",
+      "title": "Interact with Polkadot Chains Using Dedot",
+      "source_pages": [
+        "reference/tools/dedot.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Covers installation through reading on-chain data, querying storage, calling runtime APIs, and signing/sending transactions. No explicit prerequisites section (K3 absent) and no numbered ordered steps (P1 absent), so guide rather than tutorial. Category is ambiguous with reference (procedural=10, reference=8, diff=2); guide wins by Rule 3. High priority because the workflow is self-contained, code is complete, and the Dedot client is a first-class alternative to Polkadot.js in the ecosystem.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "R1",
+          "R3",
+          "K1",
+          "K2",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 10,
+          "reference": 8,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 19,
+        "category_ambiguous": true,
+        "contending_categories": [
+          "guide",
+          "reference"
+        ]
+      }
+    },
+    {
+      "skill_id": "set-up-e2e-testing-moonwall",
+      "title": "Set Up End-to-End Testing with Moonwall",
+      "source_pages": [
+        "reference/tools/moonwall.md"
+      ],
+      "category": "guide",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Sequential workflow: install, initialize config via wizard, write a test suite, run tests. Verifiable outcome ('The test runner will output detailed results'). P1 absent because main flow lacks explicit numbered lists (wizard prompts are bullets, not ordered steps), putting procedural at 14 (below 15 threshold for tutorial). High priority due to self-contained workflow with prerequisites section, complete runnable code, and deterministic CLI-based execution.",
+      "scoring": {
+        "signals": [
+          "P2",
+          "P3",
+          "P4",
+          "R2",
+          "K1",
+          "K2",
+          "K3",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 14,
+          "reference": 4,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 22
+      }
+    },
+    {
+      "skill_id": "run-parachain-node-omni-node",
+      "title": "Run a Parachain Node with Polkadot Omni Node",
+      "source_pages": [
+        "reference/tools/omninode.md"
+      ],
+      "category": "tutorial",
+      "priority": "high",
+      "status": "pending",
+      "notes": "Complete tutorial: install binary (macOS/Ubuntu/cargo), obtain chain spec via numbered steps, launch a full node, interact with it. Verifiable outcome ('You should see the installed version number' and node sync logs). Includes runtime compatibility requirements with Rust code examples. K3 absent (no explicit prerequisites section), K4 absent (no reference repo for the tutorial itself).",
+      "scoring": {
+        "signals": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "R2",
+          "K1",
+          "K2",
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "category_scores": {
+          "procedural": 20,
+          "reference": 4,
+          "conceptual": 0,
+          "not_applicable": 0
+        },
+        "priority_score": 19
+      }
     }
   ],
   "supplementary_only": [
@@ -2253,6 +2388,28 @@
           "procedural": 0,
           "reference": 0,
           "conceptual": 7,
+          "not_applicable": 0
+        }
+      }
+    },
+    {
+      "page": "reference/tools/light-clients.md",
+      "category": "conceptual",
+      "relevant_to": [
+        "interact-with-chain-dedot",
+        "set-up-chopsticks-fork"
+      ],
+      "notes": "Explains light client architecture, the trust-minimized verification model, comparison with full nodes/JSON-RPC, and PAPI/Smoldot integration. No procedural content. Useful background for skills that use Dedot with Smoldot or Chopsticks (which also uses Smoldot internally).",
+      "scoring": {
+        "signals": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "category_scores": {
+          "procedural": 0,
+          "reference": 0,
+          "conceptual": 10,
           "not_applicable": 0
         }
       }
